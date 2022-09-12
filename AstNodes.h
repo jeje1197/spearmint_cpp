@@ -5,6 +5,9 @@
 #include <memory>
 #include "Token.h"
 
+using std::string;
+using std::shared_ptr;
+
 class AstNode {
     public:
         std::string type;
@@ -47,9 +50,9 @@ class StringNode : public AstNode {
 class UnaryOpNode : public AstNode {
     public:
         std::string op;
-        AstNode* node;
+        shared_ptr<AstNode> node = nullptr;
 
-        UnaryOpNode(Token opTok, AstNode* node) {
+        UnaryOpNode(Token opTok, shared_ptr<AstNode> node) {
             this->type = "UnaryOpNode";
             this->op = opTok.value;
             this->node = node;
@@ -62,11 +65,11 @@ class UnaryOpNode : public AstNode {
 
 class BinOpNode : public AstNode {
     public:
-        AstNode* left;
-        std::string op;
-        AstNode* right;
+        shared_ptr<AstNode> left;
+        string op;
+        shared_ptr<AstNode> right;
 
-        BinOpNode(AstNode* left, Token opTok, AstNode* right) {
+        BinOpNode(shared_ptr<AstNode> left, Token opTok, shared_ptr<AstNode> right) {
             this->type = "BinOpNode";
             this->left = left;
             this->op = opTok.value;

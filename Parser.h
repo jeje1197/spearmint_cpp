@@ -20,7 +20,7 @@ class Parser {
         Token lookAhead(int steps);
 
         std::shared_ptr<AstNode> parse();
-        std::shared_ptr<AstNode> expr();
+        std::shared_ptr<AstNode> arith_expr();
         std::shared_ptr<AstNode> term();
         std::shared_ptr<AstNode> power();
         std::shared_ptr<AstNode> atom();

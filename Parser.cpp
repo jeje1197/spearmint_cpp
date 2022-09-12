@@ -27,10 +27,10 @@ Token Parser::lookAhead(int steps = 1) {
 }
 
 shared_ptr<AstNode> Parser::parse() {
-    return expr();
+    return arith_expr();
 }
 
-shared_ptr<AstNode> Parser::expr() {
+shared_ptr<AstNode> Parser::arith_expr() {
     auto left = term();
     std::unordered_map<std::string, bool> ops = {{"+", true}, {"-", true}};
 
@@ -88,7 +88,7 @@ shared_ptr<AstNode> Parser::atom() {
 
     if (tok.type == OP && (tok.value == "+" || tok.value == "-")) {
         getNext();
-        auto node = expr();
+        auto node = atom();
         if (node == nullptr) {
             throw "Expected atom after unary operator.";
         }
@@ -104,9 +104,9 @@ shared_ptr<AstNode> Parser::atom() {
         return shared_ptr<AstNode>(new StringNode(tok));
     } else if (tok.type == LPAREN) {
         getNext();
-        auto node = expr();
+        auto node = arith_expr();
         if (node == nullptr) {
-            throw "Expected atom after parenthesis";
+            throw "Expected expr after parenthesis";
         }
         if (curTok.type != RPAREN) {
             throw "Expected ')'";

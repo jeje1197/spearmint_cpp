@@ -27,9 +27,63 @@ Token Parser::lookAhead(int steps = 1) {
 }
 
 shared_ptr<AstNode> Parser::parse() {
-    return arith_expr();
+    return comp_expr1();
 }
 
+shared_ptr<AstNode> Parser::expr() {
+    if (curTok.type == OP && curTok.value == "!") {
+        Token opTok = curTok;
+        getNext();
+
+        auto node = expr();
+        if (node == nullptr) {
+            throw "Expected expr after op tok";
+        }
+        return shared_ptr<AstNode>(new UnaryOpNode(opTok, node));
+    }
+
+    return comp_expr1();
+}
+
+shared_ptr<AstNode> Parser::comp_expr1() {
+    auto left = comp_expr2();
+    std::unordered_map<std::string, bool> ops = {{"&&", true}, {"||", true}};
+
+    while (curTok.type == OP && (ops.find(curTok.value) != ops.end())) {
+        Token opTok = curTok;
+        getNext();
+
+        auto right = expr();
+        if (right == nullptr) {
+            throw "Expected expr after op tok";
+        }
+        left = shared_ptr<AstNode>(new BinOpNode(left, opTok, right));
+    }
+
+    return left;
+}
+
+shared_ptr<AstNode> Parser::comp_expr2() {
+    auto left = arith_expr();
+    std::unordered_map<std::string, bool> ops = {{"<", true}, {">", true}, {"<=", true}, {">=", true},
+        {"==", true}, {"!=", true}};
+
+    while (curTok.type == OP && (ops.find(curTok.value) != ops.end())) {
+        Token opTok = curTok;
+        getNext();
+
+        auto right = expr();
+        if (right == nullptr) {
+            throw "Expected expr after op tok";
+        }
+        left = shared_ptr<AstNode>(new BinOpNode(left, opTok, right));
+    }
+
+    return left;
+}
+
+
+// Arithmetic parsing working
 shared_ptr<AstNode> Parser::arith_expr() {
     auto left = term();
     std::unordered_map<std::string, bool> ops = {{"+", true}, {"-", true}};

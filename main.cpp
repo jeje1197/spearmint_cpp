@@ -11,7 +11,7 @@ using std::shared_ptr;
 
 int main()
 {
-    std::string input = " -10+4^3.6*10";
+    std::string input = " 10<!4*10";
 
     // Lexer
     std::cout << "Starting lexing." << std::endl;

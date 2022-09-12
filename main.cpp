@@ -32,7 +32,7 @@ int main()
     std::cout << "\n----------\n"<< std::endl;
 
 
-    std::shared_ptr<AstNode> ast = nullptr;
+    shared_ptr<AstNode> ast = nullptr;
     std::cout << "Starting parsing." << std::endl;
     try {
         Parser parser(tokens);

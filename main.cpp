@@ -11,37 +11,35 @@ using std::shared_ptr;
 
 int main()
 {
-    std::string sample = " 10+3+16";
+    std::string input = " 10+4+3.6sdfghjhgfd567564456...////bjklbv";
 
     // Lexer
-    Lexer lexer("Console", sample);
+    Lexer* lexer = new Lexer("Console", input);
     std::vector<Token> tokens;
 
     try {
-        tokens = lexer.getTokens();
+        tokens = lexer->getTokens();
     } catch (char const *err) {
         std::cout << "Lexing Error: "<< err << std::endl;
         return 0;
     }
 
-    std::cout << "After lex";
+    std::cout << "After lex" << std::endl;
 
-    // Print out list of token representations
-    std::ostringstream out;
-    std::cout << tokens->at(0);
+    for (Token t: tokens) {
+        std::cout << t << std::endl;
+    }
+    std::cout << "\n----------\n"<< std::endl;
 
-    std::cout << "Tokens:\n" << std::string(out.str()) + "\n----------\n"<< std::endl ;
-
-    AstNode* ast;
-
+    AstNode* ast = nullptr;
     try {
-        //Parser parser(tokens);
-        //ast = parser.parse();
+        Parser parser(tokens);
+        ast = parser.parse();
     } catch (char const* err) {
         std::cout << "Parsing Error: " << err << std::endl;
         return 0;
     }
-    //std::cout << ast-> toString();
+    std::cout << ast->toString();
 
     return 0;
 }

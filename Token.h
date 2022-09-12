@@ -16,6 +16,7 @@ enum TokenType {
     RBRACKET,
     COLON,
     DOT,
+    COMMA,
     SEMICOLON,
     ARROW,
     OP,

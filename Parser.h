@@ -66,7 +66,7 @@ class Parser {
         AstNode* atom() {
             Token tok = curTok;
 
-            if (tok.type == OP && (tok.value == "-" || tok.value == "-")) {
+            if (tok.type == OP && (tok.value == "+" || tok.value == "-")) {
                 getNext();
                 AstNode* node = atom();
                 return new UnaryOpNode(tok, node);

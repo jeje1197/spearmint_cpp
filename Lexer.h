@@ -10,13 +10,12 @@ class Lexer {
     public:
         std::string fileName;
         std::string text;
-        int index;
+        int index = 0;
         char curChar;
 
         Lexer(std::string fileName, std::string text) {
             this->fileName = fileName;
             this->text = text;
-            this->index = 0;
             this->curChar = text.at(0);
         }
 
@@ -42,7 +41,7 @@ class Lexer {
             }
         }
 
-        std::vector<Token>* getTokens() {
+        std::vector<Token> getTokens() {
             std::vector<Token> tokens;
             std::string operators = "+-*/^%=<>!";
 
@@ -54,6 +53,16 @@ class Lexer {
                 } else if (curChar == '\n') { // Newlines
                     Token token(NEWLINE, curChar);
                     tokens.push_back(token);
+                } else if (isalpha(curChar) || curChar == '_') {
+                    std::string str(1, curChar);
+                    getNext();
+
+                    while (curChar != '\0' && (isalnum(curChar) || curChar == '_')) {
+                        str += curChar;
+                        getNext();
+                    }
+                    tokens.push_back(Token(ID, str));
+                    continue;
                 } else if (isdigit(curChar)) { // Numbers
                     std::string number(1, curChar);
                     this->getNext();
@@ -98,6 +107,8 @@ class Lexer {
                     tokens.push_back(Token(OP, curChar));
                 } else if (curChar == '.') {
                     tokens.push_back(Token(DOT, curChar));
+                } else if (curChar == ',') {
+                    tokens.push_back(Token(COMMA, curChar));
                 } else if (curChar == ';') {
                     tokens.push_back(Token(SEMICOLON, curChar));
                 } else if (curChar == '(') {
@@ -119,7 +130,7 @@ class Lexer {
             }
 
             tokens.push_back(Token(END, "END"));
-            return &tokens;
+            return tokens;
         }
 };
 

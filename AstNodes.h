@@ -5,7 +5,6 @@
 #include <memory>
 #include "Token.h"
 
-using std::string;
 using std::shared_ptr;
 
 class AstNode {
@@ -16,8 +15,6 @@ class AstNode {
             return "Error: AstNode.toString()";
         }
 };
-
-AstNode NONE;
 
 class NumberNode : public AstNode {
     public:
@@ -66,7 +63,7 @@ class UnaryOpNode : public AstNode {
 class BinOpNode : public AstNode {
     public:
         shared_ptr<AstNode> left;
-        string op;
+        std::string op;
         shared_ptr<AstNode> right;
 
         BinOpNode(shared_ptr<AstNode> left, Token opTok, shared_ptr<AstNode> right) {

@@ -32,6 +32,7 @@ int main()
     std::cout << "\n----------\n"<< std::endl;
 
 
+    // Parser
     shared_ptr<AstNode> ast = nullptr;
     std::cout << "Starting parsing." << std::endl;
     try {
@@ -43,6 +44,9 @@ int main()
     }
     std::cout << "Parsing complete." << std::endl;
     std::cout << ast->toString() << std::endl;
+
+    // Interpreter
+
 
     return 0;
 }

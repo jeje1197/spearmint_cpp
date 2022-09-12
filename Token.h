@@ -1,6 +1,7 @@
 #ifndef TOKEN_H_INCLUDED
 #define TOKEN_H_INCLUDED
 
+#include <sstream>
 enum TokenType {
     NEWLINE,
     KEYWORD,
@@ -28,22 +29,12 @@ class Token {
     public:
         int type;
         std::string value;
-        Token() {}
-        Token(int type, std::string value) {
-            this->type = type;
-            this->value = value;
-        }
-        Token(int type, char c) {
-            this->type = type;
-            this->value = c;
-        }
+        Token() {};
+        Token(int type, std::string value);
+        Token(int type, char c);
+        static Token getNullToken();
 };
 
-Token NULLTOK(NULLTYPE, "NULL");
-
-std::ostream& operator<<(std::ostream& s, const Token& tok){
-    s << "(" << tok.type << ", " << tok.value << ")";
-    return s;
-}
+std::ostream& operator<<(std::ostream& s, const Token& tok);
 
 #endif // TOKEN_H_INCLUDED

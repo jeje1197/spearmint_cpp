@@ -33,12 +33,12 @@ class Parser {
                 index++;
                 curTok = tokens->at(index);
             } else {
-                curTok = NULLTOK;
+                curTok = Token::getNullToken();
             }
         }
 
         Token lookAhead(int steps = 1) {
-            return hasNext(steps) ? tokens->at(index + steps) : NULLTOK;
+            return hasNext(steps) ? tokens->at(index + steps) : Token::getNullToken();
         }
 
         shared_ptr<AstNode> parse() {

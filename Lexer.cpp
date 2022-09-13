@@ -87,8 +87,8 @@ std::vector<Token> Lexer::getTokens() {
             }
 
             tokens.push_back(Token(STRING, str));
-        } else if (next2chars == "!=" || next2chars == "<=" || next2chars == ">=" ||
-                   next2chars == "&&" || next2chars == "!=") { // Operators (2 char)
+        } else if (next2chars == "!=" || next2chars == "==" || next2chars == "<=" || next2chars == ">=" ||
+                   next2chars == "&&" || next2chars == "||") { // Operators (2 char)
             tokens.push_back(Token(OP, next2chars));
             this->getNext();
         } else if (operators.find(curChar) != std::string::npos) { // Operators (1 char)

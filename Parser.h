@@ -20,6 +20,17 @@ class Parser {
         Token lookAhead(int steps);
 
         std::shared_ptr<AstNode> parse();
+
+        // Statement Parsing
+        std::shared_ptr<AstNode> statement();
+
+
+        // Variable Actions
+        std::shared_ptr<AstNode> varDeclaration();
+        std::shared_ptr<AstNode> varAssign();
+        std::shared_ptr<AstNode> varAccess();
+
+        // Expression Parsing
         std::shared_ptr<AstNode> expr();
         std::shared_ptr<AstNode> comp_expr1();
         std::shared_ptr<AstNode> comp_expr2();

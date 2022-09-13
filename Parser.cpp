@@ -27,33 +27,37 @@ Token Parser::lookAhead(int steps = 1) {
 }
 
 shared_ptr<AstNode> Parser::parse() {
-    return comp_expr1();
+    return statement();
 }
 
+shared_ptr<AstNode> Parser::statement() {
+
+    return nullptr;
+}
+
+// Variable Action Parsing
+shared_ptr<AstNode> Parser::varDeclaration() {
+    return expr();
+}
+
+shared_ptr<AstNode> Parser::varAssign() {
+    return expr();
+}
+
+shared_ptr<AstNode> Parser::varAccess() {
+    return expr();
+}
+
+// Expression Parsing
 shared_ptr<AstNode> Parser::expr() {
-    if (curTok.type == OP && curTok.value == "!") {
-        Token opTok = curTok;
-        getNext();
-
-        auto node = expr();
-        if (node == nullptr) {
-            throw "Expected expr after op tok";
-        }
-        return shared_ptr<AstNode>(new UnaryOpNode(opTok, node));
-    }
-
-    return comp_expr1();
-}
-
-shared_ptr<AstNode> Parser::comp_expr1() {
-    auto left = comp_expr2();
+    auto left = comp_expr1();
     std::unordered_map<std::string, bool> ops = {{"&&", true}, {"||", true}};
 
     while (curTok.type == OP && (ops.find(curTok.value) != ops.end())) {
         Token opTok = curTok;
         getNext();
 
-        auto right = expr();
+        auto right = comp_expr1();
         if (right == nullptr) {
             throw "Expected expr after op tok";
         }
@@ -61,6 +65,21 @@ shared_ptr<AstNode> Parser::comp_expr1() {
     }
 
     return left;
+}
+
+shared_ptr<AstNode> Parser::comp_expr1() {
+    if (curTok.type == OP && curTok.value == "!") {
+        Token opTok = curTok;
+        getNext();
+
+        auto node = comp_expr2();
+        if (node == nullptr) {
+            throw "Expected expr after op tok";
+        }
+        return shared_ptr<AstNode>(new UnaryOpNode(opTok, node));
+    }
+
+    return comp_expr2();
 }
 
 shared_ptr<AstNode> Parser::comp_expr2() {
@@ -72,7 +91,7 @@ shared_ptr<AstNode> Parser::comp_expr2() {
         Token opTok = curTok;
         getNext();
 
-        auto right = expr();
+        auto right = arith_expr();
         if (right == nullptr) {
             throw "Expected expr after op tok";
         }
@@ -169,7 +188,6 @@ shared_ptr<AstNode> Parser::atom() {
         return shared_ptr<AstNode>(new StringNode(tok));
     }
 
-    throw "no atom";
-
+    throw "No atom found";
     return nullptr;
 }

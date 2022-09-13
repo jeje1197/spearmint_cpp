@@ -65,7 +65,7 @@ class VarAssignNode : public AstNodeBase {
         std::string varName;
         AstNode exprNode;
 
-        VarAccessNode(Token varNameTok, AstNode exprNode) {
+        VarAssignNode(Token varNameTok, AstNode exprNode) {
             this->type = "VarAssignNode";
             this->varName = varNameTok.value;
             this->exprNode = exprNode;

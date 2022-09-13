@@ -8,7 +8,7 @@
 
 int main()
 {
-    std::string input = " \n!10 < 5 || 1";
+    std::string input = " \n!10 || 34-2 > 5";
 
     // Lexer
     std::cout << "Starting lexing." << std::endl;

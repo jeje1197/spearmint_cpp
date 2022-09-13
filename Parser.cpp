@@ -58,109 +58,39 @@ AstNode Parser::varAssign() {
 
 // Expression Parsing
 AstNode Parser::expr() {
-    auto left = comp_expr1();
-    std::set<std::string> ops = {"&&", "||"};
-
-    while (curTok.type == OP && (ops.find(curTok.value) != ops.end())) {
-        Token opTok = curTok;
-        getNext();
-
-        auto right = comp_expr1();
-        if (right == nullptr) {
-            throw "Expected expr after op tok";
-        }
-        left = AstNode(new BinOpNode(left, opTok, right));
-    }
-
-    return left;
+    return binOp(&not_expr, {"&&", "||"}, &not_expr);
 }
 
-AstNode Parser::comp_expr1() {
+AstNode Parser::not_expr() {
     if (curTok.type == OP && curTok.value == "!") {
         Token opTok = curTok;
         getNext();
 
-        auto node = comp_expr2();
+        auto node = comp_expr();
         if (node == nullptr) {
             throw "Expected expr after op tok";
         }
         return AstNode(new UnaryOpNode(opTok, node));
     }
 
-    return comp_expr2();
+    return comp_expr();
 }
 
-AstNode Parser::comp_expr2() {
-    auto left = arith_expr();
-    std::set<std::string> ops = {"<", ">", "<=", ">=", "==", "!="};
-
-    while (curTok.type == OP && (ops.find(curTok.value) != ops.end())) {
-        Token opTok = curTok;
-        getNext();
-
-        auto right = arith_expr();
-        if (right == nullptr) {
-            throw "Expected expr after op tok";
-        }
-        left = AstNode(new BinOpNode(left, opTok, right));
-    }
-
-    return left;
+AstNode Parser::comp_expr() {
+    return binOp(&arith_expr, {"<", ">", "<=", ">=", "==", "!="}, &arith_expr);
 }
-
 
 // Arithmetic parsing working
 AstNode Parser::arith_expr() {
-    auto left = term();
-    std::set<std::string> ops = {"+", "-"};
-
-    while (curTok.type == OP && (ops.find(curTok.value) != ops.end())) {
-        Token opTok = curTok;
-        getNext();
-
-        auto right = term();
-        if (right == nullptr) {
-            throw "Expected expr after op tok";
-        }
-        left = AstNode(new BinOpNode(left, opTok, right));
-    }
-
-    return left;
+    return binOp(&term, {"+", "-"}, &term);
 }
 
 AstNode Parser::term() {
-    auto left = power();
-    std::set<std::string> ops = {"*", "/", "%"};
-
-    while (curTok.type == OP && (ops.find(curTok.value) != ops.end())) {
-        Token opTok = curTok;
-        getNext();
-
-        auto right = power();
-        if (right == nullptr) {
-            throw "Expected expr after op tok";
-        }
-        left = AstNode(new BinOpNode(left, opTok, right));
-    }
-
-    return left;
+    return binOp(&power, {"*", "/", "%"}, &power);
 }
 
 AstNode Parser::power() {
-    auto left = atom();
-
-    while (curTok.type == OP && curTok.value == "^") {
-        Token opTok = curTok;
-        getNext();
-
-        auto right = power();
-        if (right == nullptr) {
-            throw "Expected expr after op tok";
-        }
-        left = AstNode(new BinOpNode(left, opTok, right));
-    }
-
-    return left;
+    return binOp(&atom, {"^"}, &power);
 }
 
 AstNode Parser::atom() {
@@ -202,3 +132,22 @@ AstNode Parser::atom() {
     throw "No atom found";
     return nullptr;
 }
+
+AstNode Parser::binOp(ParserFunction func1, std::set<std::string> ops, ParserFunction func2) {
+    auto left = ((*this).*func1)();
+
+    while (curTok.type == OP && (ops.find(curTok.value) != ops.end())) {
+        Token opTok = curTok;
+        getNext();
+
+        auto right = ((*this).*func2)();
+        if (right == nullptr) {
+            throw "Expected expr after op tok";
+        }
+        left = AstNode(new BinOpNode(left, opTok, right));
+    }
+
+    return left;
+}
+
+

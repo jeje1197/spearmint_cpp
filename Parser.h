@@ -33,13 +33,19 @@ class Parser {
 
         // Expression Parsing
         AstNode expr();
-        AstNode comp_expr1();
-        AstNode comp_expr2();
+        AstNode not_expr();
+        AstNode comp_expr();
         AstNode arith_expr();
         AstNode term();
         AstNode power();
         AstNode atom();
 
+        typedef AstNode (Parser::* ParserFunction)();
+
+        AstNode binOp(ParserFunction func1, std::set<std::string> ops, ParserFunction func2);
+
 };
+
+
 
 #endif // PARSER_H_INCLUDED

@@ -26,32 +26,40 @@ Token Parser::lookAhead(int steps = 1) {
     return hasNext(steps) ? tokens->at(index + steps) : Token::getNullToken();
 }
 
-shared_ptr<AstNode> Parser::parse() {
+void Parser::skipSemis() {
+    while (curTok.type == SEMICOLON) {
+        getNext();
+    }
+}
+
+AstNode Parser::parse() {
     return statement();
 }
 
-shared_ptr<AstNode> Parser::statement() {
+std::vector<AstNode> Parser::statements() {
+    std::vector<AstNode> statements;
 
-    return nullptr;
+
+    return statements;
+}
+
+AstNode Parser::statement() {
+    return expr();
 }
 
 // Variable Action Parsing
-shared_ptr<AstNode> Parser::varDeclaration() {
+AstNode Parser::varDeclaration() {
     return expr();
 }
 
-shared_ptr<AstNode> Parser::varAssign() {
-    return expr();
-}
-
-shared_ptr<AstNode> Parser::varAccess() {
+AstNode Parser::varAssign() {
     return expr();
 }
 
 // Expression Parsing
-shared_ptr<AstNode> Parser::expr() {
+AstNode Parser::expr() {
     auto left = comp_expr1();
-    std::unordered_map<std::string, bool> ops = {{"&&", true}, {"||", true}};
+    std::set<std::string> ops = {"&&", "||"};
 
     while (curTok.type == OP && (ops.find(curTok.value) != ops.end())) {
         Token opTok = curTok;
@@ -61,13 +69,13 @@ shared_ptr<AstNode> Parser::expr() {
         if (right == nullptr) {
             throw "Expected expr after op tok";
         }
-        left = shared_ptr<AstNode>(new BinOpNode(left, opTok, right));
+        left = AstNode(new BinOpNode(left, opTok, right));
     }
 
     return left;
 }
 
-shared_ptr<AstNode> Parser::comp_expr1() {
+AstNode Parser::comp_expr1() {
     if (curTok.type == OP && curTok.value == "!") {
         Token opTok = curTok;
         getNext();
@@ -76,16 +84,15 @@ shared_ptr<AstNode> Parser::comp_expr1() {
         if (node == nullptr) {
             throw "Expected expr after op tok";
         }
-        return shared_ptr<AstNode>(new UnaryOpNode(opTok, node));
+        return AstNode(new UnaryOpNode(opTok, node));
     }
 
     return comp_expr2();
 }
 
-shared_ptr<AstNode> Parser::comp_expr2() {
+AstNode Parser::comp_expr2() {
     auto left = arith_expr();
-    std::unordered_map<std::string, bool> ops = {{"<", true}, {">", true}, {"<=", true}, {">=", true},
-        {"==", true}, {"!=", true}};
+    std::set<std::string> ops = {"<", ">", "<=", ">=", "==", "!="};
 
     while (curTok.type == OP && (ops.find(curTok.value) != ops.end())) {
         Token opTok = curTok;
@@ -95,7 +102,7 @@ shared_ptr<AstNode> Parser::comp_expr2() {
         if (right == nullptr) {
             throw "Expected expr after op tok";
         }
-        left = shared_ptr<AstNode>(new BinOpNode(left, opTok, right));
+        left = AstNode(new BinOpNode(left, opTok, right));
     }
 
     return left;
@@ -103,9 +110,9 @@ shared_ptr<AstNode> Parser::comp_expr2() {
 
 
 // Arithmetic parsing working
-shared_ptr<AstNode> Parser::arith_expr() {
+AstNode Parser::arith_expr() {
     auto left = term();
-    std::unordered_map<std::string, bool> ops = {{"+", true}, {"-", true}};
+    std::set<std::string> ops = {"+", "-"};
 
     while (curTok.type == OP && (ops.find(curTok.value) != ops.end())) {
         Token opTok = curTok;
@@ -115,15 +122,15 @@ shared_ptr<AstNode> Parser::arith_expr() {
         if (right == nullptr) {
             throw "Expected expr after op tok";
         }
-        left = shared_ptr<AstNode>(new BinOpNode(left, opTok, right));
+        left = AstNode(new BinOpNode(left, opTok, right));
     }
 
     return left;
 }
 
-shared_ptr<AstNode> Parser::term() {
+AstNode Parser::term() {
     auto left = power();
-    std::unordered_map<std::string, bool> ops = {{"*", true}, {"/", true}, {"%", true}};
+    std::set<std::string> ops = {"*", "/", "%"};
 
     while (curTok.type == OP && (ops.find(curTok.value) != ops.end())) {
         Token opTok = curTok;
@@ -133,13 +140,13 @@ shared_ptr<AstNode> Parser::term() {
         if (right == nullptr) {
             throw "Expected expr after op tok";
         }
-        left = shared_ptr<AstNode>(new BinOpNode(left, opTok, right));
+        left = AstNode(new BinOpNode(left, opTok, right));
     }
 
     return left;
 }
 
-shared_ptr<AstNode> Parser::power() {
+AstNode Parser::power() {
     auto left = atom();
 
     while (curTok.type == OP && curTok.value == "^") {
@@ -150,13 +157,13 @@ shared_ptr<AstNode> Parser::power() {
         if (right == nullptr) {
             throw "Expected expr after op tok";
         }
-        left = shared_ptr<AstNode>(new BinOpNode(left, opTok, right));
+        left = AstNode(new BinOpNode(left, opTok, right));
     }
 
     return left;
 }
 
-shared_ptr<AstNode> Parser::atom() {
+AstNode Parser::atom() {
     Token tok = curTok;
 
     if (tok.type == OP && (tok.value == "+" || tok.value == "-")) {
@@ -165,27 +172,31 @@ shared_ptr<AstNode> Parser::atom() {
         if (node == nullptr) {
             throw "Expected atom after unary operator.";
         }
-        return shared_ptr<AstNode>(new UnaryOpNode(tok, node));
+        return AstNode(new UnaryOpNode(tok, node));
     } else if (tok.type == INT) {
         getNext();
-        return shared_ptr<AstNode>(new NumberNode(tok));
+        return AstNode(new NumberNode(tok));
     } else if (tok.type == DOUBLE) {
         getNext();
-        return shared_ptr<AstNode>(new NumberNode(tok));
+        return AstNode(new NumberNode(tok));
     } else if (tok.type == STRING) {
         getNext();
-        return shared_ptr<AstNode>(new StringNode(tok));
+        return AstNode(new StringNode(tok));
+    } else if (tok.type == STRING) {
+        getNext();
+        return AstNode(new VarAccessNode(tok));
     } else if (tok.type == LPAREN) {
         getNext();
         auto node = arith_expr();
         if (node == nullptr) {
             throw "Expected expr after parenthesis";
         }
+
         if (curTok.type != RPAREN) {
             throw "Expected ')'";
         }
         getNext();
-        return shared_ptr<AstNode>(new StringNode(tok));
+        return AstNode(new StringNode(tok));
     }
 
     throw "No atom found";

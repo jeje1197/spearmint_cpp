@@ -32,16 +32,14 @@ char Lexer::lookAhead(int steps) {
 std::vector<Token> Lexer::getTokens() {
     std::vector<Token> tokens;
     std::string operators = "+-*/^%=<>!";
+    std::set<std::string> keywords = {"var", "if", "for", "while", "fun", "class"};
 
     while (curChar != '\0') {
         std::string next2chars = std::string(1, curChar) + lookAhead(1);
 
-        if (curChar == ' ' || curChar == '\t') {
+        if (curChar == ' ' || curChar == '\t' || curChar == '\n') {
             // Skip whitespace
-        } else if (curChar == '\n') { // Newlines
-            Token token(NEWLINE, curChar);
-            tokens.push_back(token);
-        } else if (isalpha(curChar) || curChar == '_') {
+        } else if (isalpha(curChar) || curChar == '_') { // Keywords and Identifiers
             std::string str(1, curChar);
             getNext();
 
@@ -49,7 +47,12 @@ std::vector<Token> Lexer::getTokens() {
                 str += curChar;
                 getNext();
             }
-            tokens.push_back(Token(ID, str));
+
+            if (keywords.find(str)!= keywords.end()) {
+                tokens.push_back(Token(KEYWORD, str));
+            } else {
+                tokens.push_back(Token(ID, str));
+            }
             continue;
         } else if (isdigit(curChar)) { // Numbers
             std::string number(1, curChar);

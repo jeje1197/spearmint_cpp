@@ -4,8 +4,7 @@
 #include "Token.h"
 #include "AstNodes.h"
 #include <vector>
-#include <unordered_map>
-#include <memory>
+#include <set>
 
 class Parser {
     public:
@@ -18,26 +17,28 @@ class Parser {
         bool hasNext(int steps);
         void getNext();
         Token lookAhead(int steps);
+        void skipSemis();
 
-        std::shared_ptr<AstNode> parse();
+        // Parse Entry Point
+        AstNode parse();
 
         // Statement Parsing
-        std::shared_ptr<AstNode> statement();
+        std::vector<AstNode> statements();
+        AstNode statement();
 
 
-        // Variable Actions
-        std::shared_ptr<AstNode> varDeclaration();
-        std::shared_ptr<AstNode> varAssign();
-        std::shared_ptr<AstNode> varAccess();
+        // Variable Action Parsing
+        AstNode varDeclaration();
+        AstNode varAssign();
 
         // Expression Parsing
-        std::shared_ptr<AstNode> expr();
-        std::shared_ptr<AstNode> comp_expr1();
-        std::shared_ptr<AstNode> comp_expr2();
-        std::shared_ptr<AstNode> arith_expr();
-        std::shared_ptr<AstNode> term();
-        std::shared_ptr<AstNode> power();
-        std::shared_ptr<AstNode> atom();
+        AstNode expr();
+        AstNode comp_expr1();
+        AstNode comp_expr2();
+        AstNode arith_expr();
+        AstNode term();
+        AstNode power();
+        AstNode atom();
 
 };
 

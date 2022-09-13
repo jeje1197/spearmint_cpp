@@ -1,5 +1,4 @@
 #include <iostream>
-#include <sstream>
 #include <memory>
 
 #include "Token.h"
@@ -7,11 +6,9 @@
 #include "Parser.h"
 #include "AstNodes.h"
 
-using std::shared_ptr;
-
 int main()
 {
-    std::string input = " !10 < 5 || 1";
+    std::string input = " \n!10 < 5 || 1";
 
     // Lexer
     std::cout << "Starting lexing." << std::endl;
@@ -33,7 +30,7 @@ int main()
 
 
     // Parser
-    shared_ptr<AstNode> ast = nullptr;
+    AstNode ast = nullptr;
     std::cout << "Starting parsing." << std::endl;
     try {
         Parser parser(tokens);

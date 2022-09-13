@@ -5,9 +5,8 @@
 #include <memory>
 #include "Token.h"
 
-using std::shared_ptr;
 
-class AstNode {
+class AstNodeBase {
     public:
         std::string type;
 
@@ -15,8 +14,9 @@ class AstNode {
             return "Error: AstNode.toString()";
         }
 };
+typedef std::shared_ptr<AstNodeBase> AstNode;
 
-class NumberNode : public AstNode {
+class NumberNode : public AstNodeBase {
     public:
         std::string value;
 
@@ -30,7 +30,7 @@ class NumberNode : public AstNode {
         }
 };
 
-class StringNode : public AstNode {
+class StringNode : public AstNodeBase {
     public:
         std::string value;
 
@@ -44,12 +44,58 @@ class StringNode : public AstNode {
         }
 };
 
-class UnaryOpNode : public AstNode {
+class VarDeclarationNode : public AstNodeBase {
+    public:
+        std::string varName;
+        AstNode exprNode;
+
+        VarDeclarationNode(Token varNameTok, AstNode exprNode) {
+            this->type = "VarDeclarationNode";
+            this->varName = varNameTok.value;
+            this->exprNode = exprNode;
+        }
+
+        std::string toString() {
+            return "(VarDeclarationNode: " + varName + " = " + exprNode->toString() +")";
+        }
+};
+
+class VarAssignNode : public AstNodeBase {
+    public:
+        std::string varName;
+        AstNode exprNode;
+
+        VarAccessNode(Token varNameTok, AstNode exprNode) {
+            this->type = "VarAssignNode";
+            this->varName = varNameTok.value;
+            this->exprNode = exprNode;
+        }
+
+        std::string toString() {
+            return "(VarAssignNode: " + varName + " = " + exprNode->toString() + ")";
+        }
+};
+
+class VarAccessNode : public AstNodeBase {
+    public:
+        std::string varName;
+
+        VarAccessNode(Token tok) {
+            this->type = "VarAccessNode";
+            this->varName = tok.value;
+        }
+
+        std::string toString() {
+            return "(VarAccessNode: " + varName + ")";
+        }
+};
+
+class UnaryOpNode : public AstNodeBase {
     public:
         std::string op;
-        shared_ptr<AstNode> node = nullptr;
+        AstNode node = nullptr;
 
-        UnaryOpNode(Token opTok, shared_ptr<AstNode> node) {
+        UnaryOpNode(Token opTok, AstNode node) {
             this->type = "UnaryOpNode";
             this->op = opTok.value;
             this->node = node;
@@ -60,13 +106,13 @@ class UnaryOpNode : public AstNode {
         }
 };
 
-class BinOpNode : public AstNode {
+class BinOpNode : public AstNodeBase {
     public:
-        shared_ptr<AstNode> left;
+        AstNode left;
         std::string op;
-        shared_ptr<AstNode> right;
+        AstNode right;
 
-        BinOpNode(shared_ptr<AstNode> left, Token opTok, shared_ptr<AstNode> right) {
+        BinOpNode(AstNode left, Token opTok, AstNode right) {
             this->type = "BinOpNode";
             this->left = left;
             this->op = opTok.value;

@@ -5,6 +5,7 @@
 #include <vector>
 #include <set>
 #include "Token.h"
+#include "Exception.h"
 
 class Lexer {
     public:

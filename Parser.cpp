@@ -80,7 +80,7 @@ AstNode Parser::comp_expr() {
     return binOp(&arith_expr, {"<", ">", "<=", ">=", "==", "!="}, &arith_expr);
 }
 
-// Arithmetic parsing working
+// Arithmetic parsing
 AstNode Parser::arith_expr() {
     return binOp(&term, {"+", "-"}, &term);
 }
@@ -95,34 +95,36 @@ AstNode Parser::power() {
 
 AstNode Parser::atom() {
     Token tok = curTok;
+    std::set<std::string> unaryOps = {"+", "-"};
 
-    if (tok.type == OP && (tok.value == "+" || tok.value == "-")) {
+
+    if (tok.matches(OP, unaryOps)) {
         getNext();
         auto node = atom();
         if (node == nullptr) {
             throw "Expected atom after unary operator.";
         }
         return AstNode(new UnaryOpNode(tok, node));
-    } else if (tok.type == INT) {
+    } else if (tok.matches(INT)) {
         getNext();
         return AstNode(new NumberNode(tok));
-    } else if (tok.type == DOUBLE) {
+    } else if (tok.matches(DOUBLE)) {
         getNext();
         return AstNode(new NumberNode(tok));
-    } else if (tok.type == STRING) {
+    } else if (tok.matches(STRING)) {
         getNext();
         return AstNode(new StringNode(tok));
-    } else if (tok.type == STRING) {
+    } else if (tok.matches(ID)) {
         getNext();
         return AstNode(new VarAccessNode(tok));
-    } else if (tok.type == LPAREN) {
+    } else if (tok.matches(LPAREN)) {
         getNext();
         auto node = arith_expr();
         if (node == nullptr) {
             throw "Expected expr after parenthesis";
         }
 
-        if (curTok.type != RPAREN) {
+        if (!curTok.matches(RPAREN)) {
             throw "Expected ')'";
         }
         getNext();
@@ -136,7 +138,7 @@ AstNode Parser::atom() {
 AstNode Parser::binOp(ParserFunction func1, std::set<std::string> ops, ParserFunction func2) {
     auto left = ((*this).*func1)();
 
-    while (curTok.type == OP && (ops.find(curTok.value) != ops.end())) {
+    while (curTok.matches(OP, ops)) {
         Token opTok = curTok;
         getNext();
 

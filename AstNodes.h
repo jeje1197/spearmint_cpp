@@ -1,6 +1,7 @@
 #ifndef ASTNODES_H_INCLUDED
 #define ASTNODES_H_INCLUDED
 
+#include <string>
 #include <iostream>
 #include <memory>
 #include "Token.h"

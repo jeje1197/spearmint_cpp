@@ -83,7 +83,7 @@ std::vector<Token> Lexer::getTokens() {
             while (curChar != '"') {
 
                 if (curChar == '\0') {
-                    throw "Unterminated string";
+                    throw Exception("Unterminated string");
                 }
                 str += curChar;
                 this->getNext();
@@ -115,7 +115,7 @@ std::vector<Token> Lexer::getTokens() {
         } else if (curChar == ']') {
             tokens.push_back(Token(RBRACKET, curChar));
         } else {
-            throw "Invalid char: " + curChar;
+            throw "Invalid Character: " + curChar;
         }
         this->getNext();
     }

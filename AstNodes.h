@@ -141,20 +141,30 @@ class IfNode : public AstNodeBase {
 
 class ForNode : public AstNodeBase {
     public:
-        AstNode initNode, condNode, updateNode;
+        AstNode initStatement, condNode, updateStatement;
         std::vector<AstNode> statements;
 
-        ForNode(AstNode initNode, AstNode condNode, AstNode updateNode, std::vector<AstNode>& statements) {
+        ForNode(AstNode initStatement, AstNode condNode, AstNode updateStatement, std::vector<AstNode>& statements) {
             this->type = "ForNode";
-            this->initNode = initNode;
+            this->initStatement = initStatement;
             this->condNode = condNode;
-            this->updateNode = updateNode;
+            this->updateStatement = updateStatement;
             this->statements = statements;
         }
 
         std::string toString() {
-            return "(ForNode I: " + initNode->toString() + " C: " + condNode->toString() + " U: " +
-                updateNode->toString() + " do {})";
+            return "(ForNode I: " + initStatement->toString() + " C: " + condNode->toString() + " U: " +
+                updateStatement->toString() + " do {" + astListToString(statements) + "})";
+        }
+
+        std::string astListToString(std::vector<AstNode>& ast) {
+            std::string output;
+
+            for (int i=0; i < ast.size(); i++) {
+                output += ast.at(i)->toString();
+            }
+
+            return output;
         }
 };
 

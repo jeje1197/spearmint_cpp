@@ -59,6 +59,8 @@ AstNode Parser::statement() {
         return varDeclaration();
     } else if (curTok.matches(ID)) {
         return varAssign();
+    } else if (curTok.matches(KEYWORD, "for")) {
+        return forStatement();
     } else if (curTok.matches(KEYWORD, "while")) {
         return whileStatement();
     }
@@ -145,6 +147,63 @@ AstNode Parser::ifStatement() {
         getNext();
 
     return AstNode(new IfNode(curTok));
+}
+
+AstNode Parser::forStatement() {
+    if (!curTok.matches(KEYWORD, "for")) {
+            throw Exception("Expected keyword 'for'");
+        }
+        getNext();
+
+    if (!curTok.matches(LPAREN)) {
+            throw Exception("Expected '('");
+        }
+        getNext();
+
+    AstNode init_statement = statement();
+    if (init_statement == nullptr) {
+        throw Exception("Expected  statement");
+    }
+
+    if (!curTok.matches(SEMICOLON)) {
+            throw Exception("Expected ';'");
+        }
+        getNext();
+
+    AstNode cond_node = expr();
+    if (cond_node == nullptr) {
+        throw Exception("Expected conditional expression");
+    }
+
+    if (!curTok.matches(SEMICOLON)) {
+            throw Exception("Expected ';'");
+        }
+        getNext();
+
+    AstNode update_statement = statement();
+    if (update_statement == nullptr) {
+        throw Exception("Expected  statement");
+    }
+
+    if (!curTok.matches(RPAREN)) {
+            throw Exception("Expected ')'");
+        }
+        getNext();
+
+
+    if (!curTok.matches(LBRACE)) {
+            throw Exception("Expected '{'");
+        }
+        getNext();
+
+    std::vector<AstNode> statement_list = statements(RBRACE);
+
+    if (!curTok.matches(RBRACE)) {
+            throw Exception("Expected '}'");
+        }
+        getNext();
+
+    return AstNode(new ForNode(init_statement, cond_node, update_statement, statement_list));
 }
 
 AstNode Parser::whileStatement() {

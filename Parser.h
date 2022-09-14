@@ -38,7 +38,7 @@ class Parser {
         AstNode ifStatement();
 
         // Loop Parsing
-        //AstNode forStatement();
+        AstNode forStatement();
         AstNode whileStatement();
 
         // Function Parsing

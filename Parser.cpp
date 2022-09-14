@@ -2,7 +2,7 @@
 
 Parser::Parser(std::vector<Token>& tokens) {
     if (tokens.size() <= 1) {
-        throw "No tokens passed to Parser.";
+        throw Exception("No tokens passed to Parser.");
     }
     this->tokens = &tokens;
     this->index = 0;
@@ -32,28 +32,81 @@ void Parser::skipSemis() {
     }
 }
 
-AstNode Parser::parse() {
-    return statement();
+std::vector<AstNode> Parser::parse() {
+    return statements(END);
 }
 
-std::vector<AstNode> Parser::statements() {
+std::vector<AstNode> Parser::statements(int ENDTYPE) {
     std::vector<AstNode> statements;
 
+    skipSemis();
+    while (!curTok.matches(ENDTYPE) || !curTok.matches(END)) {
+        AstNode statement_node = statement();
+        if (statement_node != nullptr) {
+                if (!curTok.matches(SEMICOLON)) {
+                    throw Exception("Expected semicolon after statement.");
+                }
+            statements.push_back(statement_node);
+            skipSemis();
+        }
+    }
 
     return statements;
 }
 
 AstNode Parser::statement() {
+    if (curTok.matches(KEYWORD, "var")) {
+        return varDeclaration();
+    } else if (curTok.matches(ID)) {
+        return varAssign();
+    }
     return expr();
 }
 
 // Variable Action Parsing
 AstNode Parser::varDeclaration() {
-    return expr();
+    if (!curTok.matches(KEYWORD, "var")) {
+            throw Exception("Expected var keyword.");
+        }
+        getNext();
+
+    if (!curTok.matches(ID)) {
+            throw Exception("Expected identifier");
+        }
+        Token varName = curTok;
+        getNext();
+
+    if (!curTok.matches(OP, "=")) {
+            throw Exception("Expected '='");
+        }
+        getNext();
+
+    auto expr_node = expr();
+    if (expr_node == nullptr) {
+        throw Exception("Expected expression.");
+    }
+
+    return AstNode(new VarDeclarationNode(varName, expr_node));
 }
 
 AstNode Parser::varAssign() {
-    return expr();
+    if (!curTok.matches(ID)) {
+            throw Exception("Expected identifier");
+        }
+        Token varNameTok = curTok;
+        getNext();
+
+    if (!curTok.matches(OP, "=")) {
+            throw Exception("Expected '='");
+        }
+        getNext();
+
+    auto expr_node = expr();
+    if (expr_node == nullptr) {
+        throw Exception("Expected expression.");
+    }
+
+    return AstNode(new VarAssignNode(varNameTok, expr_node));
 }
 
 // Expression Parsing

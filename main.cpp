@@ -44,33 +44,33 @@ void run(std::string input) {
 
     try {
         tokens = lexer.getTokens();
-    } catch (char *err) {
-        std::cout << "Lexing Error: " << err << std::endl;
-        return;
-    } catch (char const *err) {
-        std::cout << "Lexing Error: " << err << std::endl;
+    } catch (Exception& err) {
+        err.show();
         return;
     }
 
-    std::cout << "Lexing complete." << std::endl;
+    //std::cout << "Lexing complete." << std::endl;
     //for (Token t: tokens) {
     //    std::cout << t << std::endl;
     //}
     //std::cout << "\n----------\n"<< std::endl;
 
-
     // Parser
-    AstNode ast = nullptr;
+    std::vector<AstNode> ast;
     //std::cout << "Starting parsing." << std::endl;
     try {
         Parser parser(tokens);
         ast = parser.parse();
-    } catch (char const* err) {
-        std::cout << "Parsing Error: " << err << std::endl;
+    } catch (Exception& err) {
+        err.show();
         return;
     }
     //std::cout << "Parsing complete." << std::endl;
-    std::cout << ast->toString() << std::endl;
+    for (AstNode statement: ast) {
+        std::cout << statement->toString() << std::endl;
+    }
+
 
     // Interpreter
+
 }

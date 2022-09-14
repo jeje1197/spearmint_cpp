@@ -21,7 +21,7 @@ class NumberNode : public AstNodeBase {
     public:
         std::string value;
 
-        NumberNode(Token tok) {
+        NumberNode(Token& tok) {
             this->type = "NumberNode";
             this->value = tok.value;
         }
@@ -35,7 +35,7 @@ class StringNode : public AstNodeBase {
     public:
         std::string value;
 
-        StringNode(Token tok) {
+        StringNode(Token& tok) {
             this->type = "StringNode";
             this->value = tok.value;
         }
@@ -50,7 +50,7 @@ class VarDeclarationNode : public AstNodeBase {
         std::string varName;
         AstNode exprNode;
 
-        VarDeclarationNode(Token varNameTok, AstNode exprNode) {
+        VarDeclarationNode(Token& varNameTok, AstNode exprNode) {
             this->type = "VarDeclarationNode";
             this->varName = varNameTok.value;
             this->exprNode = exprNode;
@@ -66,7 +66,7 @@ class VarAssignNode : public AstNodeBase {
         std::string varName;
         AstNode exprNode;
 
-        VarAssignNode(Token varNameTok, AstNode exprNode) {
+        VarAssignNode(Token& varNameTok, AstNode exprNode) {
             this->type = "VarAssignNode";
             this->varName = varNameTok.value;
             this->exprNode = exprNode;
@@ -81,7 +81,7 @@ class VarAccessNode : public AstNodeBase {
     public:
         std::string varName;
 
-        VarAccessNode(Token tok) {
+        VarAccessNode(Token& tok) {
             this->type = "VarAccessNode";
             this->varName = tok.value;
         }
@@ -96,7 +96,7 @@ class UnaryOpNode : public AstNodeBase {
         std::string op;
         AstNode node = nullptr;
 
-        UnaryOpNode(Token opTok, AstNode node) {
+        UnaryOpNode(Token& opTok, AstNode node) {
             this->type = "UnaryOpNode";
             this->op = opTok.value;
             this->node = node;
@@ -113,7 +113,7 @@ class BinOpNode : public AstNodeBase {
         std::string op;
         AstNode right;
 
-        BinOpNode(AstNode left, Token opTok, AstNode right) {
+        BinOpNode(AstNode left, Token& opTok, AstNode right) {
             this->type = "BinOpNode";
             this->left = left;
             this->op = opTok.value;

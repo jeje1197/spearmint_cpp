@@ -115,7 +115,7 @@ std::vector<Token> Lexer::getTokens() {
         } else if (curChar == ']') {
             tokens.push_back(Token(RBRACKET, curChar));
         } else {
-            throw "Invalid Character: " + curChar;
+            throw Exception("Invalid Char: ", curChar);
         }
         this->getNext();
     }

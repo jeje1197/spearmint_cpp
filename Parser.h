@@ -3,6 +3,9 @@
 
 #include "Token.h"
 #include "AstNodes.h"
+#include "Exception.h"
+
+#include <string>
 #include <vector>
 #include <set>
 
@@ -20,16 +23,24 @@ class Parser {
         void skipSemis();
 
         // Parse Entry Point
-        AstNode parse();
+        std::vector<AstNode> parse();
 
         // Statement Parsing
-        std::vector<AstNode> statements();
+        std::vector<AstNode> statements(int ENDTYPE);
         AstNode statement();
 
 
         // Variable Action Parsing
         AstNode varDeclaration();
         AstNode varAssign();
+
+        // If Statements
+
+        // Loop Parsing
+
+        // Function Parsing
+
+        // Structure Parsing
 
         // Expression Parsing
         AstNode expr();

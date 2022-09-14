@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iostream>
 #include <set>
+
 enum TokenType {
     NEWLINE,
     KEYWORD,

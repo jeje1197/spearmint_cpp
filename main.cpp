@@ -65,7 +65,12 @@ void run(std::string input) {
         err.show();
         return;
     }
-    //std::cout << "Parsing complete." << std::endl;
+
+    std::cout << "Parsing complete." << std::endl;
+    if (ast.empty()) {
+        return;
+    }
+
     for (AstNode statement: ast) {
         std::cout << statement->toString() << std::endl;
     }

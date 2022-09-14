@@ -35,8 +35,11 @@ class Parser {
         AstNode varAssign();
 
         // If Statements
+        AstNode ifStatement();
 
         // Loop Parsing
+        //AstNode forStatement();
+        AstNode whileStatement();
 
         // Function Parsing
 

@@ -133,8 +133,8 @@ class IfNode : public AstNodeBase {
             elseCaseStatements;
 
 
-        IfNode(std::vector<AstNode> caseConditions, std::vector<std::vector<AstNode>> caseStatements,
-               std::vector<std::vector<AstNode>> elseCaseStatements) {
+        IfNode(std::vector<AstNode>& caseConditions, std::vector<std::vector<AstNode>>& caseStatements,
+               std::vector<std::vector<AstNode>>& elseCaseStatements) {
             this->caseConditions = caseConditions;
             this->caseStatements = caseStatements;
             this->elseCaseStatements = elseCaseStatements;
@@ -210,7 +210,71 @@ class WhileNode : public AstNodeBase {
         }
 };
 
+class FunctionDefNode : public AstNodeBase {
+    public:
+        std::string name;
+        std::vector<std::string> argNames;
+        std::vector<AstNode> statements;
 
+        FunctionDefNode(Token& functionNameToken, std::vector<std::string>& argNames, std::vector<AstNode>& statements) {
+            this->type = "FunctionNode";
+            this->name = functionNameToken.value;
+            this->argNames = argNames;
+            this->statements = statements;
+        }
+
+        std::string toString() {
+            return "(FunctionNode Name: '" + name + + "' Args:(" + stringListToString(argNames) +
+                ") do {" + astListToString(statements) + "})";
+        }
+
+        std::string stringListToString(std::vector<std::string>& list) {
+            std::string output;
+
+            for (int i = 0; i < (int) list.size(); i++) {
+                output += list.at(i) + ", ";
+            }
+
+            return output;
+        }
+
+        std::string astListToString(std::vector<AstNode>& ast) {
+            std::string output;
+
+            for (int i = 0; i < (int) ast.size(); i++) {
+                output += ast.at(i)->toString() + " ";
+            }
+
+            return output;
+        }
+};
+
+class FunctionCallNode : public AstNodeBase {
+    public:
+        std::string name;
+        std::vector<AstNode> argNodes;
+
+        FunctionCallNode(Token& functionNameToken, std::vector<AstNode>& argNodes) {
+            this->type = "FunctionCallNode";
+            this->name = functionNameToken.value;
+            this->argNodes = argNodes;
+        }
+
+        std::string toString() {
+            return "(FunctionCallNode Name: '" + name + + "' Args:(" +
+                astListToString(argNodes) + ")";
+        }
+
+        std::string astListToString(std::vector<AstNode>& ast) {
+            std::string output;
+
+            for (int i = 0; i < (int) ast.size(); i++) {
+                output += ast.at(i)->toString() + " ";
+            }
+
+            return output;
+        }
+};
 
 
 

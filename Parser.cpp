@@ -58,6 +58,9 @@ AstNode Parser::statement() {
     if (curTok.matches(KEYWORD, "var")) {
         return varDeclaration();
     } else if (curTok.matches(ID)) {
+        if (lookAhead().matches(LPAREN)) {
+            return functionCall();
+        }
         return varAssign();
     } else if (curTok.matches(KEYWORD, "if")) {
         return ifStatement();
@@ -65,6 +68,8 @@ AstNode Parser::statement() {
         return forStatement();
     } else if (curTok.matches(KEYWORD, "while")) {
         return whileStatement();
+    } else if (curTok.matches(KEYWORD, "fun")) {
+        return functionDef();
     }
     return nullptr;
 }
@@ -155,7 +160,6 @@ AstNode Parser::ifStatement() {
         }
         getNext();
 
-    std::cout << curTok;
 
     // else if
     while (curTok.matches(KEYWORD, "else") && lookAhead().matches(KEYWORD, "if")) {
@@ -193,13 +197,9 @@ AstNode Parser::ifStatement() {
     }
 
 
-    std::cout << "Made it here";
     // else
-
-    std::cout << curTok.matches(KEYWORD, "else");
     if (curTok.matches(KEYWORD, "else")) {
         getNext();
-        std::cout << "After else";
 
         if (!curTok.matches(LBRACE)) {
                 throw Exception("Expected '{'");
@@ -310,6 +310,96 @@ AstNode Parser::whileStatement() {
     return AstNode(new WhileNode(cond_node, statement_list));
 }
 
+AstNode Parser::functionDef() {
+    if (!curTok.matches(KEYWORD, "fun")) {
+            throw Exception("Expected keyword 'fun'");
+        }
+        getNext();
+
+    if (!curTok.matches(ID)) {
+            throw Exception("Expected identifier");
+        }
+        Token functionNameTok = curTok;
+        getNext();
+
+    std::vector<std::string> argNames;
+    if (!curTok.matches(LPAREN)) {
+            throw Exception("Expected '('");
+        }
+        getNext();
+
+    if (curTok.matches(ID)) {
+        argNames.push_back(curTok.value);
+        getNext();
+
+        while (curTok.matches(COMMA)) {
+            getNext();
+
+            if (!curTok.matches(ID)) {
+                throw Exception("Expected identifier after ','");
+            }
+            argNames.push_back(curTok.value);
+            getNext();
+        }
+    }
+
+    if (!curTok.matches(RPAREN)) {
+            throw Exception("Expected ')'");
+        }
+        getNext();
+
+    if (!curTok.matches(LBRACE)) {
+            throw Exception("Expected '{'");
+        }
+        getNext();
+
+    std::vector<AstNode> statement_list = statements(RBRACE);
+
+    if (!curTok.matches(RBRACE)) {
+            throw Exception("Expected '}'");
+        }
+        getNext();
+
+    return AstNode(new FunctionDefNode(functionNameTok, argNames, statement_list));
+}
+
+AstNode Parser::functionCall() {
+    if (!curTok.matches(ID)) {
+            throw Exception("Expected identifier");
+        }
+        Token functionNameTok = curTok;
+        getNext();
+
+    if (!curTok.matches(LPAREN)) {
+            throw Exception("Expected '('");
+        }
+        getNext();
+
+    std::vector<AstNode> argNodes;
+    AstNode exprNode = expr();
+
+    if (exprNode != nullptr) {
+        argNodes.push_back(exprNode);
+
+        while (curTok.matches(COMMA)) {
+            getNext();
+
+            exprNode = expr();
+            if (exprNode == nullptr) {
+                throw Exception("Expected expression after ','");
+            }
+            argNodes.push_back(exprNode);
+        }
+    }
+
+    if (!curTok.matches(RPAREN)) {
+            throw Exception("Expected ')'");
+        }
+        getNext();
+
+    return AstNode(new FunctionCallNode(functionNameTok, argNodes));
+}
+
 
 
 // Expression Parsing
@@ -371,6 +461,9 @@ AstNode Parser::atom() {
         getNext();
         return AstNode(new StringNode(tok));
     } else if (tok.matches(ID)) {
+        if (lookAhead().matches(LPAREN)) {
+            return functionCall();
+        }
         getNext();
         return AstNode(new VarAccessNode(tok));
     } else if (tok.matches(LPAREN)) {

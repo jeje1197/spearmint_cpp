@@ -59,6 +59,8 @@ AstNode Parser::statement() {
         return varDeclaration();
     } else if (curTok.matches(ID)) {
         return varAssign();
+    } else if (curTok.matches(KEYWORD, "if")) {
+        return ifStatement();
     } else if (curTok.matches(KEYWORD, "for")) {
         return forStatement();
     } else if (curTok.matches(KEYWORD, "while")) {
@@ -114,6 +116,11 @@ AstNode Parser::varAssign() {
 }
 
 AstNode Parser::ifStatement() {
+    std::vector<AstNode> caseConditions;
+    std::vector<std::vector<AstNode>> caseStatements,
+        elseCaseStatements;
+
+    // if
     if (!curTok.matches(KEYWORD, "if")) {
             throw Exception("Expected keyword 'if'");
         }
@@ -129,6 +136,8 @@ AstNode Parser::ifStatement() {
         throw Exception("Expected conditional expression");
     }
 
+    caseConditions.push_back(cond_node);
+
     if (!curTok.matches(RPAREN)) {
             throw Exception("Expected ')'");
         }
@@ -139,14 +148,73 @@ AstNode Parser::ifStatement() {
         }
         getNext();
 
-    std::vector<AstNode> statement_list = statements(RBRACE);
+    caseStatements.push_back(statements(RBRACE));
 
     if (!curTok.matches(RBRACE)) {
             throw Exception("Expected '}'");
         }
         getNext();
 
-    return AstNode(new IfNode(curTok));
+    std::cout << curTok;
+
+    // else if
+    while (curTok.matches(KEYWORD, "else") && lookAhead().matches(KEYWORD, "if")) {
+        getNext();
+        getNext();
+
+        if (!curTok.matches(LPAREN)) {
+            throw Exception("Expected '('");
+        }
+        getNext();
+
+        cond_node = expr();
+        if (cond_node == nullptr) {
+            throw Exception("Expected conditional expression");
+        }
+
+        caseConditions.push_back(cond_node);
+
+        if (!curTok.matches(RPAREN)) {
+                throw Exception("Expected ')'");
+            }
+            getNext();
+
+        if (!curTok.matches(LBRACE)) {
+                throw Exception("Expected '{'");
+            }
+            getNext();
+
+        caseStatements.push_back(statements(RBRACE));
+
+        if (!curTok.matches(RBRACE)) {
+                throw Exception("Expected '}'");
+            }
+            getNext();
+    }
+
+
+    std::cout << "Made it here";
+    // else
+
+    std::cout << curTok.matches(KEYWORD, "else");
+    if (curTok.matches(KEYWORD, "else")) {
+        getNext();
+        std::cout << "After else";
+
+        if (!curTok.matches(LBRACE)) {
+                throw Exception("Expected '{'");
+            }
+            getNext();
+
+        elseCaseStatements.push_back(statements(RBRACE));
+
+        if (!curTok.matches(RBRACE)) {
+                throw Exception("Expected '}'");
+            }
+            getNext();
+    }
+
+    return AstNode(new IfNode(caseConditions, caseStatements, elseCaseStatements));
 }
 
 AstNode Parser::forStatement() {
@@ -244,7 +312,6 @@ AstNode Parser::whileStatement() {
 
 
 
-
 // Expression Parsing
 AstNode Parser::expr() {
     return binOp(&not_expr, {"&&", "||"}, &not_expr);
@@ -308,7 +375,7 @@ AstNode Parser::atom() {
         return AstNode(new VarAccessNode(tok));
     } else if (tok.matches(LPAREN)) {
         getNext();
-        auto node = arith_expr();
+        AstNode node = expr();
         if (node == nullptr) {
             throw Exception("Expected expr after parenthesis");
         }
@@ -317,7 +384,7 @@ AstNode Parser::atom() {
             throw Exception("Expected ')'");
         }
         getNext();
-        return AstNode(new StringNode(tok));
+        return node;
     }
 
     return nullptr;

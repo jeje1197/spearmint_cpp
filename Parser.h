@@ -41,7 +41,9 @@ class Parser {
         AstNode forStatement();
         AstNode whileStatement();
 
-        // Function Parsing
+        // Function Parsing (PassableFunctions?)
+        //AstNode functionDef();
+        //AstNode functionCall();
 
         // Structure Parsing
 

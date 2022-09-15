@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1663141788 source:c:\users\jo\desktop\c++\spearmint\main.cpp
+1663183398 source:c:\users\jo\desktop\c++\spearmint\main.cpp
 	<iostream>
 	<memory>
 	"Token.h"
@@ -20,7 +20,7 @@
 	"Token.h"
 	"Exception.h"
 
-1663143818 c:\users\jo\desktop\c++\spearmint\parser.h
+1663144461 c:\users\jo\desktop\c++\spearmint\parser.h
 	"Token.h"
 	"AstNodes.h"
 	"Exception.h"
@@ -28,7 +28,7 @@
 	<vector>
 	<set>
 
-1663143812 c:\users\jo\desktop\c++\spearmint\astnodes.h
+1663218135 c:\users\jo\desktop\c++\spearmint\astnodes.h
 	<string>
 	<vector>
 	<iostream>
@@ -44,7 +44,7 @@
 1663140891 source:c:\users\jo\desktop\c++\spearmint\token.cpp
 	"Token.h"
 
-1663142195 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
+1663218807 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
 	"Parser.h"
 
 1663114357 source:c:\users\jo\desktop\c++\spearmint\exception.cpp

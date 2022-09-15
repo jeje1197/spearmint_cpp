@@ -128,14 +128,30 @@ class VarAccessNode : public AstNodeBase {
 
 class IfNode : public AstNodeBase {
     public:
+        std::vector<AstNode> caseConditions;
+        std::vector<std::vector<AstNode>> caseStatements,
+            elseCaseStatements;
 
-        IfNode(Token& tok) {
-            //this->type = "IfNode";
-            //this->varName = tok.value;
+
+        IfNode(std::vector<AstNode> caseConditions, std::vector<std::vector<AstNode>> caseStatements,
+               std::vector<std::vector<AstNode>> elseCaseStatements) {
+            this->caseConditions = caseConditions;
+            this->caseStatements = caseStatements;
+            this->elseCaseStatements = elseCaseStatements;
         }
 
         std::string toString() {
-            return "(IfNode:)";
+            return "(IfNode: ...)";
+        }
+
+        std::string astListToString(std::vector<AstNode>& ast) {
+            std::string output;
+
+            for (int i = 0; i < (int) ast.size(); i++) {
+                output += ast.at(i)->toString() + " ";
+            }
+
+            return output;
         }
 };
 
@@ -160,8 +176,8 @@ class ForNode : public AstNodeBase {
         std::string astListToString(std::vector<AstNode>& ast) {
             std::string output;
 
-            for (int i=0; i < ast.size(); i++) {
-                output += ast.at(i)->toString();
+            for (int i = 0; i < (int) ast.size(); i++) {
+                output += ast.at(i)->toString() + " ";
             }
 
             return output;
@@ -186,8 +202,8 @@ class WhileNode : public AstNodeBase {
         std::string astListToString(std::vector<AstNode>& ast) {
             std::string output;
 
-            for (int i=0; i < ast.size(); i++) {
-                output += ast.at(i)->toString();
+            for (int i = 0; i < (int) ast.size(); i++) {
+                output += ast.at(i)->toString() + " ";
             }
 
             return output;

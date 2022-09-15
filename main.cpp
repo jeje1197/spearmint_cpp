@@ -50,9 +50,9 @@ void run(std::string input) {
     }
 
     //std::cout << "Lexing complete." << std::endl;
-    //for (Token t: tokens) {
-    //    std::cout << t << std::endl;
-    //}
+    for (Token t: tokens) {
+        std::cout << t << std::endl;
+    }
     //std::cout << "\n----------\n"<< std::endl;
 
     // Parser

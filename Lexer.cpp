@@ -32,7 +32,7 @@ char Lexer::lookAhead(int steps) {
 std::vector<Token> Lexer::getTokens() {
     std::vector<Token> tokens;
     std::string operators = "+-*/^%=<>!";
-    std::set<std::string> keywords = {"var", "if", "for", "while", "fun", "class"};
+    std::set<std::string> keywords = {"var", "if", "else", "for", "while", "fun", "class"};
 
     while (curChar != '\0') {
         std::string next2chars = std::string(1, curChar) + lookAhead(1);

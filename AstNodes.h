@@ -40,6 +40,21 @@ class AstNodeBase {
 };
 typedef std::shared_ptr<AstNodeBase> AstNode;
 
+// This purpose of this is to be able to pass a vector to the
+// visit method of the Interpreter
+class VectorWrapperNode : public AstNodeBase {
+    std::vector<AstNode> v;
+    public:
+        VectorWrapperNode(std::vector<AstNode> v) {
+            this->type = "VectorWrapperNode";
+            this->v = v;
+        }
+
+        std::vector<AstNode> getVector() {
+            return this->v;
+        }
+};
+
 class NumberNode : public AstNodeBase {
     public:
         std::string value;

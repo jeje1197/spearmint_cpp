@@ -80,8 +80,11 @@ void run(std::string input) {
         std::cout << statement->toString() << std::endl;
     }
 
+    // Put vector in AstWrapper
+    AstNode programStatements = AstNode(new VectorWrapperNode(ast));
+
     std::cout << "Starting interpreter." << std::endl;
     // Interpreter
     Interpreter interpreter("Console");
-    interpreter.visit(&ast);
+    interpreter.visit(programStatements);
 }

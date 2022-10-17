@@ -8,6 +8,6 @@ class Interpreter {
 		std::string fileName;
 		Interpreter();
 		Interpreter(std::string fileName);
-		Object visit(void* vector_or_node);
+		Object visit(AstNode vector_or_node);
 		Number visit_NumberNode(AstNode node);
 };

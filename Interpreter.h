@@ -1,6 +1,13 @@
-#ifndef INTERPRETER_H_INCLUDED
-#define INTERPRETER_H_INCLUDED
-
+#pragma once
+#include "AstNodes.h"
+#include "Classes.h"
 #include <string>
 
-#endif // INTERPRETER_H_INCLUDED
+class Interpreter {
+	public:
+		std::string fileName;
+		Interpreter();
+		Interpreter(std::string fileName);
+		Object visit(void* vector_or_node);
+		Number visit_NumberNode(AstNode node);
+};

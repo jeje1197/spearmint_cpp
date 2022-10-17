@@ -10,14 +10,15 @@ Parser::Parser(std::vector<Token>& tokens) {
 }
 
 bool Parser::hasNext(int steps = 1) {
-    return (index + steps) < (int) tokens->size();
+    return (index + steps) < (int)tokens->size();
 }
 
 void Parser::getNext() {
     if (hasNext()) {
         index++;
         curTok = tokens->at(index);
-    } else {
+    }
+    else {
         curTok = Token::getNullToken();
     }
 }
@@ -57,60 +58,62 @@ std::vector<AstNode> Parser::statements(int ENDTYPE) {
 AstNode Parser::statement() {
     if (curTok.matches(KEYWORD, "var")) {
         return varDeclaration();
-    } else if (curTok.matches(ID)) {
-        if (lookAhead().matches(LPAREN)) {
-            return functionCall();
-        }
+    }
+    else if (curTok.matches(ID) && lookAhead().matches(OP, "=")) {
         return varAssign();
-    } else if (curTok.matches(KEYWORD, "if")) {
+    }
+    else if (curTok.matches(KEYWORD, "if")) {
         return ifStatement();
-    } else if (curTok.matches(KEYWORD, "for")) {
+    }
+    else if (curTok.matches(KEYWORD, "for")) {
         return forStatement();
-    } else if (curTok.matches(KEYWORD, "while")) {
+    }
+    else if (curTok.matches(KEYWORD, "while")) {
         return whileStatement();
-    } else if (curTok.matches(KEYWORD, "fun")) {
+    }
+    else if (curTok.matches(KEYWORD, "fun")) {
         return functionDef();
     }
-    return nullptr;
+
+    return expr(); // Can return nullptr
 }
 
-// Variable Action Parsing
 AstNode Parser::varDeclaration() {
     if (!curTok.matches(KEYWORD, "var")) {
-            throw Exception("Expected keyword 'var'");
-        }
-        getNext();
+        throw Exception("Expected keyword var");
+    }
+    getNext();
 
     if (!curTok.matches(ID)) {
-            throw Exception("Expected identifier");
-        }
-        Token varName = curTok;
-        getNext();
+        throw Exception("Expected identifier");
+    }
+    Token varNameTok = curTok;
+    getNext();
 
     if (!curTok.matches(OP, "=")) {
-            throw Exception("Expected '='");
-        }
-        getNext();
+        throw Exception("Expected '='");
+    }
+    getNext();
 
     AstNode expr_node = expr();
     if (expr_node == nullptr) {
-        throw Exception("Expected expression.");
+        throw Exception("Expected expression");
     }
 
-    return AstNode(new VarDeclarationNode(varName, expr_node));
+    return AstNode(new VarDeclarationNode(varNameTok, expr_node));
 }
 
 AstNode Parser::varAssign() {
     if (!curTok.matches(ID)) {
-            throw Exception("Expected identifier");
-        }
-        Token varNameTok = curTok;
-        getNext();
+        throw Exception("Expected identifier");
+    }
+    Token varNameTok = curTok;
+    getNext();
 
     if (!curTok.matches(OP, "=")) {
-            throw Exception("Expected '='");
-        }
-        getNext();
+        throw Exception("Expected '='");
+    }
+    getNext();
 
     AstNode expr_node = expr();
     if (expr_node == nullptr) {
@@ -127,14 +130,14 @@ AstNode Parser::ifStatement() {
 
     // if
     if (!curTok.matches(KEYWORD, "if")) {
-            throw Exception("Expected keyword 'if'");
-        }
-        getNext();
+        throw Exception("Expected keyword 'if'");
+    }
+    getNext();
 
     if (!curTok.matches(LPAREN)) {
-            throw Exception("Expected '('");
-        }
-        getNext();
+        throw Exception("Expected '('");
+    }
+    getNext();
 
     AstNode cond_node = expr();
     if (cond_node == nullptr) {
@@ -144,21 +147,21 @@ AstNode Parser::ifStatement() {
     caseConditions.push_back(cond_node);
 
     if (!curTok.matches(RPAREN)) {
-            throw Exception("Expected ')'");
-        }
-        getNext();
+        throw Exception("Expected ')'");
+    }
+    getNext();
 
     if (!curTok.matches(LBRACE)) {
-            throw Exception("Expected '{'");
-        }
-        getNext();
+        throw Exception("Expected '{'");
+    }
+    getNext();
 
     caseStatements.push_back(statements(RBRACE));
 
     if (!curTok.matches(RBRACE)) {
-            throw Exception("Expected '}'");
-        }
-        getNext();
+        throw Exception("Expected '}'");
+    }
+    getNext();
 
 
     // else if
@@ -179,21 +182,21 @@ AstNode Parser::ifStatement() {
         caseConditions.push_back(cond_node);
 
         if (!curTok.matches(RPAREN)) {
-                throw Exception("Expected ')'");
-            }
-            getNext();
+            throw Exception("Expected ')'");
+        }
+        getNext();
 
         if (!curTok.matches(LBRACE)) {
-                throw Exception("Expected '{'");
-            }
-            getNext();
+            throw Exception("Expected '{'");
+        }
+        getNext();
 
         caseStatements.push_back(statements(RBRACE));
 
         if (!curTok.matches(RBRACE)) {
-                throw Exception("Expected '}'");
-            }
-            getNext();
+            throw Exception("Expected '}'");
+        }
+        getNext();
     }
 
 
@@ -202,16 +205,16 @@ AstNode Parser::ifStatement() {
         getNext();
 
         if (!curTok.matches(LBRACE)) {
-                throw Exception("Expected '{'");
-            }
-            getNext();
+            throw Exception("Expected '{'");
+        }
+        getNext();
 
         elseCaseStatements.push_back(statements(RBRACE));
 
         if (!curTok.matches(RBRACE)) {
-                throw Exception("Expected '}'");
-            }
-            getNext();
+            throw Exception("Expected '}'");
+        }
+        getNext();
     }
 
     return AstNode(new IfNode(caseConditions, caseStatements, elseCaseStatements));
@@ -219,14 +222,14 @@ AstNode Parser::ifStatement() {
 
 AstNode Parser::forStatement() {
     if (!curTok.matches(KEYWORD, "for")) {
-            throw Exception("Expected keyword 'for'");
-        }
-        getNext();
+        throw Exception("Expected keyword 'for'");
+    }
+    getNext();
 
     if (!curTok.matches(LPAREN)) {
-            throw Exception("Expected '('");
-        }
-        getNext();
+        throw Exception("Expected '('");
+    }
+    getNext();
 
     AstNode init_statement = statement();
     if (init_statement == nullptr) {
@@ -234,9 +237,9 @@ AstNode Parser::forStatement() {
     }
 
     if (!curTok.matches(SEMICOLON)) {
-            throw Exception("Expected ';'");
-        }
-        getNext();
+        throw Exception("Expected ';'");
+    }
+    getNext();
 
     AstNode cond_node = expr();
     if (cond_node == nullptr) {
@@ -244,9 +247,9 @@ AstNode Parser::forStatement() {
     }
 
     if (!curTok.matches(SEMICOLON)) {
-            throw Exception("Expected ';'");
-        }
-        getNext();
+        throw Exception("Expected ';'");
+    }
+    getNext();
 
     AstNode update_statement = statement();
     if (update_statement == nullptr) {
@@ -254,36 +257,36 @@ AstNode Parser::forStatement() {
     }
 
     if (!curTok.matches(RPAREN)) {
-            throw Exception("Expected ')'");
-        }
-        getNext();
+        throw Exception("Expected ')'");
+    }
+    getNext();
 
 
     if (!curTok.matches(LBRACE)) {
-            throw Exception("Expected '{'");
-        }
-        getNext();
+        throw Exception("Expected '{'");
+    }
+    getNext();
 
     std::vector<AstNode> statement_list = statements(RBRACE);
 
     if (!curTok.matches(RBRACE)) {
-            throw Exception("Expected '}'");
-        }
-        getNext();
+        throw Exception("Expected '}'");
+    }
+    getNext();
 
     return AstNode(new ForNode(init_statement, cond_node, update_statement, statement_list));
 }
 
 AstNode Parser::whileStatement() {
     if (!curTok.matches(KEYWORD, "while")) {
-            throw Exception("Expected keyword 'while'");
-        }
-        getNext();
+        throw Exception("Expected keyword 'while'");
+    }
+    getNext();
 
     if (!curTok.matches(LPAREN)) {
-            throw Exception("Expected '('");
-        }
-        getNext();
+        throw Exception("Expected '('");
+    }
+    getNext();
 
     AstNode cond_node = expr();
     if (cond_node == nullptr) {
@@ -291,42 +294,42 @@ AstNode Parser::whileStatement() {
     }
 
     if (!curTok.matches(RPAREN)) {
-            throw Exception("Expected ')'");
-        }
-        getNext();
+        throw Exception("Expected ')'");
+    }
+    getNext();
 
     if (!curTok.matches(LBRACE)) {
-            throw Exception("Expected '{'");
-        }
-        getNext();
+        throw Exception("Expected '{'");
+    }
+    getNext();
 
     std::vector<AstNode> statement_list = statements(RBRACE);
 
     if (!curTok.matches(RBRACE)) {
-            throw Exception("Expected '}'");
-        }
-        getNext();
+        throw Exception("Expected '}'");
+    }
+    getNext();
 
     return AstNode(new WhileNode(cond_node, statement_list));
 }
 
 AstNode Parser::functionDef() {
     if (!curTok.matches(KEYWORD, "fun")) {
-            throw Exception("Expected keyword 'fun'");
-        }
-        getNext();
+        throw Exception("Expected keyword 'fun'");
+    }
+    getNext();
 
     if (!curTok.matches(ID)) {
-            throw Exception("Expected identifier");
-        }
-        Token functionNameTok = curTok;
-        getNext();
+        throw Exception("Expected identifier");
+    }
+    Token functionNameTok = curTok;
+    getNext();
 
     std::vector<std::string> argNames;
     if (!curTok.matches(LPAREN)) {
-            throw Exception("Expected '('");
-        }
-        getNext();
+        throw Exception("Expected '('");
+    }
+    getNext();
 
     if (curTok.matches(ID)) {
         argNames.push_back(curTok.value);
@@ -344,67 +347,57 @@ AstNode Parser::functionDef() {
     }
 
     if (!curTok.matches(RPAREN)) {
-            throw Exception("Expected ')'");
-        }
-        getNext();
+        throw Exception("Expected ')'");
+    }
+    getNext();
 
     if (!curTok.matches(LBRACE)) {
-            throw Exception("Expected '{'");
-        }
-        getNext();
+        throw Exception("Expected '{'");
+    }
+    getNext();
 
     std::vector<AstNode> statement_list = statements(RBRACE);
 
     if (!curTok.matches(RBRACE)) {
-            throw Exception("Expected '}'");
-        }
-        getNext();
+        throw Exception("Expected '}'");
+    }
+    getNext();
 
     return AstNode(new FunctionDefNode(functionNameTok, argNames, statement_list));
 }
 
-AstNode Parser::functionCall() {
-    if (!curTok.matches(ID)) {
-            throw Exception("Expected identifier");
-        }
-        Token functionNameTok = curTok;
-        getNext();
 
-    if (!curTok.matches(LPAREN)) {
-            throw Exception("Expected '('");
-        }
-        getNext();
-
-    std::vector<AstNode> argNodes;
-    AstNode exprNode = expr();
-
-    if (exprNode != nullptr) {
-        argNodes.push_back(exprNode);
-
-        while (curTok.matches(COMMA)) {
-            getNext();
-
-            exprNode = expr();
-            if (exprNode == nullptr) {
-                throw Exception("Expected expression after ','");
-            }
-            argNodes.push_back(exprNode);
-        }
+AstNode Parser::classDef() {
+    if (!curTok.matches(KEYWORD, "class")) {
+        throw Exception("Expected keyword 'class'");
     }
+    getNext();
 
-    if (!curTok.matches(RPAREN)) {
-            throw Exception("Expected ')'");
-        }
-        getNext();
+    if (!curTok.matches(ID)) {
+        throw Exception("Expected class name identifier");
+    }
+    Token classNameTok = curTok;
+    getNext();
 
-    return AstNode(new FunctionCallNode(functionNameTok, argNodes));
+    if (!curTok.matches(LBRACE)) {
+        throw Exception("Expected '{'");
+    }
+    getNext();
+
+    std::vector<AstNode> classStatements = statements(RBRACE);
+
+    if (!curTok.matches(RBRACE)) {
+        throw Exception("Expected '}'");
+    }
+    getNext();
+
+    return AstNode(new ClassDefNode(classNameTok, classStatements));
 }
-
 
 
 // Expression Parsing
 AstNode Parser::expr() {
-    return binOp(&not_expr, {"&&", "||"}, &not_expr);
+    return binOp(&Parser::not_expr, { "&&", "||" }, &Parser::not_expr);
 }
 
 AstNode Parser::not_expr() {
@@ -414,7 +407,7 @@ AstNode Parser::not_expr() {
 
         auto node = comp_expr();
         if (node == nullptr) {
-            throw "Expected expr after op tok";
+            throw Exception("Expected expr after op tok");
         }
         return AstNode(new UnaryOpNode(opTok, node));
     }
@@ -423,25 +416,31 @@ AstNode Parser::not_expr() {
 }
 
 AstNode Parser::comp_expr() {
-    return binOp(&arith_expr, {"<", ">", "<=", ">=", "==", "!="}, &arith_expr);
+    return binOp(&Parser::arith_expr, { "<", ">", "<=", ">=", "==", "!=" }, &Parser::arith_expr);
 }
 
 // Arithmetic parsing
 AstNode Parser::arith_expr() {
-    return binOp(&term, {"+", "-"}, &term);
+    return binOp(&Parser::term, {"+", "-"}, &Parser::term);
 }
 
 AstNode Parser::term() {
-    return binOp(&power, {"*", "/", "%"}, &power);
+    return binOp(&Parser::power, { "*", "/", "%" }, &Parser::power);
 }
 
 AstNode Parser::power() {
-    return binOp(&atom, {"^"}, &power);
+    return binOp(&Parser::call, { "^" }, &Parser::power);
+}
+
+AstNode Parser::call() {
+    AstNode atom_node = atom();
+   
+    return atom_node;
 }
 
 AstNode Parser::atom() {
     Token tok = curTok;
-    std::set<std::string> unaryOps = {"+", "-"};
+    std::set<std::string> unaryOps = { "+", "-" };
 
 
     if (tok.matches(OP, unaryOps)) {
@@ -451,22 +450,24 @@ AstNode Parser::atom() {
             throw Exception("Expected atom after unary operator");
         }
         return AstNode(new UnaryOpNode(tok, node));
-    } else if (tok.matches(INT)) {
+    }
+    else if (tok.matches(INT)) {
         getNext();
         return AstNode(new NumberNode(tok));
-    } else if (tok.matches(DOUBLE)) {
+    }
+    else if (tok.matches(DOUBLE)) {
         getNext();
         return AstNode(new NumberNode(tok));
-    } else if (tok.matches(STRING)) {
+    }
+    else if (tok.matches(STRING)) {
         getNext();
         return AstNode(new StringNode(tok));
-    } else if (tok.matches(ID)) {
-        if (lookAhead().matches(LPAREN)) {
-            return functionCall();
-        }
+    }
+    else if (tok.matches(ID)) {
         getNext();
         return AstNode(new VarAccessNode(tok));
-    } else if (tok.matches(LPAREN)) {
+    }
+    else if (tok.matches(LPAREN)) {
         getNext();
         AstNode node = expr();
         if (node == nullptr) {
@@ -484,15 +485,15 @@ AstNode Parser::atom() {
 }
 
 AstNode Parser::binOp(ParserFunction func1, std::set<std::string> ops, ParserFunction func2) {
-    auto left = ((*this).*func1)();
+    AstNode left = ((*this).*func1)();
 
     while (curTok.matches(OP, ops)) {
         Token opTok = curTok;
         getNext();
 
-        auto right = ((*this).*func2)();
+        AstNode right = ((*this).*func2)();
         if (right == nullptr) {
-            throw "Expected expr after op tok";
+            throw Exception("Expected expr after operator");
         }
         left = AstNode(new BinOpNode(left, opTok, right));
     }

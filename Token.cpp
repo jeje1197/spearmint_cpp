@@ -1,5 +1,9 @@
 #include "Token.h"
 
+Token::Token() {
+    this->type = -1;
+    this->value = "NULLTOK";
+}
 
 Token::Token(int type, std::string value) {
     this->type = type;

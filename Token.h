@@ -2,9 +2,9 @@
 #define TOKEN_H_INCLUDED
 
 #include <string>
-#include <sstream>
 #include <iostream>
 #include <set>
+#include <sstream>
 
 enum TokenType {
     NEWLINE,
@@ -33,7 +33,7 @@ class Token {
     public:
         int type;
         std::string value;
-        Token() {};
+        Token();
         Token(int type, std::string value);
         Token(int type, char c);
         static Token getNullToken();

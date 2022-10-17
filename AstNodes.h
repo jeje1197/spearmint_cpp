@@ -15,6 +15,28 @@ class AstNodeBase {
         virtual std::string toString() {
             return "Error: AstNode.toString()";
         }
+
+        virtual ~AstNodeBase() = default;
+
+        static std::string stringListToString(std::vector<std::string>& list) {
+            std::string output;
+
+            for (int i = 0; i < (int) list.size(); i++) {
+                output += list.at(i) + ", ";
+            }
+
+            return output;
+        }
+
+        static std::string astListToString(std::vector<std::shared_ptr<AstNodeBase>>& ast) {
+            std::string output;
+
+            for (int i = 0; i < (int) ast.size(); i++) {
+                output += ast.at(i)->toString() + " ";
+            }
+
+            return output;
+        }
 };
 typedef std::shared_ptr<AstNodeBase> AstNode;
 
@@ -141,17 +163,7 @@ class IfNode : public AstNodeBase {
         }
 
         std::string toString() {
-            return "(IfNode: ...)";
-        }
-
-        std::string astListToString(std::vector<AstNode>& ast) {
-            std::string output;
-
-            for (int i = 0; i < (int) ast.size(); i++) {
-                output += ast.at(i)->toString() + " ";
-            }
-
-            return output;
+            return "(IfNode: cases...)";
         }
 };
 
@@ -172,16 +184,6 @@ class ForNode : public AstNodeBase {
             return "(ForNode I: " + initStatement->toString() + " C: " + condNode->toString() + " U: " +
                 updateStatement->toString() + " do {" + astListToString(statements) + "})";
         }
-
-        std::string astListToString(std::vector<AstNode>& ast) {
-            std::string output;
-
-            for (int i = 0; i < (int) ast.size(); i++) {
-                output += ast.at(i)->toString() + " ";
-            }
-
-            return output;
-        }
 };
 
 class WhileNode : public AstNodeBase {
@@ -198,16 +200,6 @@ class WhileNode : public AstNodeBase {
         std::string toString() {
             return "(WhileNode Cond:" + condNode->toString() + " do {" + astListToString(statements) + "})";
         }
-
-        std::string astListToString(std::vector<AstNode>& ast) {
-            std::string output;
-
-            for (int i = 0; i < (int) ast.size(); i++) {
-                output += ast.at(i)->toString() + " ";
-            }
-
-            return output;
-        }
 };
 
 class FunctionDefNode : public AstNodeBase {
@@ -216,36 +208,16 @@ class FunctionDefNode : public AstNodeBase {
         std::vector<std::string> argNames;
         std::vector<AstNode> statements;
 
-        FunctionDefNode(Token& functionNameToken, std::vector<std::string>& argNames, std::vector<AstNode>& statements) {
-            this->type = "FunctionNode";
-            this->name = functionNameToken.value;
+        FunctionDefNode(Token& functionNameTok, std::vector<std::string>& argNames, std::vector<AstNode>& statements) {
+            this->type = "FunctionDefNode";
+            this->name = functionNameTok.value;
             this->argNames = argNames;
             this->statements = statements;
         }
 
         std::string toString() {
-            return "(FunctionNode Name: '" + name + + "' Args:(" + stringListToString(argNames) +
+            return "(FunctionDefNode Name: '" + name + + "' Args:(" + stringListToString(argNames) +
                 ") do {" + astListToString(statements) + "})";
-        }
-
-        std::string stringListToString(std::vector<std::string>& list) {
-            std::string output;
-
-            for (int i = 0; i < (int) list.size(); i++) {
-                output += list.at(i) + ", ";
-            }
-
-            return output;
-        }
-
-        std::string astListToString(std::vector<AstNode>& ast) {
-            std::string output;
-
-            for (int i = 0; i < (int) ast.size(); i++) {
-                output += ast.at(i)->toString() + " ";
-            }
-
-            return output;
         }
 };
 
@@ -254,25 +226,34 @@ class FunctionCallNode : public AstNodeBase {
         std::string name;
         std::vector<AstNode> argNodes;
 
-        FunctionCallNode(Token& functionNameToken, std::vector<AstNode>& argNodes) {
+        FunctionCallNode(Token& functionNameTok, std::vector<AstNode>& argNodes) {
             this->type = "FunctionCallNode";
-            this->name = functionNameToken.value;
+            this->name = functionNameTok.value;
             this->argNodes = argNodes;
         }
 
         std::string toString() {
             return "(FunctionCallNode Name: '" + name + + "' Args:(" +
-                astListToString(argNodes) + ")";
+                astListToString(argNodes) + "))";
+        }
+};
+
+
+
+class ClassDefNode : public AstNodeBase {
+    public:
+        std::string name;
+        std::vector<AstNode> statements;
+
+        ClassDefNode(Token& classNameTok, std::vector<AstNode>& statements) {
+            this->type = "FunctionCallNode";
+            this->name = classNameTok.value;
+            this->statements = statements;
         }
 
-        std::string astListToString(std::vector<AstNode>& ast) {
-            std::string output;
-
-            for (int i = 0; i < (int) ast.size(); i++) {
-                output += ast.at(i)->toString() + " ";
-            }
-
-            return output;
+        std::string toString() {
+            return "(ClassDefNode Name: '" + name + + "' Statements: {" +
+                astListToString(statements) + "})";
         }
 };
 

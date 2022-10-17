@@ -29,7 +29,6 @@ class Parser {
         std::vector<AstNode> statements(int ENDTYPE);
         AstNode statement();
 
-
         // Variable Action Parsing
         AstNode varDeclaration();
         AstNode varAssign();
@@ -43,10 +42,13 @@ class Parser {
 
         // Function Parsing (PassableFunctions?)
         AstNode functionDef();
-        AstNode functionCall();
+        AstNode call();
+
+        // Lambda
+        //AstNode lambdaDef();
 
         // Structure Parsing
-        //AstNode classDef();
+        AstNode classDef();
         //AstNode classAccess();
 
         // Expression Parsing

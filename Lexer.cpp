@@ -39,6 +39,10 @@ std::vector<Token> Lexer::getTokens() {
 
         if (curChar == ' ' || curChar == '\t' || curChar == '\n') {
             // Skip whitespace
+        } else if (curChar == '#') { // Comments
+            while (curChar != '\n' && curChar != '\0') {
+                getNext();
+            }
         } else if (isalpha(curChar) || curChar == '_') { // Keywords and Identifiers
             std::string str(1, curChar);
             getNext();

@@ -86,5 +86,15 @@ void run(std::string input) {
     std::cout << "Starting interpreter." << std::endl;
     // Interpreter
     Interpreter interpreter("Console");
-    interpreter.visit(programStatements);
+    Object result = NullType();
+    try {
+        interpreter.visit(programStatements);
+    } catch (Exception& err) {
+        err.show();
+        return;
+    }
+
+    // Print out results
+    std::cout << result.getType() << std::endl;
+
 }

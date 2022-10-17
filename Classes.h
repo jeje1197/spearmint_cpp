@@ -4,9 +4,11 @@
 class Object {
     // Base Object in Spearmint
     std::string type;
+    std::string value;
     public:
         Object() {
             this->type = "BaseObject";
+            this->value = "BaseObjectValue";
         }
 
         Object(std::string type) {
@@ -25,18 +27,20 @@ class Object {
 
 };
 
-class VectorWrapper : public Object {
-    std::vector<AstNode> v;
-
+class NullType : public Object {
     public:
-      VectorWrapper(std::vector<AstNode> v) : Object("VectorWrapper") {
-          this->v = v;
-      }
+        NullType() : Object("Null") {
+        }
 };
 
 
 class Number : public Object {
-
+    std::string value;
+    public:
+        Number(std::string value) {
+            this->type = "Number";
+            this->value = value;
+        }
 };
 
 class String : public Object {

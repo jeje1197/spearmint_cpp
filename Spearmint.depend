@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1666041299 source:c:\users\jo\desktop\c++\spearmint\main.cpp
+1666042366 source:c:\users\jo\desktop\c++\spearmint\main.cpp
 	<iostream>
 	<memory>
 	"Token.h"
@@ -68,14 +68,15 @@
 
 1663143110 source:c:\users\jo\desktop\c++\spearmint\helper.cpp
 
-1666040813 c:\users\jo\desktop\c++\spearmint\interpreter.h
+1666042441 c:\users\jo\desktop\c++\spearmint\interpreter.h
+	"Exception.h"
 	"AstNodes.h"
 	"Classes.h"
 	<string>
 
-1666040863 source:c:\users\jo\desktop\c++\spearmint\interpreter.cpp
+1666042777 source:c:\users\jo\desktop\c++\spearmint\interpreter.cpp
 	"Interpreter.h"
 	<string>
 
-1666041101 c:\users\jo\desktop\c++\spearmint\classes.h
+1666043022 c:\users\jo\desktop\c++\spearmint\classes.h
 

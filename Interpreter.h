@@ -16,4 +16,7 @@ class Interpreter {
 		Object_sPtr visit_StringNode(AstNode node);
 		Object_sPtr visit_UnaryOpNode(AstNode node);
 		Object_sPtr visit_BinOpNode(AstNode node);
+		Object_sPtr visit_VarDeclarationNode(AstNode node);
+		Object_sPtr visit_VarAssignNode(AstNode node);
+		Object_sPtr visit_VarAccessNode(AstNode node);
 };

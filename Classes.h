@@ -63,11 +63,7 @@ class Object {
         }
 };
 
-class NullType : public Object {
-    public:
-        NullType() : Object("Null") {
-        }
-};
+Object_sPtr Null_sPtr = Object_sPtr(new Object("Null"));
 
 class Number : public Object {
     public:
@@ -86,7 +82,7 @@ class Number : public Object {
             } else {
                 this->illegalOperation();
             }
-            return Object_sPtr(new NullType());
+            return Null_sPtr;
         }
 };
 
@@ -107,7 +103,7 @@ class String : public Object {
             } else {
                 this->illegalOperation();
             }
-            return Object_sPtr(new NullType());
+            return Null_sPtr;
         }
 
 };

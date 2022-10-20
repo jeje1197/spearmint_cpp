@@ -32,7 +32,7 @@ Object_sPtr Interpreter::visit(AstNode node) {
         throw Exception("No visit_" + node->type + " method defined.");
     }
 
-    return Object_sPtr(new NullType());
+    return Null_sPtr;
 }
 
 Object_sPtr Interpreter::visit_VectorWrapperNode(AstNode node){
@@ -40,7 +40,7 @@ Object_sPtr Interpreter::visit_VectorWrapperNode(AstNode node){
     for (AstNode a: v) {
         visit(a);
     }
-    return Object_sPtr(new NullType());
+    return Null_sPtr;
 }
 
 Object_sPtr Interpreter::visit_NumberNode(AstNode node){
@@ -53,28 +53,44 @@ Object_sPtr Interpreter::visit_StringNode(AstNode node){
     return Object_sPtr(new String(strNode->value));
 }
 
+Object_sPtr Interpreter::visit_VarDeclarationNode(AstNode node){
+    std::shared_ptr<VarDeclarationNode> varNode = std::static_pointer_cast<VarDeclarationNode>(node);
+    return Null_sPtr;
+}
+
+Object_sPtr Interpreter::visit_VarAssignNode(AstNode node){
+    std::shared_ptr<VarDeclarationNode> varNode = std::static_pointer_cast<VarDeclarationNode>(node);
+    return Null_sPtr;
+}
+
+Object_sPtr Interpreter::visit_VarAccessNode(AstNode node){
+    std::shared_ptr<VarDeclarationNode> varNode = std::static_pointer_cast<VarDeclarationNode>(node);
+    return Null_sPtr;
+}
+
 Object_sPtr Interpreter::visit_UnaryOpNode(AstNode node){
-    return Object_sPtr(new NullType());
+    return Null_sPtr;
 }
 
 Object_sPtr Interpreter::visit_BinOpNode(AstNode node){
-    // Cast Node
+    // Cast shared_ptr<AstNode> to shared_ptr<BinOpNode>
     std::shared_ptr<BinOpNode> binOpNode = std::static_pointer_cast<BinOpNode>(node);
 
-    // Use unique ptr for vitual calls
+    // Use unique ptr for virtual calls
     Object_sPtr left = visit(binOpNode->left);
     Object_sPtr right = visit(binOpNode->right);
 
     if (binOpNode->op.compare("+") == 0) {
-        std::cout << left->add(right)->toString();
-
+        return left->add(right);
     } else if (binOpNode->op.compare("-") == 0) {
 
     } else if (binOpNode->op.compare("*") == 0) {
 
     } else if (binOpNode->op.compare("/") == 0) {
         ;
+    } else {
+
     }
-    return Object_sPtr(new NullType());
+    return Null_sPtr;
 }
 

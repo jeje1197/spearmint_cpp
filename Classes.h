@@ -207,28 +207,28 @@ class Number : public Object {
 
         Object_sPtr compare_lte(Object_sPtr other) {
             if (isInstance(other, "Number"))  {
-                return Object_sPtr(new Number(this->getStrValue() <= other->getStrValue()));
+                return Object_sPtr(new Number(this->getFloatValue() <= other->getFloatValue()));
             }
             return illegalOperation();
         }
 
         Object_sPtr compare_gte(Object_sPtr other) {
             if (isInstance(other, "Number"))  {
-                return Object_sPtr(new Number(this->getStrValue() >= other->getStrValue()));
+                return Object_sPtr(new Number(this->getFloatValue() >= other->getFloatValue()));
             }
             return illegalOperation();
         }
 
         Object_sPtr compare_ee(Object_sPtr other) {
             if (isInstance(other, "Number"))  {
-                return Object_sPtr(new Number(this->getStrValue() == other->getStrValue()));
+                return Object_sPtr(new Number(this->getFloatValue() == other->getFloatValue()));
             }
             return illegalOperation();
         }
 
         Object_sPtr compare_ne(Object_sPtr other) {
             if (isInstance(other, "Number"))  {
-                return Object_sPtr(new Number(this->getStrValue() != other->getStrValue()));
+                return Object_sPtr(new Number(this->getFloatValue() != other->getFloatValue()));
             }
             return illegalOperation();
         }

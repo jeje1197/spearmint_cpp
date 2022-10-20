@@ -40,7 +40,7 @@ void showWelcomeMessage() {
 
 void run(std::string input) {
     // Lexer
-    std::cout << "Starting lexing." << std::endl;
+    //std::cout << "Starting lexing." << std::endl;
     Lexer lexer = Lexer("Console", input);
     std::vector<Token> tokens;
 
@@ -51,15 +51,15 @@ void run(std::string input) {
         return;
     }
 
-    std::cout << "Lexing complete." << std::endl;
-    for (Token t: tokens) {
-        std::cout << t << std::endl;
-    }
+    //std::cout << "Lexing complete." << std::endl;
+    //for (Token t: tokens) {
+    //    std::cout << t << std::endl;
+    //}
     //std::cout << "\n----------\n"<< std::endl;
 
     // Parser
     std::vector<AstNode> ast;
-    std::cout << "Starting parsing." << std::endl;
+    //std::cout << "Starting parsing." << std::endl;
     try {
         Parser parser(tokens);
         ast = parser.parse();
@@ -68,22 +68,20 @@ void run(std::string input) {
         return;
     }
 
-    std::cout << "Parsing complete." << std::endl;
+    //std::cout << "Parsing complete." << std::endl;
     if (ast.empty()) {
         std::cout << "Ast is empty." << std::endl;
         return;
     }
 
-    std::cout << "Printing statements" << std::endl;
-    std::cout << "Number of statements: " << ast.size() << std::endl;
-    for (AstNode statement: ast) {
-        std::cout << statement->toString() << std::endl;
-    }
+    //std::cout << "Printing statements" << std::endl;
+    //std::cout << "Number of statements: " << ast.size() << std::endl;
+    //for (AstNode statement: ast) {
+    //    std::cout << statement->toString() << std::endl;
+    //}
 
     // Put vector in AstWrapper
     AstNode programStatements = AstNode(new VectorWrapperNode(ast));
-
-    std::cout << "Starting interpreter." << std::endl;
 
     // Interpreter
     Interpreter interpreter("Console");

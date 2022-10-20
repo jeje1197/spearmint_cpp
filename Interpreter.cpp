@@ -12,23 +12,25 @@ Interpreter::Interpreter(std::string fileName) {
 }
 
 
-Object_sPtr Interpreter::visit(AstNode node) {
+Object_sPtr Interpreter::visit(AstNode node, Context& ctx) {
     std::string type = node->type;
 
     if (type == "VectorWrapperNode") {
-        return visit_VectorWrapperNode(node);
+        return visit_VectorWrapperNode(node, ctx);
     } else if (type == "NumberNode") {
-        return visit_NumberNode(node);
+        return visit_NumberNode(node, ctx);
     } else if (type == "StringNode") {
-        return visit_StringNode(node);
+        return visit_StringNode(node, ctx);
     } else if (type == "UnaryOpNode") {
-        return visit_UnaryOpNode(node);
+        return visit_UnaryOpNode(node, ctx);
     } else if (type == "BinOpNode") {
-        return visit_BinOpNode(node);
+        return visit_BinOpNode(node, ctx);
     } else if (type == "VarDeclarationNode") {
-        return visit_VarDeclarationNode(node);
+        return visit_VarDeclarationNode(node, ctx);
     } else if (type == "VarAssignNode") {
-        return visit_VarAssignNode(node);
+        return visit_VarAssignNode(node, ctx);
+    } else if (type == "VarAccessNode") {
+        return visit_VarAccessNode(node, ctx);
     } else {
         throw Exception("No visit_" + node->type + " method defined.");
     }
@@ -36,43 +38,59 @@ Object_sPtr Interpreter::visit(AstNode node) {
     return Null_sPtr;
 }
 
-Object_sPtr Interpreter::visit_VectorWrapperNode(AstNode node){
+Object_sPtr Interpreter::visit_VectorWrapperNode(AstNode node, Context& ctx){
     std::vector<AstNode> v = std::static_pointer_cast<VectorWrapperNode>(node)->getVector();
     Object_sPtr retList = Object_sPtr(new List());
     for (AstNode a: v) {
-        retList->add(visit(a));
+        retList->add(visit(a, ctx));
     }
     return retList;
 }
 
-Object_sPtr Interpreter::visit_NumberNode(AstNode node){
+Object_sPtr Interpreter::visit_NumberNode(AstNode node, Context& ctx){
     std::shared_ptr<NumberNode> numNode = std::static_pointer_cast<NumberNode>(node);
     return Object_sPtr(new Number(std::stof(numNode->value)));
 }
 
-Object_sPtr Interpreter::visit_StringNode(AstNode node){
+Object_sPtr Interpreter::visit_StringNode(AstNode node, Context& ctx){
     std::shared_ptr<StringNode> strNode = std::static_pointer_cast<StringNode>(node);
     return Object_sPtr(new String(strNode->value));
 }
 
-Object_sPtr Interpreter::visit_VarDeclarationNode(AstNode node){
+Object_sPtr Interpreter::visit_VarDeclarationNode(AstNode node, Context& ctx){
     std::shared_ptr<VarDeclarationNode> varNode = std::static_pointer_cast<VarDeclarationNode>(node);
-    return Null_sPtr;
+    if (ctx.symbol_table->containsLocalKey(varNode->varName)) {
+        throw Exception("'" + varNode->varName + "' is already in scope.");
+    }
+
+    Object_sPtr value = visit(varNode->exprNode, ctx);
+    ctx.symbol_table->addLocal(varNode->varName, value);
+    return value;
 }
 
-Object_sPtr Interpreter::visit_VarAssignNode(AstNode node){
-    std::shared_ptr<VarDeclarationNode> varNode = std::static_pointer_cast<VarDeclarationNode>(node);
-    return Null_sPtr;
+Object_sPtr Interpreter::visit_VarAssignNode(AstNode node, Context& ctx){
+    std::shared_ptr<VarAssignNode> varNode = std::static_pointer_cast<VarAssignNode>(node);
+    if (!ctx.symbol_table->containsKeyAnywhere(varNode->varName)) {
+        throw Exception("'" + varNode->varName + "' has not been declared.");
+    }
+
+    Object_sPtr value = visit(varNode->exprNode, ctx);
+    ctx.symbol_table->update(varNode->varName, value);
+    return value;
 }
 
-Object_sPtr Interpreter::visit_VarAccessNode(AstNode node){
-    std::shared_ptr<VarDeclarationNode> varNode = std::static_pointer_cast<VarDeclarationNode>(node);
-    return Null_sPtr;
+Object_sPtr Interpreter::visit_VarAccessNode(AstNode node, Context& ctx){
+    std::shared_ptr<VarAccessNode> varNode = std::static_pointer_cast<VarAccessNode>(node);
+    if (!ctx.symbol_table->containsKeyAnywhere(varNode->varName)) {
+        throw Exception("'" + varNode->varName + "' has not been declared.");
+    }
+
+    return ctx.symbol_table->get(varNode->varName);
 }
 
-Object_sPtr Interpreter::visit_UnaryOpNode(AstNode node){
+Object_sPtr Interpreter::visit_UnaryOpNode(AstNode node, Context& ctx){
     std::shared_ptr<UnaryOpNode> unaryOpNode = std::static_pointer_cast<UnaryOpNode>(node);
-    Object_sPtr res = visit(unaryOpNode->expr_node);
+    Object_sPtr res = visit(unaryOpNode->exprNode, ctx);
 
     if (unaryOpNode->op.compare("-") == 0) {
         res = res->mul(Object_sPtr(new Number(-1)));
@@ -82,13 +100,13 @@ Object_sPtr Interpreter::visit_UnaryOpNode(AstNode node){
     return res;
 }
 
-Object_sPtr Interpreter::visit_BinOpNode(AstNode node){
+Object_sPtr Interpreter::visit_BinOpNode(AstNode node, Context& ctx){
     // Cast shared_ptr<AstNode> to shared_ptr<BinOpNode>
     std::shared_ptr<BinOpNode> binOpNode = std::static_pointer_cast<BinOpNode>(node);
 
     // Use unique ptr for virtual calls
-    Object_sPtr left = visit(binOpNode->left);
-    Object_sPtr right = visit(binOpNode->right);
+    Object_sPtr left = visit(binOpNode->left, ctx);
+    Object_sPtr right = visit(binOpNode->right, ctx);
 
     Object_sPtr res = Null_sPtr;
     if (binOpNode->op.compare("+") == 0) {

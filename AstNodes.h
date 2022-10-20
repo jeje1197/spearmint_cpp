@@ -87,16 +87,16 @@ class StringNode : public AstNodeBase {
 class UnaryOpNode : public AstNodeBase {
     public:
         std::string op;
-        AstNode expr_node;
+        AstNode exprNode;
 
-        UnaryOpNode(Token& opTok, AstNode expr_node) {
+        UnaryOpNode(Token& opTok, AstNode exprNode) {
             this->type = "UnaryOpNode";
             this->op = opTok.value;
-            this->expr_node = expr_node;
+            this->exprNode = exprNode;
         }
 
         std::string toString() {
-            return "(UnaryOpNode Op: " + op + " Node: "+ expr_node->toString() + ")";
+            return "(UnaryOpNode Op: " + op + " Node: "+ exprNode->toString() + ")";
         }
 };
 

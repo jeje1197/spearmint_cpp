@@ -3,10 +3,11 @@
 
 #include "Exception.h"
 #include "Classes.h"
+#include <string>
 #include <unordered_map>
 
 class SymbolTable {
-    unordered_map<std::string, Object_sPtr> symbol_table;
+    std::unordered_map<std::string, Object_sPtr> symbol_table;
     SymbolTable* parent = nullptr;
 
     public:
@@ -23,7 +24,7 @@ class SymbolTable {
         bool containsKeyAnywhere(std::string key) {
             SymbolTable* cur = this;
             while (cur != nullptr) {
-                if (cur.containsLocalKey(key)) {
+                if (cur->containsLocalKey(key)) {
                     return true;
                 }
                 cur = cur->parent;
@@ -32,21 +33,18 @@ class SymbolTable {
         }
 
         void addLocal(std::string key, Object_sPtr value) {
-            if (this->containsLocalKey(key)) {
-                throw Exception("'" + key + "' is already defined in scope.");
-            }
-            this->symbol_table.insert(key, value);
+            this->symbol_table[key] = value;
         }
 
         void update(std::string key, Object_sPtr value) {
             SymbolTable* cur = this;
             while (cur != nullptr) {
                 if (cur->containsLocalKey(key)) {
-                    return cur->symbol_table.insert(key, value);
+                    cur->symbol_table[key] = value;
+                    return;
                 }
                 cur = cur->parent;
             }
-            throw Exception("Cannot update key, value pair. '" + key + "' has not been declared.");
         }
 
         Object_sPtr get(std::string key) {
@@ -57,8 +55,8 @@ class SymbolTable {
                 }
                 cur = cur->parent;
             }
-            throw Exception("'" + key "' is not in scope.");
-            return Null_sPtr;
+            throw Exception("'" + key + "' is not in scope.");
+            return Object::NullType();
         }
 
         void remove(std::string key) {
@@ -67,10 +65,20 @@ class SymbolTable {
 };
 
 class Context {
-
     public:
-        Context() {
+        std::string name;
+        SymbolTable* symbol_table;
+
+        Context(std::string name, SymbolTable symbol_table) {
+            this->name = name;
+            this->symbol_table = &symbol_table;
         }
+
+        Context generateNewContext(std::string name) {
+            Context c = Context(name, SymbolTable(symbol_table));
+            return c;
+        }
+
 };
 
 

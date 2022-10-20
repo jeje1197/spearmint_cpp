@@ -86,8 +86,10 @@ void run(std::string input) {
     // Interpreter
     Interpreter interpreter("Console");
     Object_sPtr result = Object::NullType();
+
+    Context ctx = Context("Base Context", SymbolTable());
     try {
-        result = interpreter.visit(programStatements);
+        result = interpreter.visit(programStatements, ctx);
     } catch (Exception& err) {
         err.show();
         return;

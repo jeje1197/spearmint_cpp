@@ -179,7 +179,7 @@ class String : public Object {
             if (isInstance(other, "String"))  {
                 return Object_sPtr(new String(this->getStrValue() + other->getStrValue()));
             } else if (isInstance(other, "Number"))  {
-                return Object_sPtr(new String(this->getStrValue() + std::to_string(other->getFloatValue())));
+                return Object_sPtr(new String(this->getStrValue() + other->toString()));
             }
             return illegalOperation();
         }
@@ -249,7 +249,7 @@ class Number : public Object {
             if (isInstance(other, "Number"))  {
                 return Object_sPtr(new Number(this->getFloatValue() + other->getFloatValue()));
             } else if (isInstance(other, "String"))  {
-                return Object_sPtr(new String(std::to_string(this->getFloatValue()) + other->getStrValue()));
+                return Object_sPtr(new String(this->toString() + other->getStrValue()));
             }
             return illegalOperation();
         }

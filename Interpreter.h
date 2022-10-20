@@ -9,7 +9,6 @@
 class Interpreter {
 	public:
 		std::string fileName;
-		Object_sPtr result;
 
 		bool should_return = false;
 		bool should_break = false;
@@ -27,4 +26,6 @@ class Interpreter {
 		Object_sPtr visit_VarDeclarationNode(AstNode node, Context& ctx);
 		Object_sPtr visit_VarAssignNode(AstNode node, Context& ctx);
 		Object_sPtr visit_VarAccessNode(AstNode node, Context& ctx);
+
+
 };

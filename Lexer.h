@@ -13,6 +13,7 @@ class Lexer {
         std::string text;
         int index;
         char curChar;
+        Position curPos;
 
         Lexer(std::string fileName, std::string text);
 

@@ -29,13 +29,29 @@ enum TokenType {
     NULLTYPE
 };
 
+class Position {
+    public:
+        std::string fn;
+        int ln;
+        int col;
+
+        Position();
+        Position(std::string fn);
+        void advance(char c);
+        Position copy();
+        std::string toString();
+};
+
 class Token {
     public:
         int type;
         std::string value;
+        Position pos;
         Token();
         Token(int type, std::string value);
+        Token(int type, std::string value, Position& pos);
         Token(int type, char c);
+        Token(int type, char c, Position& pos);
         static Token getNullToken();
 
         bool matches(int type);

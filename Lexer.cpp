@@ -5,6 +5,7 @@ Lexer::Lexer(std::string fileName, std::string text) {
     this->text = text;
     this->index = 0;
     this->curChar = text.at(0);
+    this->curPos = Position(fileName);
 }
 
 bool Lexer::hasNext() {
@@ -13,6 +14,7 @@ bool Lexer::hasNext() {
 
 char Lexer::getNext() {
     if (hasNext()) {
+        this->curPos.advance(curChar);
         index++;
         curChar = text.at(index);
     } else {
@@ -44,6 +46,7 @@ std::vector<Token> Lexer::getTokens() {
                 getNext();
             }
         } else if (isalpha(curChar) || curChar == '_') { // Keywords and Identifiers
+            Position startPos = curPos.copy();
             std::string str(1, curChar);
             getNext();
 
@@ -53,12 +56,13 @@ std::vector<Token> Lexer::getTokens() {
             }
 
             if (keywords.find(str)!= keywords.end()) {
-                tokens.push_back(Token(KEYWORD, str));
+                tokens.push_back(Token(KEYWORD, str, startPos));
             } else {
-                tokens.push_back(Token(ID, str));
+                tokens.push_back(Token(ID, str, startPos));
             }
             continue;
         } else if (isdigit(curChar)) { // Numbers
+            Position startPos = curPos.copy();
             std::string number(1, curChar);
             this->getNext();
 
@@ -81,45 +85,46 @@ std::vector<Token> Lexer::getTokens() {
 
             continue;
         } else if (curChar == '"') { // Strings
+            Position startPos = curPos.copy();
             this->getNext();
 
             std::string str;
             while (curChar != '"') {
 
                 if (curChar == '\0') {
-                    throw Exception("Unterminated string");
+                    throw Exception("Unterminated string " + startPos.toString());
                 }
                 str += curChar;
                 this->getNext();
             }
 
-            tokens.push_back(Token(STRING, str));
+            tokens.push_back(Token(STRING, str, startPos));
         } else if (next2chars == "!=" || next2chars == "==" || next2chars == "<=" || next2chars == ">=" ||
                    next2chars == "&&" || next2chars == "||") { // Operators (2 char)
-            tokens.push_back(Token(OP, next2chars));
+            tokens.push_back(Token(OP, next2chars, curPos));
             this->getNext();
         } else if (operators.find(curChar) != std::string::npos) { // Operators (1 char)
-            tokens.push_back(Token(OP, curChar));
+            tokens.push_back(Token(OP, curChar, curPos));
         } else if (curChar == '.') {
-            tokens.push_back(Token(DOT, curChar));
+            tokens.push_back(Token(DOT, curChar, curPos));
         } else if (curChar == ',') {
-            tokens.push_back(Token(COMMA, curChar));
+            tokens.push_back(Token(COMMA, curChar, curPos));
         } else if (curChar == ';') {
-            tokens.push_back(Token(SEMICOLON, curChar));
+            tokens.push_back(Token(SEMICOLON, curChar, curPos));
         } else if (curChar == '(') {
-            tokens.push_back(Token(LPAREN, curChar));
+            tokens.push_back(Token(LPAREN, curChar, curPos));
         } else if (curChar == ')') {
-            tokens.push_back(Token(RPAREN, curChar));
+            tokens.push_back(Token(RPAREN, curChar, curPos));
         } else if (curChar == '{') {
-            tokens.push_back(Token(LBRACE, curChar));
+            tokens.push_back(Token(LBRACE, curChar, curPos));
         } else if (curChar == '}') {
-            tokens.push_back(Token(RBRACE, curChar));
+            tokens.push_back(Token(RBRACE, curChar, curPos));
         } else if (curChar == '[') {
-            tokens.push_back(Token(LBRACKET, curChar));
+            tokens.push_back(Token(LBRACKET, curChar, curPos));
         } else if (curChar == ']') {
-            tokens.push_back(Token(RBRACKET, curChar));
+            tokens.push_back(Token(RBRACKET, curChar, curPos));
         } else {
-            throw Exception("Invalid Char: ", curChar);
+            throw Exception("Invalid Char: " + std::string(1, curChar) + curPos.toString());
         }
         this->getNext();
     }

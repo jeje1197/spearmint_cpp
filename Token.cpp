@@ -1,5 +1,33 @@
 #include "Token.h"
 
+Position::Position() {}
+
+Position::Position(std::string fn) {
+    this->fn = fn;
+    this->ln = 0;
+    this->col = 0;
+}
+
+void Position::advance(char c) {
+    this->col++;
+    if (c == '\n') {
+        this->ln++;
+        this->col = 0;
+    }
+}
+
+Position Position::copy() {
+    Position p = Position();
+    p.fn = this->fn;
+    p.ln = this->ln;
+    p.col = this->col;
+    return p;
+}
+std::string Position::toString() {
+    return "at Line: " + std::to_string(ln) + " Col: " + std::to_string(col) + " in File: '" +
+    fn + "'";
+}
+
 Token::Token() {
     this->type = -1;
     this->value = "NULLTOK";
@@ -10,9 +38,21 @@ Token::Token(int type, std::string value) {
     this->value = value;
 }
 
+Token::Token(int type, std::string value, Position& pos) {
+    this->type = type;
+    this->value = value;
+    this->pos = pos.copy();
+}
+
 Token::Token(int type, char c) {
     this->type = type;
     this->value = c;
+}
+
+Token::Token(int type, char c, Position& pos) {
+    this->type = type;
+    this->value = c;
+    this->pos = pos.copy();
 }
 
 Token NULLTOK(NULLTYPE, "NULL");

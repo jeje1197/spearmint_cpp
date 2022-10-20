@@ -21,8 +21,10 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="AstNodes.h" />
+		<Unit filename="Classes.h" />
 		<Unit filename="Exception.cpp" />
 		<Unit filename="Exception.h" />
+		<Unit filename="Interpreter.cpp" />
 		<Unit filename="Interpreter.h" />
 		<Unit filename="Lexer.cpp" />
 		<Unit filename="Lexer.h" />

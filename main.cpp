@@ -84,6 +84,7 @@ void run(std::string input) {
     AstNode programStatements = AstNode(new VectorWrapperNode(ast));
 
     std::cout << "Starting interpreter." << std::endl;
+
     // Interpreter
     Interpreter interpreter("Console");
     Object result = NullType();

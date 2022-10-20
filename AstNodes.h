@@ -7,6 +7,8 @@
 #include <memory>
 #include "Token.h"
 
+class AstNodeBase;
+typedef std::shared_ptr<AstNodeBase> AstNode;
 
 class AstNodeBase {
     public:
@@ -38,7 +40,6 @@ class AstNodeBase {
             return output;
         }
 };
-typedef std::shared_ptr<AstNodeBase> AstNode;
 
 // This purpose of this is to be able to pass a vector to the
 // visit method of the Interpreter

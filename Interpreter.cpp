@@ -1,6 +1,9 @@
 #include "Interpreter.h"
 #include <string>
 
+#include <iostream>
+#include <memory>
+
 
 Interpreter::Interpreter() {}
 Interpreter::Interpreter(std::string fileName) {
@@ -8,7 +11,7 @@ Interpreter::Interpreter(std::string fileName) {
 }
 
 
-Object Interpreter::visit(AstNode node) {
+Object_uPtr Interpreter::visit(AstNode node) {
     std::string type = node->type;
 
     if (type == "VectorWrapperNode") {
@@ -29,26 +32,49 @@ Object Interpreter::visit(AstNode node) {
         throw Exception("No visit_" + node->type + " method defined.");
     }
 
-    return Object();
+    return Object_uPtr(new NullType());
 }
 
-Object Interpreter::visit_VectorWrapperNode(AstNode node){
-    return NullType();
+Object_uPtr Interpreter::visit_VectorWrapperNode(AstNode node){
+    std::vector<AstNode> v = std::static_pointer_cast<VectorWrapperNode>(node)->getVector();
+    for (AstNode a: v) {
+        visit(a);
+    }
+    return Object_uPtr(new NullType());
 }
 
-Number Interpreter::visit_NumberNode(AstNode node){
-    return Number();
+Object_uPtr Interpreter::visit_NumberNode(AstNode node){
+    std::shared_ptr<NumberNode> numNode = std::static_pointer_cast<NumberNode>(node);
+    return Object_uPtr(new Number(std::stof(numNode->value)));
 }
 
-String Interpreter::visit_StringNode(AstNode node){
-    return String();
+Object_uPtr Interpreter::visit_StringNode(AstNode node){
+    std::shared_ptr<StringNode> strNode = std::static_pointer_cast<StringNode>(node);
+    return Object_uPtr(new String(strNode->value));
 }
 
-Object Interpreter::visit_UnaryOpNode(AstNode node){
-    return Number();
+Object_uPtr Interpreter::visit_UnaryOpNode(AstNode node){
+    return Object_uPtr(new NullType());
 }
 
-Object Interpreter::visit_BinOpNode(AstNode node){
-    return Number();
+Object_uPtr Interpreter::visit_BinOpNode(AstNode node){
+    // Cast Node
+    std::shared_ptr<BinOpNode> binOpNode = std::static_pointer_cast<BinOpNode>(node);
+
+    // Use unique ptr for vitual calls
+    Object_uPtr left = visit(binOpNode->left);
+    Object_uPtr right = visit(binOpNode->right);
+
+    if (binOpNode->op.compare("+") == 0) {
+        std::cout << left->add(right)->toString();
+
+    } else if (binOpNode->op.compare("-") == 0) {
+
+    } else if (binOpNode->op.compare("*") == 0) {
+
+    } else if (binOpNode->op.compare("/") == 0) {
+        ;
+    }
+    return Object_uPtr(new NullType());
 }
 

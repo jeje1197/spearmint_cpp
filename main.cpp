@@ -87,7 +87,7 @@ void run(std::string input) {
 
     // Interpreter
     Interpreter interpreter("Console");
-    Object_sPtr result = Null_sPtr;
+    Object_sPtr result = Object::NullType();
     try {
         interpreter.visit(programStatements);
     } catch (Exception& err) {
@@ -96,6 +96,8 @@ void run(std::string input) {
     }
 
     // Print out results
-    std::cout << result->toString() << std::endl;
+    if (result != Object::NullType()) {
+        std::cout << result->toString() << std::endl;
+    }
 
 }

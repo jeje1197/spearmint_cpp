@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 
+Object_sPtr Null_sPtr = Object::NullType();
 
 Interpreter::Interpreter() {}
 Interpreter::Interpreter(std::string fileName) {
@@ -24,10 +25,10 @@ Object_sPtr Interpreter::visit(AstNode node) {
         return visit_UnaryOpNode(node);
     } else if (type == "BinOpNode") {
         return visit_BinOpNode(node);
-    //} else if (type == "VarDeclarationNode") {
-    //   return visit_VarDeclarationNode(node);
-    //} else if (type == "VarAssignNode") {
-    //    return visit_VarAssignNode(node);
+    } else if (type == "VarDeclarationNode") {
+        return visit_VarDeclarationNode(node);
+    } else if (type == "VarAssignNode") {
+        return visit_VarAssignNode(node);
     } else {
         throw Exception("No visit_" + node->type + " method defined.");
     }
@@ -37,6 +38,7 @@ Object_sPtr Interpreter::visit(AstNode node) {
 
 Object_sPtr Interpreter::visit_VectorWrapperNode(AstNode node){
     std::vector<AstNode> v = std::static_pointer_cast<VectorWrapperNode>(node)->getVector();
+
     for (AstNode a: v) {
         visit(a);
     }
@@ -80,17 +82,19 @@ Object_sPtr Interpreter::visit_BinOpNode(AstNode node){
     Object_sPtr left = visit(binOpNode->left);
     Object_sPtr right = visit(binOpNode->right);
 
+    Object_sPtr res = nullptr;
     if (binOpNode->op.compare("+") == 0) {
-        return left->add(right);
+        res = left->add(right);
     } else if (binOpNode->op.compare("-") == 0) {
 
     } else if (binOpNode->op.compare("*") == 0) {
 
     } else if (binOpNode->op.compare("/") == 0) {
-        ;
+
     } else {
 
     }
-    return Null_sPtr;
+
+    return res;
 }
 

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <sstream>
 
 class Object;
 typedef std::shared_ptr<Object> Object_sPtr;
@@ -11,14 +12,11 @@ typedef std::shared_ptr<Object> Object_sPtr;
 class Object {
     // Base Object in Spearmint
     public:
-        std::string type;
-        std::string str_value;
+        std::string type = "BaseObject";
+        std::string str_value = "Base Object String";
         float float_value;
 
-        Object() {
-            this->type = "BaseObject";
-            this->str_value = "BaseObjectValue";
-        }
+        Object() {}
 
         Object(std::string type) {
             this->type = type;
@@ -43,12 +41,34 @@ class Object {
             return (int) this->float_value;
         }
 
+        std::string getAddress() {
+            const void * address = static_cast<const void*>(this);
+            std::stringstream ss;
+            ss << address;
+            return ss.str();
+        }
+
+        bool isInstance(Object_sPtr obj, std::string type) {
+            return obj->type == type;
+        }
+
         bool isSameType(Object& obj1, Object& obj2) {
             return (obj1.type).compare(obj2.type) == 0;
         }
 
+        bool isNull() {
+            return this->type == "Null";
+        }
+
         virtual std::string toString() {
-            return this->type + " at address <>";
+            if (this->isNull()) {
+                return "null";
+            }
+            return this->type + this->getAddress();
+        }
+
+        static Object_sPtr NullType() {
+            return Object_sPtr(new Object("Null"));
         }
 
         // Operator methods
@@ -59,16 +79,13 @@ class Object {
         virtual Object_sPtr add(Object_sPtr other) {
             std::cout << "Base object called" << std::endl;
             illegalOperation();
-            return Object_sPtr(new Object("Null"));
+            return NullType();
         }
 };
 
-Object_sPtr Null_sPtr = Object_sPtr(new Object("Null"));
-
 class Number : public Object {
     public:
-        Number(float value) : Object() {
-            this->type = "Number";
+        Number(float value) : Object("Number") {
             this->float_value = value;
         }
 
@@ -82,14 +99,13 @@ class Number : public Object {
             } else {
                 this->illegalOperation();
             }
-            return Null_sPtr;
+            return NullType();
         }
 };
 
 class String : public Object {
     public:
         String(std::string value) {
-            this->type = "String";
             this->str_value = value;
         }
 
@@ -99,12 +115,56 @@ class String : public Object {
 
         Object_sPtr add(Object_sPtr other) {
             if (other->getType() == "String")  {
-                return Object_sPtr(new String(this->str_value + other->str_value));
+                return Object_sPtr(new String(this->getStrValue()+ other->getStrValue()));
             } else {
                 this->illegalOperation();
             }
-            return Null_sPtr;
+            return NullType();
         }
+
+};
+
+class List : public Object {
+    private:
+        std::vector<Object_sPtr> myList;
+
+    public:
+        List() : Object("List") {}
+
+        Object_sPtr add(Object_sPtr newObj) {
+            this->myList.push_back(newObj);
+            return Object::NullType();
+        }
+
+        Object_sPtr get(Object_sPtr numObj) {
+            if (!isInstance(numObj, "Number")){
+                throw Exception("List get method requires a number object as argument.");
+            }
+            int index = numObj->getIntValue();
+            if ((index < 0) || (index >= this->myList.size())) {
+                throw Exception("Index " + std::to_string(index) + " is out of list bounds.");
+            }
+            this->myList.at(index);
+            return Object::NullType();
+        }
+
+        Object_sPtr getSize() {
+            return Object_sPtr(new Number(this->myList.size()));
+        }
+
+        std::string toString() {
+            std::string str = "[";
+            for (int i = 0; i < this->myList.size(); i++) {
+                str += this->myList.at(i)->toString();
+                if (i < this->myList.size() - 1) {
+                    str += ", ";
+                }
+            }
+            str += "]";
+            return str;
+        }
+
+
 
 };
 

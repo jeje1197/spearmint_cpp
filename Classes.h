@@ -6,7 +6,7 @@
 #include <memory>
 
 class Object;
-typedef std::unique_ptr<Object> Object_uPtr;
+typedef std::shared_ptr<Object> Object_sPtr;
 
 class Object {
     // Base Object in Spearmint
@@ -56,9 +56,10 @@ class Object {
             throw Exception("Operation cannot be performed on " + this->type);
         }
 
-        virtual Object_uPtr add(Object other) {
-            std::cout << "Base object called";
+        virtual Object_sPtr add(Object_sPtr other) {
+            std::cout << "Base object called" << std::endl;
             illegalOperation();
+            return Object_sPtr(new Object("Null"));
         }
 };
 
@@ -79,13 +80,13 @@ class Number : public Object {
             return std::to_string(this->float_value);
         }
 
-        Object_uPtr add(Object_uPtr other) {
-            std::cout << other->getType();
+        Object_sPtr add(Object_sPtr other) {
             if (other->getType() == "Number")  {
-                return Object_uPtr(new Number(this->getFloatValue() + other->getFloatValue()));
+                return Object_sPtr(new Number(this->getFloatValue() + other->getFloatValue()));
             } else {
                 this->illegalOperation();
             }
+            return Object_sPtr(new NullType());
         }
 };
 
@@ -100,12 +101,13 @@ class String : public Object {
             return this->str_value;
         }
 
-        Object_uPtr add(Object_uPtr other) {
+        Object_sPtr add(Object_sPtr other) {
             if (other->getType() == "String")  {
-                return Object_uPtr(new String(this->str_value + other->str_value));
+                return Object_sPtr(new String(this->str_value + other->str_value));
             } else {
                 this->illegalOperation();
             }
+            return Object_sPtr(new NullType());
         }
 
 };

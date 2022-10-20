@@ -13,6 +13,7 @@ typedef std::shared_ptr<AstNodeBase> AstNode;
 class AstNodeBase {
     public:
         std::string type;
+        Position startPos;
 
         virtual std::string toString() {
             return "Error: AstNode.toString()";

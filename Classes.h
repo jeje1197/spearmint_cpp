@@ -5,11 +5,9 @@
 #include <string>
 #include <memory>
 #include <sstream>
+#include <cmath>
 
 class Object;
-class Number;
-class String;
-class List;
 typedef std::shared_ptr<Object> Object_sPtr;
 
 class Object {
@@ -158,6 +156,91 @@ class Number : public Object {
             return illegalOperation();
         }
 
+        Object_sPtr sub(Object_sPtr other) {
+            if (isInstance(other, "Number"))  {
+                return Object_sPtr(new Number(this->getFloatValue() - other->getFloatValue()));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr mul(Object_sPtr other) {
+            if (isInstance(other, "Number"))  {
+                return Object_sPtr(new Number(this->getFloatValue() * other->getFloatValue()));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr div(Object_sPtr other) {
+            if (isInstance(other, "Number"))  {
+                return Object_sPtr(new Number(this->getFloatValue() / other->getFloatValue()));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr pow(Object_sPtr other) {
+            if (isInstance(other, "Number"))  {
+                return Object_sPtr(new Number(std::pow(this->getFloatValue(), other->getIntValue())));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr mod(Object_sPtr other) {
+            if (isInstance(other, "Number"))  {
+                return Object_sPtr(new Number(std::fmod(this->getFloatValue(), other->getFloatValue())));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_lt(Object_sPtr other) {
+            if (isInstance(other, "Number"))  {
+                return Object_sPtr(new Number(this->getFloatValue() < other->getFloatValue()));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_gt(Object_sPtr other) {
+            if (isInstance(other, "Number"))  {
+                return Object_sPtr(new Number(this->getFloatValue() > other->getFloatValue()));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_lte(Object_sPtr other) {
+            if (isInstance(other, "Number"))  {
+                return Object_sPtr(new Number(this->getStrValue() <= other->getStrValue()));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_gte(Object_sPtr other) {
+            if (isInstance(other, "Number"))  {
+                return Object_sPtr(new Number(this->getStrValue() >= other->getStrValue()));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_ee(Object_sPtr other) {
+            if (isInstance(other, "Number"))  {
+                return Object_sPtr(new Number(this->getStrValue() == other->getStrValue()));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_ne(Object_sPtr other) {
+            if (isInstance(other, "Number"))  {
+                return Object_sPtr(new Number(this->getStrValue() != other->getStrValue()));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr notted() {
+            return Object_sPtr(new Number(!is_true()));
+        }
+
+        bool is_true() {
+            return this->getFloatValue() != 0;
+        }
+
 };
 
 class String : public Object {
@@ -269,7 +352,9 @@ class List : public Object {
             return str;
         }
 
-
+        bool is_true() {
+            return !myList.empty();
+        }
 
 };
 

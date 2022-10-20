@@ -81,9 +81,10 @@
 	<iostream>
 	<memory>
 
-1666261123 c:\users\jo\desktop\c++\spearmint\classes.h
+1666262584 c:\users\jo\desktop\c++\spearmint\classes.h
 	<iostream>
 	<string>
 	<memory>
 	<sstream>
+	<cmath>
 

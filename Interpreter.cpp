@@ -71,7 +71,15 @@ Object_sPtr Interpreter::visit_VarAccessNode(AstNode node){
 }
 
 Object_sPtr Interpreter::visit_UnaryOpNode(AstNode node){
-    return Null_sPtr;
+    std::shared_ptr<UnaryOpNode> unaryOpNode = std::static_pointer_cast<UnaryOpNode>(node);
+    Object_sPtr res = visit(unaryOpNode->expr_node);
+
+    if (unaryOpNode->op.compare("-") == 0) {
+        res = res->mul(Object_sPtr(new Number(-1)));
+    } else if (unaryOpNode->op.compare("!") == 0) {
+        res = res->notted();
+    }
+    return res;
 }
 
 Object_sPtr Interpreter::visit_BinOpNode(AstNode node){

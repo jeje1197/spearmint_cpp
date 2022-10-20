@@ -7,6 +7,9 @@
 #include <sstream>
 
 class Object;
+class Number;
+class String;
+class List;
 typedef std::shared_ptr<Object> Object_sPtr;
 
 class Object {
@@ -26,19 +29,19 @@ class Object {
 
         // Base Methods for all types
         std::string getType() {
-            return this->type;
+            return type;
         }
 
         std::string getStrValue() {
-            return this->str_value;
+            return str_value;
         }
 
         float getFloatValue() {
-            return this->float_value;
+            return float_value;
         }
 
         int getIntValue() {
-            return (int) this->float_value;
+            return (int) float_value;
         }
 
         std::string getAddress() {
@@ -49,22 +52,18 @@ class Object {
         }
 
         bool isInstance(Object_sPtr obj, std::string type) {
-            return obj->type == type;
-        }
-
-        bool isSameType(Object& obj1, Object& obj2) {
-            return (obj1.type).compare(obj2.type) == 0;
+            return obj->type.compare(type) == 0;
         }
 
         bool isNull() {
-            return this->type == "Null";
+            return type.compare("Null") == 0;
         }
 
         virtual std::string toString() {
             if (this->isNull()) {
                 return "null";
             }
-            return this->type + this->getAddress();
+            return type + getAddress();
         }
 
         static Object_sPtr NullType() {
@@ -72,14 +71,73 @@ class Object {
         }
 
         // Operator methods
-        void illegalOperation() {
+        Object_sPtr illegalOperation() {
             throw Exception("Operation cannot be performed on " + this->type);
+            return NullType();
         }
 
         virtual Object_sPtr add(Object_sPtr other) {
-            std::cout << "Base object called" << std::endl;
-            illegalOperation();
-            return NullType();
+            return illegalOperation();
+        }
+
+        virtual Object_sPtr sub(Object_sPtr other) {
+            return illegalOperation();
+        }
+
+        virtual Object_sPtr mul(Object_sPtr other) {
+            return illegalOperation();
+        }
+
+        virtual Object_sPtr div(Object_sPtr other) {
+            return illegalOperation();
+        }
+
+        virtual Object_sPtr pow(Object_sPtr other) {
+            return illegalOperation();
+        }
+
+        virtual Object_sPtr mod(Object_sPtr other) {
+            return illegalOperation();
+        }
+
+        virtual Object_sPtr compare_lt(Object_sPtr other) {
+            return illegalOperation();
+        }
+
+        virtual Object_sPtr compare_gt(Object_sPtr other) {
+            return illegalOperation();
+        }
+
+        virtual Object_sPtr compare_lte(Object_sPtr other) {
+            return illegalOperation();
+        }
+
+        virtual Object_sPtr compare_gte(Object_sPtr other) {
+            return illegalOperation();
+        }
+
+        virtual Object_sPtr compare_ee(Object_sPtr other) {
+            return illegalOperation();
+        }
+
+        virtual Object_sPtr compare_ne(Object_sPtr other) {
+            return illegalOperation();
+        }
+
+        virtual Object_sPtr anded_by(Object_sPtr other) {
+            return illegalOperation();
+        }
+
+        virtual Object_sPtr ored_by(Object_sPtr other) {
+            return illegalOperation();
+        }
+
+        virtual Object_sPtr notted() {
+            return illegalOperation();
+        }
+
+        virtual bool is_true() {
+            return !isNull();
         }
 };
 
@@ -94,34 +152,81 @@ class Number : public Object {
         }
 
         Object_sPtr add(Object_sPtr other) {
-            if (other->getType() == "Number")  {
+            if (isInstance(other, "Number"))  {
                 return Object_sPtr(new Number(this->getFloatValue() + other->getFloatValue()));
-            } else {
-                this->illegalOperation();
             }
-            return NullType();
+            return illegalOperation();
         }
+
 };
 
 class String : public Object {
     public:
-        String(std::string value) {
+        String(std::string value) : Object("String") {
             this->str_value = value;
         }
 
         std::string toString() {
-            return this->str_value;
+            return "'" + str_value + "'";
         }
 
+        // Operations
         Object_sPtr add(Object_sPtr other) {
-            if (other->getType() == "String")  {
+            if (isInstance(other, "String"))  {
                 return Object_sPtr(new String(this->getStrValue()+ other->getStrValue()));
-            } else {
-                this->illegalOperation();
             }
-            return NullType();
+            return illegalOperation();
         }
 
+        Object_sPtr compare_lt(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new Number(this->getStrValue().compare(other->getStrValue()) < 0));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_gt(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new Number(this->getStrValue().compare(other->getStrValue()) > 0));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_lte(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new Number(this->getStrValue().compare(other->getStrValue()) <= 0));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_gte(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new Number(this->getStrValue().compare(other->getStrValue()) >= 0));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_ee(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new Number(this->getStrValue().compare(other->getStrValue()) == 0));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_ne(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new Number(this->getStrValue().compare(other->getStrValue()) != 0));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr notted() {
+            return Object_sPtr(new Number((float) this->getStrValue().compare("") == 0));
+        }
+
+        bool is_true() {
+            return this->getStrValue().compare("") != 0;
+        }
 };
 
 class List : public Object {
@@ -141,7 +246,7 @@ class List : public Object {
                 throw Exception("List get method requires a number object as argument.");
             }
             int index = numObj->getIntValue();
-            if ((index < 0) || (index >= this->myList.size())) {
+            if ((index < 0) || (index >= (int) myList.size())) {
                 throw Exception("Index " + std::to_string(index) + " is out of list bounds.");
             }
             this->myList.at(index);
@@ -149,14 +254,14 @@ class List : public Object {
         }
 
         Object_sPtr getSize() {
-            return Object_sPtr(new Number(this->myList.size()));
+            return Object_sPtr(new Number(myList.size()));
         }
 
         std::string toString() {
             std::string str = "[";
-            for (int i = 0; i < this->myList.size(); i++) {
-                str += this->myList.at(i)->toString();
-                if (i < this->myList.size() - 1) {
+            for (int i = 0; i < (int) myList.size(); i++) {
+                str += myList.at(i)->toString();
+                if (i < (int) myList.size() - 1) {
                     str += ", ";
                 }
             }

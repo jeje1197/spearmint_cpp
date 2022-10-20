@@ -89,7 +89,7 @@ void run(std::string input) {
     Interpreter interpreter("Console");
     Object_sPtr result = Object::NullType();
     try {
-        interpreter.visit(programStatements);
+        result = interpreter.visit(programStatements);
     } catch (Exception& err) {
         err.show();
         return;

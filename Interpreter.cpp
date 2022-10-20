@@ -38,11 +38,11 @@ Object_sPtr Interpreter::visit(AstNode node) {
 
 Object_sPtr Interpreter::visit_VectorWrapperNode(AstNode node){
     std::vector<AstNode> v = std::static_pointer_cast<VectorWrapperNode>(node)->getVector();
-
+    Object_sPtr retList = Object_sPtr(new List());
     for (AstNode a: v) {
-        visit(a);
+        retList->add(visit(a));
     }
-    return Null_sPtr;
+    return retList;
 }
 
 Object_sPtr Interpreter::visit_NumberNode(AstNode node){
@@ -82,17 +82,37 @@ Object_sPtr Interpreter::visit_BinOpNode(AstNode node){
     Object_sPtr left = visit(binOpNode->left);
     Object_sPtr right = visit(binOpNode->right);
 
-    Object_sPtr res = nullptr;
+    Object_sPtr res = Null_sPtr;
     if (binOpNode->op.compare("+") == 0) {
         res = left->add(right);
     } else if (binOpNode->op.compare("-") == 0) {
-
+        res = left->sub(right);
     } else if (binOpNode->op.compare("*") == 0) {
-
+        res = left->mul(right);
     } else if (binOpNode->op.compare("/") == 0) {
-
+        res = left->div(right);
+    } else if (binOpNode->op.compare("^") == 0) {
+        res = left->pow(right);
+    } else if (binOpNode->op.compare("%") == 0) {
+        res = left->mod(right);
+    } else if (binOpNode->op.compare("<") == 0) {
+        res = left->compare_lt(right);
+    } else if (binOpNode->op.compare(">") == 0) {
+        res = left->compare_gt(right);
+    } else if (binOpNode->op.compare("<=") == 0) {
+        res = left->compare_lte(right);
+    } else if (binOpNode->op.compare(">=") == 0) {
+        res = left->compare_gte(right);
+    } else if (binOpNode->op.compare("==") == 0) {
+        res = left->compare_ee(right);
+    } else if (binOpNode->op.compare("!=") == 0) {
+        res = left->compare_ne(right);
+    } else if (binOpNode->op.compare("&&") == 0) {
+        res = left->anded_by(right);
+    } else if (binOpNode->op.compare("||") == 0) {
+        res = left->ored_by(right);
     } else {
-
+        res = left->pow(right);
     }
 
     return res;

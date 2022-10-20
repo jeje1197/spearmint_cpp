@@ -16,6 +16,7 @@ class Object {
         std::string type = "BaseObject";
         std::string str_value = "Base Object String";
         float float_value;
+        bool boolean_value = false;
 
         Object() {}
 
@@ -36,6 +37,10 @@ class Object {
 
         float getFloatValue() {
             return float_value;
+        }
+
+        bool getBooleanValue() {
+            return boolean_value;
         }
 
         int getIntValue() {
@@ -139,6 +144,97 @@ class Object {
         }
 };
 
+class Boolean : public Object {
+    public:
+        Boolean(bool value) : Object("Boolean") {
+            this->boolean_value = value;
+        }
+
+        Boolean(std::string value) : Object("Boolean") {
+            this->boolean_value = value.compare("") != 0;
+        }
+
+        Boolean(float value) : Object("Boolean") {
+            this->boolean_value = value != 0;
+        }
+
+        std::string toString() {
+            return boolean_value ? "true" : "false";
+        }
+
+};
+
+class String : public Object {
+    public:
+        String(std::string value) : Object("String") {
+            this->str_value = value;
+        }
+
+        std::string toString() {
+            return "'" + str_value + "'";
+        }
+
+        // Operations
+        Object_sPtr add(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new String(this->getStrValue() + other->getStrValue()));
+            } else if (isInstance(other, "Number"))  {
+                return Object_sPtr(new String(this->getStrValue() + std::to_string(other->getFloatValue())));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_lt(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new Boolean(this->getStrValue().compare(other->getStrValue()) < 0));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_gt(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new Boolean(this->getStrValue().compare(other->getStrValue()) > 0));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_lte(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new Boolean(this->getStrValue().compare(other->getStrValue()) <= 0));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_gte(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new Boolean(this->getStrValue().compare(other->getStrValue()) >= 0));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_ee(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new Boolean(this->getStrValue().compare(other->getStrValue()) == 0));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_ne(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new Boolean(this->getStrValue().compare(other->getStrValue()) != 0));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr notted() {
+            return Object_sPtr(new Boolean(this->getStrValue().compare("") == 0));
+        }
+
+        bool is_true() {
+            return this->getStrValue().compare("") != 0;
+        }
+};
+
 class Number : public Object {
     public:
         Number(float value) : Object("Number") {
@@ -152,6 +248,8 @@ class Number : public Object {
         Object_sPtr add(Object_sPtr other) {
             if (isInstance(other, "Number"))  {
                 return Object_sPtr(new Number(this->getFloatValue() + other->getFloatValue()));
+            } else if (isInstance(other, "String"))  {
+                return Object_sPtr(new String(std::to_string(this->getFloatValue()) + other->getStrValue()));
             }
             return illegalOperation();
         }
@@ -193,42 +291,42 @@ class Number : public Object {
 
         Object_sPtr compare_lt(Object_sPtr other) {
             if (isInstance(other, "Number"))  {
-                return Object_sPtr(new Number(this->getFloatValue() < other->getFloatValue()));
+                return Object_sPtr(new Boolean(this->getFloatValue() < other->getFloatValue()));
             }
             return illegalOperation();
         }
 
         Object_sPtr compare_gt(Object_sPtr other) {
             if (isInstance(other, "Number"))  {
-                return Object_sPtr(new Number(this->getFloatValue() > other->getFloatValue()));
+                return Object_sPtr(new Boolean(this->getFloatValue() > other->getFloatValue()));
             }
             return illegalOperation();
         }
 
         Object_sPtr compare_lte(Object_sPtr other) {
             if (isInstance(other, "Number"))  {
-                return Object_sPtr(new Number(this->getFloatValue() <= other->getFloatValue()));
+                return Object_sPtr(new Boolean(this->getFloatValue() <= other->getFloatValue()));
             }
             return illegalOperation();
         }
 
         Object_sPtr compare_gte(Object_sPtr other) {
             if (isInstance(other, "Number"))  {
-                return Object_sPtr(new Number(this->getFloatValue() >= other->getFloatValue()));
+                return Object_sPtr(new Boolean(this->getFloatValue() >= other->getFloatValue()));
             }
             return illegalOperation();
         }
 
         Object_sPtr compare_ee(Object_sPtr other) {
             if (isInstance(other, "Number"))  {
-                return Object_sPtr(new Number(this->getFloatValue() == other->getFloatValue()));
+                return Object_sPtr(new Boolean(this->getFloatValue() == other->getFloatValue()));
             }
             return illegalOperation();
         }
 
         Object_sPtr compare_ne(Object_sPtr other) {
             if (isInstance(other, "Number"))  {
-                return Object_sPtr(new Number(this->getFloatValue() != other->getFloatValue()));
+                return Object_sPtr(new Boolean(this->getFloatValue() != other->getFloatValue()));
             }
             return illegalOperation();
         }
@@ -241,75 +339,6 @@ class Number : public Object {
             return this->getFloatValue() != 0;
         }
 
-};
-
-class String : public Object {
-    public:
-        String(std::string value) : Object("String") {
-            this->str_value = value;
-        }
-
-        std::string toString() {
-            return "'" + str_value + "'";
-        }
-
-        // Operations
-        Object_sPtr add(Object_sPtr other) {
-            if (isInstance(other, "String"))  {
-                return Object_sPtr(new String(this->getStrValue()+ other->getStrValue()));
-            }
-            return illegalOperation();
-        }
-
-        Object_sPtr compare_lt(Object_sPtr other) {
-            if (isInstance(other, "String"))  {
-                return Object_sPtr(new Number(this->getStrValue().compare(other->getStrValue()) < 0));
-            }
-            return illegalOperation();
-        }
-
-        Object_sPtr compare_gt(Object_sPtr other) {
-            if (isInstance(other, "String"))  {
-                return Object_sPtr(new Number(this->getStrValue().compare(other->getStrValue()) > 0));
-            }
-            return illegalOperation();
-        }
-
-        Object_sPtr compare_lte(Object_sPtr other) {
-            if (isInstance(other, "String"))  {
-                return Object_sPtr(new Number(this->getStrValue().compare(other->getStrValue()) <= 0));
-            }
-            return illegalOperation();
-        }
-
-        Object_sPtr compare_gte(Object_sPtr other) {
-            if (isInstance(other, "String"))  {
-                return Object_sPtr(new Number(this->getStrValue().compare(other->getStrValue()) >= 0));
-            }
-            return illegalOperation();
-        }
-
-        Object_sPtr compare_ee(Object_sPtr other) {
-            if (isInstance(other, "String"))  {
-                return Object_sPtr(new Number(this->getStrValue().compare(other->getStrValue()) == 0));
-            }
-            return illegalOperation();
-        }
-
-        Object_sPtr compare_ne(Object_sPtr other) {
-            if (isInstance(other, "String"))  {
-                return Object_sPtr(new Number(this->getStrValue().compare(other->getStrValue()) != 0));
-            }
-            return illegalOperation();
-        }
-
-        Object_sPtr notted() {
-            return Object_sPtr(new Number((float) this->getStrValue().compare("") == 0));
-        }
-
-        bool is_true() {
-            return this->getStrValue().compare("") != 0;
-        }
 };
 
 class List : public Object {

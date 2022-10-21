@@ -1,14 +1,16 @@
 #include <iostream>
 #include <memory>
+#include <fstream>
 
 #include "Token.h"
 #include "Lexer.h"
 #include "Parser.h"
 #include "AstNodes.h"
 #include "Interpreter.h"
-#include <typeinfo>
+
 
 void run(std::string input);
+void readFromFile(std::string fileName);
 void showWelcomeMessage();
 
 int main()
@@ -23,8 +25,18 @@ int main()
 
         if (input.size() == 0) {
             continue;
-        } else if (input == "-e" || input == "-exit") {
+        } else if (input == "-e") {
             break;
+        } else if (input.find("-r") != std::string::npos) {
+            int startIndex = input.find("-r ") + 3;
+            input = input.substr(startIndex, (int)input.size() - startIndex-1);
+            try {
+                readFromFile(input);
+            } catch (Exception& e) {
+                std::cout << input << " is not a valid file.";
+            }
+
+            continue;
         }
 
         run(input);
@@ -100,4 +112,15 @@ void run(std::string input) {
         std::cout << result->toString() << std::endl;
     }
 
+}
+
+void readFromFile(std::string fileName) {
+    std::string fileText;
+    std::ifstream MyReadFile(fileName);
+
+    while (getline (MyReadFile, fileText)) {
+        std::cout << fileText;
+    }
+
+    run(fileText);
 }

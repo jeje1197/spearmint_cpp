@@ -1,0 +1,7 @@
+if (0) {
+    "First case";
+} else if (1) {
+    "Spearmint is an awesome language.";
+} else {
+    "Else case";
+}

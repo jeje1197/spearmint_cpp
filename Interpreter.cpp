@@ -156,18 +156,18 @@ Object_sPtr Interpreter::visit_BinOpNode(AstNode node, Context& ctx){
 
 Object_sPtr Interpreter::visit_IfNode(AstNode node, Context& ctx) {
     std::shared_ptr<IfNode> ifNode = std::static_pointer_cast<IfNode>(node);
-    ctx.generateNewContext("If statement in " + ctx.name);
+    Context newCtx = ctx.generateNewContext("If statement in " + ctx.name);
     for (int i = 0; i < (int) ifNode->caseConditions.size(); i++) {
         Object_sPtr cond = visit(ifNode->caseConditions.at(i), ctx);
         if (cond->is_true()) {
-            Object_sPtr res = visit(AstNode(new VectorWrapperNode(ifNode->caseStatements.at(i))), ctx);
+            Object_sPtr res = visit(AstNode(new VectorWrapperNode(ifNode->caseStatements.at(i))), newCtx);
             return res;
         }
     }
 
     AstNode vw = AstNode(new VectorWrapperNode(ifNode->elseCaseStatements));
-    Object_sPtr res = visit(vw, ctx);
-    return Null_sPtr;
+    Object_sPtr res = visit(vw, newCtx);
+    return res;
 }
 
 Object_sPtr Interpreter::visit_ForNode(AstNode node, Context& ctx) {

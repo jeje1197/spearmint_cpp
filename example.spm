@@ -4,4 +4,4 @@ if (0) {
     "Spearmint is an awesome language.";
 } else {
     "Else case";
-}
+};

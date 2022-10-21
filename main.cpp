@@ -10,7 +10,7 @@
 
 
 void run(std::string input);
-void readFromFile(std::string fileName);
+std::string getFileText(std::string fileName);
 void showWelcomeMessage();
 
 int main()
@@ -27,15 +27,18 @@ int main()
             continue;
         } else if (input == "-e") {
             break;
-        } else if (input.find("-r") != std::string::npos) {
-            int startIndex = input.find("-r ") + 3;
-            input = input.substr(startIndex, (int)input.size() - startIndex-1);
-            try {
-                readFromFile(input);
-            } catch (Exception& e) {
-                std::cout << input << " is not a valid file.";
+        } else if (input.find("-r") != std::string::npos) { // Remove "-r "
+            int len = (int) input.size();
+            int startIndex = (int) input.find("-r") + 3;
+            if (startIndex < len) {
+                input = input.substr(startIndex, len - startIndex);
+                try {
+                    input = getFileText(input);
+                    run(input);
+                } catch (...) {
+                    std::cout << "File: '" << input << "' not found.";
+                }
             }
-
             continue;
         }
 
@@ -114,13 +117,12 @@ void run(std::string input) {
 
 }
 
-void readFromFile(std::string fileName) {
-    std::string fileText;
+std::string getFileText(std::string fileName) {
+    std::string fileText, text;
     std::ifstream MyReadFile(fileName);
 
-    while (getline (MyReadFile, fileText)) {
-        std::cout << fileText;
+    while (getline(MyReadFile, text)) {
+        fileText += text;
     }
-
-    run(fileText);
+    return fileText;
 }

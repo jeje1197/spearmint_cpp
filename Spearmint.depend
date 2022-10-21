@@ -1,13 +1,13 @@
 # depslib dependency file v1.0
-1666268049 source:c:\users\jo\desktop\c++\spearmint\main.cpp
+1666324603 source:c:\users\jo\desktop\c++\spearmint\main.cpp
 	<iostream>
 	<memory>
+	<fstream>
 	"Token.h"
 	"Lexer.h"
 	"Parser.h"
 	"AstNodes.h"
 	"Interpreter.h"
-	<typeinfo>
 
 1666272310 c:\users\jo\desktop\c++\spearmint\token.h
 	<string>

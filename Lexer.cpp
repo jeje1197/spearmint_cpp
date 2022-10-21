@@ -89,9 +89,11 @@ std::vector<Token> Lexer::getTokens() {
             Position startPos = curPos.copy();
             this->getNext();
             std::unordered_map<char, std::string> escapeChars = {
+                {'"', "\""},
                 {'n', "\n"},
                 {'t', "\t"},
                 {'\\', "\\"}
+
             };
 
             std::string str;

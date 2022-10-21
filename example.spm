@@ -9,7 +9,7 @@ if (0) {
     "Else case";
 };
 
-"Printed from file: \"" + filename + "\"";
+"Printed from file: \"'" + filename + "'"";
 
 # Constant modifier test
 #filename = "newfile.spm";

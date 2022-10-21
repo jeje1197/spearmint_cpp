@@ -74,7 +74,7 @@ Object_sPtr Interpreter::visit_VarDeclarationNode(AstNode node, Context& ctx){
     }
 
     Object_sPtr value = visit(varNode->exprNode, ctx);
-    Object_sPtr varWrapper = Object_sPtr(new VariableWrapper(value));
+    Object_sPtr varWrapper = Object_sPtr(new VariableWrapper(value, varNode->isConstant));
     ctx.symbol_table->addLocal(varNode->varName, varWrapper);
     return value;
 }

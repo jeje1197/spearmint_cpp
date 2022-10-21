@@ -1,4 +1,6 @@
 # Sample file for the Spearmint Programming Language
+const var filename = "example.spm";
+
 if (0) {
     "First case";
 } else if (1) {
@@ -6,3 +8,10 @@ if (0) {
 } else {
     "Else case";
 };
+
+"Printed from file: \"" + filename + "\"";
+
+# Constant modifier test
+#filename = "newfile.spm";
+
+# This should throw an error

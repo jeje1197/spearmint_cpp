@@ -53,7 +53,8 @@ std::vector<AstNode> Parser::statements(int ENDTYPE) {
 }
 
 AstNode Parser::statement() {
-    if (curTok.matches(KEYWORD, "var")) {
+
+    if (curTok.matches(KEYWORD, "var") || curTok.matches(KEYWORD, "const")) {
         return varDeclaration();
     }
     else if (curTok.matches(ID) && lookAhead().matches(OP, "=")) {
@@ -76,6 +77,12 @@ AstNode Parser::statement() {
 }
 
 AstNode Parser::varDeclaration() {
+    bool isConstant = false;
+    if (curTok.matches(KEYWORD, "const")) {
+        isConstant = true;
+        getNext();
+    }
+
     if (!curTok.matches(KEYWORD, "var")) {
         throw Exception("Expected keyword var");
     }
@@ -97,7 +104,7 @@ AstNode Parser::varDeclaration() {
         throw Exception("Expected expression");
     }
 
-    return AstNode(new VarDeclarationNode(varNameTok, expr_node));
+    return AstNode(new VarDeclarationNode(varNameTok, expr_node, isConstant));
 }
 
 AstNode Parser::varAssign() {
@@ -438,7 +445,6 @@ AstNode Parser::call() {
 AstNode Parser::atom() {
     Token tok = curTok;
     std::set<std::string> unaryOps = { "+", "-" };
-
 
     if (tok.matches(OP, unaryOps)) {
         getNext();

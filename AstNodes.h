@@ -123,11 +123,13 @@ class VarDeclarationNode : public AstNodeBase {
     public:
         std::string varName;
         AstNode exprNode;
+        bool isConstant;
 
-        VarDeclarationNode(Token& varNameTok, AstNode exprNode) {
+        VarDeclarationNode(Token& varNameTok, AstNode exprNode, bool isConstant) {
             this->type = "VarDeclarationNode";
             this->varName = varNameTok.value;
             this->exprNode = exprNode;
+            this->isConstant = isConstant;
         }
 
         std::string toString() {

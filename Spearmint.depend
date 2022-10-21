@@ -31,7 +31,7 @@
 	<vector>
 	<set>
 
-1666316732 c:\users\jo\desktop\c++\spearmint\astnodes.h
+1666388261 c:\users\jo\desktop\c++\spearmint\astnodes.h
 	<string>
 	<vector>
 	<iostream>
@@ -41,13 +41,13 @@
 1662785747 c:\users\jo\desktop\c++\spearmint\regexfile.h
 	<regex>
 
-1666333521 source:c:\users\jo\desktop\c++\spearmint\lexer.cpp
+1666387943 source:c:\users\jo\desktop\c++\spearmint\lexer.cpp
 	"Lexer.h"
 
 1666272440 source:c:\users\jo\desktop\c++\spearmint\token.cpp
 	"Token.h"
 
-1666330143 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
+1666389383 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
 	"Parser.h"
 
 1663114357 source:c:\users\jo\desktop\c++\spearmint\exception.cpp
@@ -77,7 +77,7 @@
 	<string>
 	<vector>
 
-1666387349 source:c:\users\jo\desktop\c++\spearmint\interpreter.cpp
+1666388333 source:c:\users\jo\desktop\c++\spearmint\interpreter.cpp
 	"Interpreter.h"
 	<string>
 	<iostream>

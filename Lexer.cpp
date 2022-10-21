@@ -1,4 +1,5 @@
 #include "Lexer.h"
+#include <unordered_map>
 
 Lexer::Lexer(std::string fileName, std::string text) {
     this->fileName = fileName;
@@ -34,7 +35,7 @@ char Lexer::lookAhead(int steps) {
 std::vector<Token> Lexer::getTokens() {
     std::vector<Token> tokens;
     std::string operators = "+-*/^%=<>!";
-    std::set<std::string> keywords = {"var", "if", "else", "for", "while", "fun", "class"};
+    std::set<std::string> keywords = {"const", "var", "if", "else", "for", "while", "fun", "class"};
 
     while (curChar != '\0') {
         std::string next2chars = std::string(1, curChar) + lookAhead(1);
@@ -87,15 +88,30 @@ std::vector<Token> Lexer::getTokens() {
         } else if (curChar == '"') { // Strings
             Position startPos = curPos.copy();
             this->getNext();
+            std::unordered_map<char, std::string> escapeChars = {
+                {'n', "\n"},
+                {'t', "\t"},
+                {'\\', "\\"}
+            };
 
             std::string str;
             while (curChar != '"') {
-
                 if (curChar == '\0') {
                     throw Exception("Unterminated string " + startPos.toString());
                 }
-                str += curChar;
-                this->getNext();
+
+                if (curChar == '\\') {
+                    if (escapeChars.find(lookAhead(1)) == escapeChars.end()) {
+                        throw Exception("Unescaped slash in string" + curPos.toString());
+                    }
+
+                    str += escapeChars.at(lookAhead(1));
+                    getNext();
+                    getNext();
+                } else {
+                    str += curChar;
+                    getNext();
+                }
             }
 
             tokens.push_back(Token(STRING, str, startPos));

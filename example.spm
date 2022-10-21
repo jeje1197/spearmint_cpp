@@ -1,3 +1,4 @@
+# Sample file for the Spearmint Programming Language
 if (0) {
     "First case";
 } else if (1) {

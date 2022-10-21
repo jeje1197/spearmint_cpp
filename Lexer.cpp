@@ -9,25 +9,25 @@ Lexer::Lexer(std::string fileName, std::string text) {
 }
 
 bool Lexer::hasNext() {
-    return index + 1 < (int) text.length();
+    return this->index + 1 < (int) text.length();
 }
 
 char Lexer::getNext() {
     if (hasNext()) {
         this->curPos.advance(curChar);
         index++;
-        curChar = text.at(index);
+        this->curChar = this->text.at(index);
     } else {
-        curChar = '\0';
+        this->curChar = '\0';
     }
     return curChar;
 }
 
 char Lexer::lookAhead(int steps) {
-    if ((this->index + steps) < (int)text.length()) {
+    if ((this->index + steps) < (int) text.length()) {
         return this->text.at(this->index + steps);
     } else {
-        return '_';
+        return '\0';
     }
 }
 
@@ -50,7 +50,7 @@ std::vector<Token> Lexer::getTokens() {
             std::string str(1, curChar);
             getNext();
 
-            while (curChar != '\0' && (isalnum(curChar) || curChar == '_')) {
+            while (hasNext() && (isalnum(curChar) || curChar == '_')) {
                 str += curChar;
                 getNext();
             }

@@ -171,8 +171,20 @@ class Boolean : public Object {
             return this->boolean_value ? "true" : "false";
         }
 
-        bool isTrue() {
+        bool is_true() {
             return this->boolean_value;
+        }
+
+        Object_sPtr anded_by(Object_sPtr other) {
+            return Object_sPtr(new Boolean(is_true() && other->is_true()));
+        }
+
+        Object_sPtr ored_by(Object_sPtr other) {
+            return Object_sPtr(new Boolean(is_true() || other->is_true()));
+        }
+
+        Object_sPtr notted() {
+            return Object_sPtr(new Boolean(!is_true()));
         }
 
 };

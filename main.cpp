@@ -7,6 +7,7 @@
 #include "Parser.h"
 #include "AstNodes.h"
 #include "Interpreter.h"
+#include "Classes.h"
 
 
 void run(std::string input);
@@ -21,7 +22,6 @@ int main()
         std::string input;
         std::cout << "Spearmint>";
         std::getline(std::cin, input);
-        //std::cout << "Input: " << input << std::endl;
 
         if (input.size() == 0) {
             continue;
@@ -66,6 +66,8 @@ void run(std::string input) {
         return;
     }
 
+    if ((int) tokens.size() <= 1) return;
+
     //std::cout << "Lexing complete." << std::endl;
     //for (Token t: tokens) {
     //    std::cout << t << std::endl;
@@ -73,8 +75,8 @@ void run(std::string input) {
     //std::cout << "\n----------\n"<< std::endl;
 
     // Parser
-    std::vector<AstNode> ast;
     //std::cout << "Starting parsing." << std::endl;
+    std::vector<AstNode> ast;
     try {
         Parser parser(tokens);
         ast = parser.parse();
@@ -84,10 +86,7 @@ void run(std::string input) {
     }
 
     //std::cout << "Parsing complete." << std::endl;
-    if (ast.empty()) {
-        std::cout << "Ast is empty." << std::endl;
-        return;
-    }
+    if (ast.empty()) return;
 
     //std::cout << "Printing statements" << std::endl;
     //std::cout << "Number of statements: " << ast.size() << std::endl;
@@ -101,8 +100,10 @@ void run(std::string input) {
     // Interpreter
     Interpreter interpreter("Console");
     Object_sPtr result = Object::NullType();
-
     Context ctx = Context("Base Context", SymbolTable());
+
+    ctx.symbol_table->addLocal("true", Object_sPtr(new Boolean(true)));
+    ctx.symbol_table->addLocal("false", Object_sPtr(new Boolean(false)));
     try {
         result = interpreter.visit(programStatements, ctx);
     } catch (Exception& err) {
@@ -111,10 +112,7 @@ void run(std::string input) {
     }
 
     // Print out results
-    if (result != Object::NullType()) {
-        std::cout << result->toString() << std::endl;
-    }
-
+    std::cout << result->toString() << std::endl;
 }
 
 std::string getFileText(std::string fileName) {
@@ -122,7 +120,7 @@ std::string getFileText(std::string fileName) {
     std::ifstream MyReadFile(fileName);
 
     while (getline(MyReadFile, text)) {
-        fileText += text;
+        fileText += text + "\n";
     }
-    return fileText;
+    return fileText.erase(fileText.length()-1, 1);
 }

@@ -1,9 +1,6 @@
 #include "Parser.h"
 
 Parser::Parser(std::vector<Token>& tokens) {
-    if (tokens.size() <= 1) {
-        throw Exception("No tokens passed to Parser.");
-    }
     this->tokens = &tokens;
     this->index = 0;
     this->curTok = tokens.at(0);

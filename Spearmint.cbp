@@ -34,6 +34,7 @@
 		<Unit filename="SymbolTable.h" />
 		<Unit filename="Token.cpp" />
 		<Unit filename="Token.h" />
+		<Unit filename="example.spm" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

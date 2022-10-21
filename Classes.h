@@ -47,6 +47,19 @@ class Object {
             return (int) float_value;
         }
 
+        virtual bool isConstant() {
+            illegalOperation();
+            return false;
+        }
+
+        virtual void storeObject(Object_sPtr obj) {
+            illegalOperation();
+        }
+
+        virtual Object_sPtr getObject() {
+            return illegalOperation();
+        }
+
         std::string getAddress() {
             const void * address = static_cast<const void*>(this);
             std::stringstream ss;
@@ -418,6 +431,34 @@ class List : public Object {
             return !myList.empty();
         }
 
+};
+
+class VariableWrapper : public Object {
+    private:
+        Object_sPtr obj;
+        bool constant_modifier = false; // 0 - none, 1 - const
+
+    public:
+        VariableWrapper(Object_sPtr obj) : Object("VariableWrapper") {
+            this->obj = obj;
+        }
+
+        VariableWrapper(Object_sPtr obj, bool isConstant) : Object("VariableWrapper") {
+            this->obj = obj;
+            this->constant_modifier = isConstant;
+        }
+
+        void storeObject(Object_sPtr obj) {
+            this->obj = obj;
+        }
+
+        Object_sPtr getObject() {
+            return obj;
+        }
+
+        bool isConstant() {
+            return constant_modifier;
+        }
 };
 
 

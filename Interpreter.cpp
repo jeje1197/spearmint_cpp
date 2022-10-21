@@ -74,7 +74,8 @@ Object_sPtr Interpreter::visit_VarDeclarationNode(AstNode node, Context& ctx){
     }
 
     Object_sPtr value = visit(varNode->exprNode, ctx);
-    ctx.symbol_table->addLocal(varNode->varName, value);
+    Object_sPtr varWrapper = Object_sPtr(new VariableWrapper(value));
+    ctx.symbol_table->addLocal(varNode->varName, varWrapper);
     return value;
 }
 
@@ -84,8 +85,12 @@ Object_sPtr Interpreter::visit_VarAssignNode(AstNode node, Context& ctx){
         throw Exception("'" + varNode->varName + "' has not been declared.");
     }
 
+    Object_sPtr varWrapper = ctx.symbol_table->get(varNode->varName);
+    if (varWrapper->isConstant()) {
+        throw Exception("Value cannot be reassigned. Variable '" + varNode->varName + "' is declared as constant.");
+    }
     Object_sPtr value = visit(varNode->exprNode, ctx);
-    ctx.symbol_table->update(varNode->varName, value);
+    varWrapper->storeObject(value);
     return value;
 }
 
@@ -95,7 +100,8 @@ Object_sPtr Interpreter::visit_VarAccessNode(AstNode node, Context& ctx){
         throw Exception("'" + varNode->varName + "' has not been declared.");
     }
 
-    return ctx.symbol_table->get(varNode->varName);
+    Object_sPtr varWrapper = ctx.symbol_table->get(varNode->varName);
+    return varWrapper->getObject();
 }
 
 Object_sPtr Interpreter::visit_UnaryOpNode(AstNode node, Context& ctx){

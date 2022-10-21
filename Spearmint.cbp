@@ -22,6 +22,7 @@
 		</Compiler>
 		<Unit filename="AstNodes.h" />
 		<Unit filename="Classes.h" />
+		<Unit filename="Context.h" />
 		<Unit filename="Exception.cpp" />
 		<Unit filename="Exception.h" />
 		<Unit filename="Interpreter.cpp" />

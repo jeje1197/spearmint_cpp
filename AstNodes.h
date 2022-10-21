@@ -168,12 +168,13 @@ class VarAccessNode : public AstNodeBase {
 class IfNode : public AstNodeBase {
     public:
         std::vector<AstNode> caseConditions;
-        std::vector<std::vector<AstNode>> caseStatements,
-            elseCaseStatements;
+        std::vector<std::vector<AstNode>> caseStatements;
+        std::vector<AstNode> elseCaseStatements;
 
 
         IfNode(std::vector<AstNode>& caseConditions, std::vector<std::vector<AstNode>>& caseStatements,
-               std::vector<std::vector<AstNode>>& elseCaseStatements) {
+               std::vector<AstNode>& elseCaseStatements) {
+            this->type = "IfNode";
             this->caseConditions = caseConditions;
             this->caseStatements = caseStatements;
             this->elseCaseStatements = elseCaseStatements;

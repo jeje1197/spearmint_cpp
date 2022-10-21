@@ -125,8 +125,8 @@ AstNode Parser::varAssign() {
 
 AstNode Parser::ifStatement() {
     std::vector<AstNode> caseConditions;
-    std::vector<std::vector<AstNode>> caseStatements,
-        elseCaseStatements;
+    std::vector<std::vector<AstNode>> caseStatements;
+    std::vector<AstNode> elseCaseStatements;
 
     // if
     if (!curTok.matches(KEYWORD, "if")) {
@@ -209,7 +209,7 @@ AstNode Parser::ifStatement() {
         }
         getNext();
 
-        elseCaseStatements.push_back(statements(RBRACE));
+        elseCaseStatements = statements(RBRACE);
 
         if (!curTok.matches(RBRACE)) {
             throw Exception("Expected '}'");
@@ -434,7 +434,7 @@ AstNode Parser::power() {
 
 AstNode Parser::call() {
     AstNode atom_node = atom();
-   
+
     return atom_node;
 }
 

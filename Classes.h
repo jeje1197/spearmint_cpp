@@ -142,6 +142,15 @@ class Object {
         virtual bool is_true() {
             return !isNull();
         }
+
+        virtual int getSizeInternal() {
+            illegalOperation();
+            return 0;
+        }
+
+        virtual Object_sPtr getInternal(int index) {
+            return illegalOperation();
+        }
 };
 
 class Boolean : public Object {
@@ -159,7 +168,11 @@ class Boolean : public Object {
         }
 
         std::string toString() {
-            return boolean_value ? "true" : "false";
+            return this->boolean_value ? "true" : "false";
+        }
+
+        bool isTrue() {
+            return this->boolean_value;
         }
 
 };
@@ -347,6 +360,14 @@ class List : public Object {
 
     public:
         List() : Object("List") {}
+
+        int getSizeInternal() {
+            return (int) this->myList.size();
+        }
+
+        Object_sPtr getInternal(int index) {
+            return this->myList.at(index);
+        }
 
         Object_sPtr add(Object_sPtr newObj) {
             this->myList.push_back(newObj);

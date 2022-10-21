@@ -26,6 +26,12 @@ class Interpreter {
 		Object_sPtr visit_VarDeclarationNode(AstNode node, Context& ctx);
 		Object_sPtr visit_VarAssignNode(AstNode node, Context& ctx);
 		Object_sPtr visit_VarAccessNode(AstNode node, Context& ctx);
+		Object_sPtr visit_IfNode(AstNode node, Context& ctx);
+		Object_sPtr visit_ForNode(AstNode node, Context& ctx);
+		Object_sPtr visit_WhileNode(AstNode node, Context& ctx);
+
+		//Object_sPtr visit_FunctionDefNode(AstNode node, Context& ctx);
+		//Object_sPtr visit_FunctionCallNode(AstNode node, Context& ctx);
 
 
 };

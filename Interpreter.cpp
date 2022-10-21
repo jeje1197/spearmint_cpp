@@ -31,6 +31,12 @@ Object_sPtr Interpreter::visit(AstNode node, Context& ctx) {
         return visit_VarAssignNode(node, ctx);
     } else if (type == "VarAccessNode") {
         return visit_VarAccessNode(node, ctx);
+    } else if (type == "IfNode") {
+        return visit_IfNode(node, ctx);
+    } else if (type == "ForNode") {
+        return visit_ForNode(node, ctx);
+    } else if (type == "WhileNode") {
+        return visit_WhileNode(node, ctx);
     } else {
         throw Exception("No visit_" + node->type + " method defined.");
     }
@@ -43,6 +49,10 @@ Object_sPtr Interpreter::visit_VectorWrapperNode(AstNode node, Context& ctx){
     Object_sPtr retList = Object_sPtr(new List());
     for (AstNode a: v) {
         retList->add(visit(a, ctx));
+    }
+
+    if (retList->getSizeInternal() == 1) {
+        return retList->getInternal(0);
     }
     return retList;
 }
@@ -142,5 +152,29 @@ Object_sPtr Interpreter::visit_BinOpNode(AstNode node, Context& ctx){
     }
 
     return res;
+}
+
+Object_sPtr Interpreter::visit_IfNode(AstNode node, Context& ctx) {
+    std::shared_ptr<IfNode> ifNode = std::static_pointer_cast<IfNode>(node);
+    ctx.generateNewContext("If statement in " + ctx.name);
+    for (int i = 0; i < (int) ifNode->caseConditions.size(); i++) {
+        Object_sPtr cond = visit(ifNode->caseConditions.at(i), ctx);
+        if (cond->is_true()) {
+            Object_sPtr res = visit(AstNode(new VectorWrapperNode(ifNode->caseStatements.at(i))), ctx);
+            return res;
+        }
+    }
+
+    AstNode vw = AstNode(new VectorWrapperNode(ifNode->elseCaseStatements));
+    Object_sPtr res = visit(vw, ctx);
+    return Null_sPtr;
+}
+
+Object_sPtr Interpreter::visit_ForNode(AstNode node, Context& ctx) {
+    return Null_sPtr;
+}
+
+Object_sPtr Interpreter::visit_WhileNode(AstNode node, Context& ctx) {
+    return Null_sPtr;
 }
 

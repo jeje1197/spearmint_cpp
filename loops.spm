@@ -1,0 +1,6 @@
+# There are two types of loops in Spearmint:
+# For and while loops
+
+for (var i = 0; i < 5; i = i + 1) {
+    i;
+};

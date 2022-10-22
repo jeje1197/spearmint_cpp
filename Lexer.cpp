@@ -65,7 +65,7 @@ std::vector<Token> Lexer::getTokens() {
         } else if (isdigit(curChar)) { // Numbers
             Position startPos = curPos.copy();
             std::string number(1, curChar);
-            this->getNext();
+            getNext();
 
             int decimal_count = 0;
             while (curChar != '\0' && (isdigit(curChar) || curChar == '.')) {
@@ -74,7 +74,7 @@ std::vector<Token> Lexer::getTokens() {
                     if (decimal_count == 1) break;
                     decimal_count++;
                 }
-                this->getNext();
+                getNext();
             }
 
 
@@ -87,13 +87,12 @@ std::vector<Token> Lexer::getTokens() {
             continue;
         } else if (curChar == '"') { // Strings
             Position startPos = curPos.copy();
-            this->getNext();
+            getNext();
             std::unordered_map<char, std::string> escapeChars = {
                 {'"', "\""},
                 {'n', "\n"},
                 {'t', "\t"},
                 {'\\', "\\"}
-
             };
 
             std::string str;
@@ -115,12 +114,11 @@ std::vector<Token> Lexer::getTokens() {
                     getNext();
                 }
             }
-
             tokens.push_back(Token(STRING, str, startPos));
         } else if (next2chars == "!=" || next2chars == "==" || next2chars == "<=" || next2chars == ">=" ||
                    next2chars == "&&" || next2chars == "||") { // Operators (2 char)
             tokens.push_back(Token(OP, next2chars, curPos));
-            this->getNext();
+            getNext();
         } else if (operators.find(curChar) != std::string::npos) { // Operators (1 char)
             tokens.push_back(Token(OP, curChar, curPos));
         } else if (curChar == '.') {
@@ -144,7 +142,7 @@ std::vector<Token> Lexer::getTokens() {
         } else {
             throw Exception("Invalid Char: " + std::string(1, curChar) + curPos.toString());
         }
-        this->getNext();
+        getNext();
     }
 
     tokens.push_back(Token(END, "END"));

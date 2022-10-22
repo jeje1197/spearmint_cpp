@@ -216,10 +216,8 @@ class String : public Object {
         Object_sPtr add(Object_sPtr other) {
             if (isInstance(other, "String"))  {
                 return Object_sPtr(new String(this->getStrValue() + other->getStrValue()));
-            } else if (isInstance(other, "Number"))  {
-                return Object_sPtr(new String(this->getStrValue() + other->toString()));
             }
-            return illegalOperation();
+            return Object_sPtr(new String(this->getStrValue() + other->toString()));
         }
 
         Object_sPtr compare_lt(Object_sPtr other) {
@@ -460,6 +458,5 @@ class VariableWrapper : public Object {
             return constant_modifier;
         }
 };
-
 
 #endif // CLASSES_H_INCLUDED

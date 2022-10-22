@@ -5,10 +5,14 @@
 #include "Classes.h"
 #include <string>
 #include <unordered_map>
+#
+
+class SymbolTable;
+typedef std::shared_ptr<SymbolTable> SymbolTable_sPtr;
 
 class SymbolTable {
-    std::unordered_map<std::string, Object_sPtr> symbol_table;
-    SymbolTable* parent = nullptr;
+    std::unordered_map<std::string, Object_sPtr> symbol_table = std::unordered_map<std::string, Object_sPtr>();
+    SymbolTable* parent;
 
     public:
         SymbolTable() {}
@@ -18,7 +22,7 @@ class SymbolTable {
         }
 
         bool containsLocalKey(std::string key) {
-            return this->symbol_table.find(key) != this->symbol_table.end();
+            return symbol_table.find(key) != symbol_table.end();
         }
 
         bool containsKeyAnywhere(std::string key) {
@@ -33,7 +37,7 @@ class SymbolTable {
         }
 
         void addLocal(std::string key, Object_sPtr value) {
-            this->symbol_table[key] = value;
+            symbol_table[key] = value;
         }
 
         void update(std::string key, Object_sPtr value) {
@@ -67,18 +71,20 @@ class SymbolTable {
 class Context {
     public:
         std::string name;
-        SymbolTable* symbol_table;
+        SymbolTable_sPtr symbol_table;
 
-        Context(std::string name, SymbolTable symbol_table) {
+        Context(std::string name, SymbolTable_sPtr symbol_table) {
             this->name = name;
-            this->symbol_table = &symbol_table;
+            this->symbol_table = symbol_table;
         }
 
         Context generateNewContext(std::string name) {
-            Context c = Context(name, SymbolTable(symbol_table));
-            return c;
+            // Use shared_ptr to allocate space so the symboltable object doesn't go out of scope
+            // and give us a nullptr when we return from the function
+            SymbolTable_sPtr s = SymbolTable_sPtr(new SymbolTable(symbol_table.get()));
+            Context ctx = Context(name, s);
+            return ctx;
         }
-
 };
 
 

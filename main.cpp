@@ -14,6 +14,10 @@ void run(std::string input);
 std::string getFileText(std::string fileName);
 void showWelcomeMessage();
 
+Object_sPtr truePrimitive = Object_sPtr(new Boolean(true));
+Object_sPtr falsePrimitive = Object_sPtr(new Boolean(false));
+Object_sPtr nullPrimitive = Object_sPtr(new Object("Null"));
+
 int main()
 {
     showWelcomeMessage();
@@ -99,11 +103,13 @@ void run(std::string input) {
 
     // Interpreter
     Interpreter interpreter("Console");
-    Object_sPtr result = Object::NullType();
-    Context ctx = Context("Base Context", SymbolTable());
+    Object_sPtr result = nullPrimitive;
+    Context ctx = Context("Base Context", SymbolTable_sPtr(new SymbolTable()));
 
-    ctx.symbol_table->addLocal("true", Object_sPtr(new Boolean(true)));
-    ctx.symbol_table->addLocal("false", Object_sPtr(new Boolean(false)));
+
+    ctx.symbol_table->addLocal("true", Object_sPtr(new VariableWrapper(truePrimitive, true)));
+    ctx.symbol_table->addLocal("false", Object_sPtr(new VariableWrapper(falsePrimitive, true)));
+    ctx.symbol_table->addLocal("null", Object_sPtr(new VariableWrapper(nullPrimitive, true)));
     try {
         result = interpreter.visit(programStatements, ctx);
     } catch (Exception& err) {

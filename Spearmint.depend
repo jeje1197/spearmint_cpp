@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1666334287 source:c:\users\jo\desktop\c++\spearmint\main.cpp
+1666428390 source:c:\users\jo\desktop\c++\spearmint\main.cpp
 	<iostream>
 	<memory>
 	<fstream>
@@ -41,8 +41,9 @@
 1662785747 c:\users\jo\desktop\c++\spearmint\regexfile.h
 	<regex>
 
-1666387943 source:c:\users\jo\desktop\c++\spearmint\lexer.cpp
+1666406252 source:c:\users\jo\desktop\c++\spearmint\lexer.cpp
 	"Lexer.h"
+	<unordered_map>
 
 1666272440 source:c:\users\jo\desktop\c++\spearmint\token.cpp
 	"Token.h"
@@ -77,20 +78,22 @@
 	<string>
 	<vector>
 
-1666388333 source:c:\users\jo\desktop\c++\spearmint\interpreter.cpp
+1666429714 source:c:\users\jo\desktop\c++\spearmint\interpreter.cpp
 	"Interpreter.h"
+	"Exception.h"
+	"Context.h"
 	<string>
 	<iostream>
 	<memory>
 
-1666387571 c:\users\jo\desktop\c++\spearmint\classes.h
+1666425540 c:\users\jo\desktop\c++\spearmint\classes.h
 	<iostream>
 	<string>
 	<memory>
 	<sstream>
 	<cmath>
 
-1666269495 c:\users\jo\desktop\c++\spearmint\context.h
+1666429757 c:\users\jo\desktop\c++\spearmint\context.h
 	"Exception.h"
 	"Classes.h"
 	<string>

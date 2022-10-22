@@ -1,4 +1,6 @@
 #include "Interpreter.h"
+#include "Exception.h"
+#include "Context.h"
 #include <string>
 
 #include <iostream>
@@ -89,6 +91,7 @@ Object_sPtr Interpreter::visit_VarAssignNode(AstNode node, Context& ctx){
     if (varWrapper->isConstant()) {
         throw Exception("Value cannot be reassigned. Variable '" + varNode->varName + "' is declared as constant.");
     }
+
     Object_sPtr value = visit(varNode->exprNode, ctx);
     varWrapper->storeObject(value);
     return value;
@@ -120,7 +123,7 @@ Object_sPtr Interpreter::visit_BinOpNode(AstNode node, Context& ctx){
     // Cast shared_ptr<AstNode> to shared_ptr<BinOpNode>
     std::shared_ptr<BinOpNode> binOpNode = std::static_pointer_cast<BinOpNode>(node);
 
-    // Use unique ptr for virtual calls
+    // Use shared ptr for virtual calls
     Object_sPtr left = visit(binOpNode->left, ctx);
     Object_sPtr right = visit(binOpNode->right, ctx);
 
@@ -163,6 +166,7 @@ Object_sPtr Interpreter::visit_BinOpNode(AstNode node, Context& ctx){
 Object_sPtr Interpreter::visit_IfNode(AstNode node, Context& ctx) {
     std::shared_ptr<IfNode> ifNode = std::static_pointer_cast<IfNode>(node);
     Context newCtx = ctx.generateNewContext("If statement in " + ctx.name);
+
     for (int i = 0; i < (int) ifNode->caseConditions.size(); i++) {
         Object_sPtr cond = visit(ifNode->caseConditions.at(i), ctx);
         if (cond->is_true()) {
@@ -177,7 +181,21 @@ Object_sPtr Interpreter::visit_IfNode(AstNode node, Context& ctx) {
 }
 
 Object_sPtr Interpreter::visit_ForNode(AstNode node, Context& ctx) {
-    return Null_sPtr;
+    std::shared_ptr<ForNode> forNode = std::static_pointer_cast<ForNode>(node);
+    Context initCtx = ctx.generateNewContext("For loop initializer in " + ctx.name);
+    visit(forNode->initStatement, initCtx);
+
+    Object_sPtr retList = Object_sPtr(new List());
+    while (visit(forNode->condNode, initCtx)->is_true()) {
+        Context iterCtx = initCtx.generateNewContext("For loop iteration in " + ctx.name);
+        retList->add(visit(AstNode(new VectorWrapperNode(forNode->statements)), iterCtx));
+        visit(forNode->updateStatement, iterCtx);
+    }
+
+    if (retList->getSizeInternal() == 1) {
+        return retList->getInternal(0);
+    }
+    return retList;
 }
 
 Object_sPtr Interpreter::visit_WhileNode(AstNode node, Context& ctx) {

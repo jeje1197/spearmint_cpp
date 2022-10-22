@@ -1,17 +1,14 @@
 # Sample file for the Spearmint Programming Language
-const var filename = "example.spm";
+# const var filename = "example.spm";
 
 if (0) {
     "First case";
 } else if (1) {
     "Spearmint is an awesome language.";
+    var cond = true;
+    #true;
 } else {
     "Else case";
 };
 
-"Printed from file: \"'" + filename + "'"";
-
-# Constant modifier test
-#filename = "newfile.spm";
-
-# This should throw an error
+cond;

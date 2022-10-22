@@ -199,6 +199,17 @@ Object_sPtr Interpreter::visit_ForNode(AstNode node, Context& ctx) {
 }
 
 Object_sPtr Interpreter::visit_WhileNode(AstNode node, Context& ctx) {
-    return Null_sPtr;
+    std::shared_ptr<WhileNode> whileNode = std::static_pointer_cast<WhileNode>(node);
+
+    Object_sPtr retList = Object_sPtr(new List());
+    while (visit(whileNode->condNode, ctx)->is_true()) {
+        Context iterCtx = ctx.generateNewContext("While loop iteration in " + ctx.name);
+        retList->add(visit(AstNode(new VectorWrapperNode(whileNode->statements)), iterCtx));
+    }
+
+    if (retList->getSizeInternal() == 1) {
+        return retList->getInternal(0);
+    }
+    return retList;
 }
 

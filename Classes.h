@@ -166,6 +166,34 @@ class Object {
         }
 };
 
+class VariableWrapper : public Object {
+    private:
+        Object_sPtr obj;
+        bool constant_modifier = false; // 0 - none, 1 - const
+
+    public:
+        VariableWrapper(Object_sPtr obj) : Object("VariableWrapper") {
+            this->obj = obj;
+        }
+
+        VariableWrapper(Object_sPtr obj, bool isConstant) : Object("VariableWrapper") {
+            this->obj = obj;
+            this->constant_modifier = isConstant;
+        }
+
+        void storeObject(Object_sPtr obj) {
+            this->obj = obj;
+        }
+
+        Object_sPtr getObject() {
+            return obj;
+        }
+
+        bool isConstant() {
+            return constant_modifier;
+        }
+};
+
 class Boolean : public Object {
     public:
         Boolean(bool value) : Object("Boolean") {
@@ -431,32 +459,26 @@ class List : public Object {
 
 };
 
-class VariableWrapper : public Object {
-    private:
-        Object_sPtr obj;
-        bool constant_modifier = false; // 0 - none, 1 - const
+class Function : public Object {
+    std::string name;
+    std::vector<std::string> argNames;
+    std::vector<AstNode> statements;
 
     public:
-        VariableWrapper(Object_sPtr obj) : Object("VariableWrapper") {
-            this->obj = obj;
+        Function(std::string name, std::vector<std::string> argNames, std::vector<AstNode> statements) : Object("Function") {
+            this->name = name;
+            this->argNames = argNames;
+            this->statements = statements;
         }
 
-        VariableWrapper(Object_sPtr obj, bool isConstant) : Object("VariableWrapper") {
-            this->obj = obj;
-            this->constant_modifier = isConstant;
+        bool checkNumArgs(std::vector<std::string>& other) {
+            return this->statements.size() == other.size();
         }
 
-        void storeObject(Object_sPtr obj) {
-            this->obj = obj;
+        std::string toString() {
+            return "Function '" + name + "' at address:" + getAddress();
         }
 
-        Object_sPtr getObject() {
-            return obj;
-        }
-
-        bool isConstant() {
-            return constant_modifier;
-        }
 };
 
 #endif // CLASSES_H_INCLUDED

@@ -14,9 +14,9 @@ void run(std::string input);
 std::string getFileText(std::string fileName);
 void showWelcomeMessage();
 
-Object_sPtr truePrimitive = Object_sPtr(new Boolean(true));
-Object_sPtr falsePrimitive = Object_sPtr(new Boolean(false));
-Object_sPtr nullPrimitive = Object_sPtr(new Object("Null"));
+Object_sPtr truePrimitive(new Boolean(true));
+Object_sPtr falsePrimitive(new Boolean(false));
+Object_sPtr nullPrimitive(new Object("Null"));
 
 int main()
 {
@@ -59,7 +59,7 @@ void showWelcomeMessage() {
 
 void run(std::string input) {
     // Lexer
-    //std::cout << "Starting lexing." << std::endl;
+    // std::cout << "Starting lexing." << std::endl;
     Lexer lexer = Lexer("Console", input);
     std::vector<Token> tokens;
 
@@ -89,6 +89,9 @@ void run(std::string input) {
         return;
     }
 
+    // Clean up tokens
+    tokens.clear();
+
     //std::cout << "Parsing complete." << std::endl;
     if (ast.empty()) return;
 
@@ -104,7 +107,7 @@ void run(std::string input) {
     // Interpreter
     Interpreter interpreter("Console");
     Object_sPtr result = nullPrimitive;
-    Context ctx = Context("Base Context", SymbolTable_sPtr(new SymbolTable()));
+    Context ctx("Base Context", SymbolTable_sPtr(new SymbolTable()));
 
 
     ctx.symbol_table->addLocal("true", Object_sPtr(new VariableWrapper(truePrimitive, true)));

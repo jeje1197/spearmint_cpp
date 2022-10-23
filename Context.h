@@ -5,14 +5,13 @@
 #include "Classes.h"
 #include <string>
 #include <unordered_map>
-#
 
 class SymbolTable;
 typedef std::shared_ptr<SymbolTable> SymbolTable_sPtr;
 
 class SymbolTable {
     std::unordered_map<std::string, Object_sPtr> symbol_table = std::unordered_map<std::string, Object_sPtr>();
-    SymbolTable* parent;
+    SymbolTable* parent = nullptr;
 
     public:
         SymbolTable() {}
@@ -28,7 +27,7 @@ class SymbolTable {
         bool containsKeyAnywhere(std::string key) {
             SymbolTable* cur = this;
             while (cur != nullptr) {
-                if (cur->containsLocalKey(key)) {
+                if (cur->symbol_table.find(key) != cur->symbol_table.end()) {
                     return true;
                 }
                 cur = cur->parent;
@@ -43,7 +42,7 @@ class SymbolTable {
         void update(std::string key, Object_sPtr value) {
             SymbolTable* cur = this;
             while (cur != nullptr) {
-                if (cur->containsLocalKey(key)) {
+                if (cur->symbol_table.find(key) != cur->symbol_table.end()) {
                     cur->symbol_table[key] = value;
                     return;
                 }
@@ -54,7 +53,7 @@ class SymbolTable {
         Object_sPtr get(std::string key) {
             SymbolTable* cur = this;
             while (cur != nullptr) {
-                if (cur->containsLocalKey(key)) {
+                if (cur->symbol_table.find(key) != cur->symbol_table.end()) {
                     return cur->symbol_table.at(key);
                 }
                 cur = cur->parent;
@@ -79,11 +78,9 @@ class Context {
         }
 
         Context generateNewContext(std::string name) {
-            // Use shared_ptr to allocate space so the symboltable object doesn't go out of scope
+            // Use shared_ptr variable to allocate space so the symboltable object doesn't go out of scope
             // and give us a nullptr when we return from the function
-            SymbolTable_sPtr s = SymbolTable_sPtr(new SymbolTable(symbol_table.get()));
-            Context ctx = Context(name, s);
-            return ctx;
+            return Context(name, SymbolTable_sPtr(new SymbolTable(symbol_table.get())));
         }
 };
 

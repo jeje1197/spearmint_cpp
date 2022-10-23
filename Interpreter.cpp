@@ -182,12 +182,12 @@ Object_sPtr Interpreter::visit_IfNode(AstNode node, Context& ctx) {
 
 Object_sPtr Interpreter::visit_ForNode(AstNode node, Context& ctx) {
     std::shared_ptr<ForNode> forNode = std::static_pointer_cast<ForNode>(node);
-    Context initCtx = ctx.generateNewContext("For loop initializer in " + ctx.name);
+    Context initCtx = ctx.generateNewContext("For loop initializer");
     visit(forNode->initStatement, initCtx);
 
     Object_sPtr retList = Object_sPtr(new List());
     while (visit(forNode->condNode, initCtx)->is_true()) {
-        Context iterCtx = initCtx.generateNewContext("For loop iteration in " + ctx.name);
+        Context iterCtx = initCtx.generateNewContext("For loop iteration");
         retList->add(visit(AstNode(new VectorWrapperNode(forNode->statements)), iterCtx));
         visit(forNode->updateStatement, iterCtx);
     }
@@ -203,7 +203,7 @@ Object_sPtr Interpreter::visit_WhileNode(AstNode node, Context& ctx) {
 
     Object_sPtr retList = Object_sPtr(new List());
     while (visit(whileNode->condNode, ctx)->is_true()) {
-        Context iterCtx = ctx.generateNewContext("While loop iteration in " + ctx.name);
+        Context iterCtx = ctx.generateNewContext("While loop iteration");
         retList->add(visit(AstNode(new VectorWrapperNode(whileNode->statements)), iterCtx));
     }
 
@@ -212,4 +212,23 @@ Object_sPtr Interpreter::visit_WhileNode(AstNode node, Context& ctx) {
     }
     return retList;
 }
+
+Object_sPtr Interpreter::visit_FunctionDefNode(AstNode node, Context& ctx) {
+    std::shared_ptr<FunctionDefNode> funDefNode = std::static_pointer_cast<FunctionDefNode>(node);
+    if (ctx.symbol_table->containsLocalKey(funDefNode->name)) {
+        throw Exception("Cannot define function. '" + funDefNode->name + "' is already in scope.");
+    }
+
+
+    Object_sPtr newFunction(new Function(funDefNode->name, funDefNode->argNames, funDefNode->statements));
+    Object_sPtr varWrapper = Object_sPtr(new VariableWrapper(newFunction, false));
+    ctx.symbol_table->addLocal(funDefNode->name, varWrapper);
+    return newFunction;
+}
+
+Object_sPtr Interpreter::visit_FunctionCallNode(AstNode node, Context& ctx) {
+    std::shared_ptr<FunctionCallNode> funCallNode = std::static_pointer_cast<FunctionCallNode>(node);
+}
+
+
 

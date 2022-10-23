@@ -4,10 +4,16 @@
 for (var i = 0; i > 5; i = i - 1) {
     i;
 };
-#i;
+
+# This should throw an error because i was not declared outside of the loop
+# i;
 
 var j = 0;
 while (j < 10) {
     j;
     j = j + 1;
+    var b = 0;
 };
+
+# This should throw an error because k was not declared outside of the loop
+b;

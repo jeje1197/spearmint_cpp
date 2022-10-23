@@ -13,10 +13,11 @@ typedef std::shared_ptr<Object> Object_sPtr;
 class Object {
     // Base Object in Spearmint
     public:
-        std::string type = "BaseObject";
-        std::string str_value = "Base Object String";
-        float float_value;
-        bool boolean_value = false;
+        std::string type = "BaseObject"; // This is for type management
+        std::string str_value = "Base Object String"; // This is for strings
+        //std::string name = "BaseObject"; // This is for functions
+        float float_value; // This is for numbers
+        bool boolean_value = false; // This is for booleans
 
         Object() {}
 
@@ -58,6 +59,18 @@ class Object {
 
         virtual Object_sPtr getObject() {
             return illegalOperation();
+        }
+
+        bool isCallable() {
+            if (type != "Function") {
+                throw Exception(type + " is not callable");
+            }
+            return false;
+        }
+
+        virtual bool checkNumArgs(std::vector<AstNode>& other) {
+            illegalOperation();
+            return false;
         }
 
         std::string getAddress() {
@@ -460,19 +473,26 @@ class List : public Object {
 };
 
 class Function : public Object {
-    std::string name;
-    std::vector<std::string> argNames;
-    std::vector<AstNode> statements;
-
     public:
+        std::string name;
+        std::vector<std::string> argNames;
+        std::vector<AstNode> statements;
+
         Function(std::string name, std::vector<std::string> argNames, std::vector<AstNode> statements) : Object("Function") {
             this->name = name;
             this->argNames = argNames;
             this->statements = statements;
         }
 
-        bool checkNumArgs(std::vector<std::string>& other) {
-            return this->statements.size() == other.size();
+        bool checkNumArgs(std::vector<AstNode>& other) {
+            int numArgs = (int) statements.size();
+            int numPassedArgs = (int) other.size();
+
+            if (numArgs != numPassedArgs) {
+                throw Exception("Function '" + name + "' expected " + std::to_string(numArgs) + " args, but received " +
+                                std::to_string(numPassedArgs) + " args");
+            }
+            return true;
         }
 
         std::string toString() {

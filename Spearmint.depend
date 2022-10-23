@@ -31,7 +31,7 @@
 	<vector>
 	<set>
 
-1666388261 c:\users\jo\desktop\c++\spearmint\astnodes.h
+1666508705 c:\users\jo\desktop\c++\spearmint\astnodes.h
 	<string>
 	<vector>
 	<iostream>
@@ -48,7 +48,7 @@
 1666272440 source:c:\users\jo\desktop\c++\spearmint\token.cpp
 	"Token.h"
 
-1666389383 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
+1666511162 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
 	"Parser.h"
 
 1663114357 source:c:\users\jo\desktop\c++\spearmint\exception.cpp
@@ -78,7 +78,7 @@
 	<string>
 	<vector>
 
-1666503411 source:c:\users\jo\desktop\c++\spearmint\interpreter.cpp
+1666510220 source:c:\users\jo\desktop\c++\spearmint\interpreter.cpp
 	"Interpreter.h"
 	"Exception.h"
 	"Context.h"
@@ -86,7 +86,7 @@
 	<iostream>
 	<memory>
 
-1666505404 c:\users\jo\desktop\c++\spearmint\classes.h
+1666511366 c:\users\jo\desktop\c++\spearmint\classes.h
 	<iostream>
 	<string>
 	<memory>

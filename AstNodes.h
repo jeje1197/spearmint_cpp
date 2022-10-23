@@ -243,17 +243,17 @@ class FunctionDefNode : public AstNodeBase {
 
 class FunctionCallNode : public AstNodeBase {
     public:
-        std::string name;
+        AstNode nodeToCall;
         std::vector<AstNode> argNodes;
 
-        FunctionCallNode(Token& functionNameTok, std::vector<AstNode>& argNodes) {
+        FunctionCallNode(AstNode nodeToCall, std::vector<AstNode>& argNodes) {
             this->type = "FunctionCallNode";
-            this->name = functionNameTok.value;
+            this->nodeToCall = nodeToCall;
             this->argNodes = argNodes;
         }
 
         std::string toString() {
-            return "(FunctionCallNode Name: '" + name + + "' Args:(" +
+            return "(FunctionCallNode NodeToCall:" + nodeToCall->toString() + "Args:(" +
                 astListToString(argNodes) + "))";
         }
 };

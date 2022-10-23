@@ -437,9 +437,38 @@ AstNode Parser::power() {
 }
 
 AstNode Parser::call() {
-    AstNode atom_node = atom();
+    AstNode node = atom();
 
-    return atom_node;
+    while (curTok.matches(LPAREN)) {
+        getNext();
+        std::vector<AstNode> argNodes;
+
+        AstNode expr_node = expr();
+        if (expr_node != nullptr) {
+            argNodes.push_back(expr_node);
+        }
+
+        while (curTok.matches(COMMA)) {
+            getNext();
+
+            expr_node = expr();
+            if (expr_node == nullptr) {
+                throw Exception("Expected expression after ','");
+            }
+
+            argNodes.push_back(expr_node);
+        }
+
+        if (!curTok.matches(RPAREN)) {
+            throw Exception("Expected ')'");
+        }
+        getNext();
+
+        node = AstNode(new FunctionCallNode(node, argNodes));
+        std::cout << node->toString() << std::endl;
+    }
+
+    return node;
 }
 
 AstNode Parser::atom() {

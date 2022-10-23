@@ -39,6 +39,10 @@ Object_sPtr Interpreter::visit(AstNode node, Context& ctx) {
         return visit_ForNode(node, ctx);
     } else if (type == "WhileNode") {
         return visit_WhileNode(node, ctx);
+    } else if (type == "FunctionDefNode") {
+        return visit_FunctionDefNode(node, ctx);
+    } else if (type == "FunctionCallNode") {
+        return visit_FunctionCallNode(node, ctx);
     } else {
         throw Exception("No visit_" + node->type + " method defined.");
     }
@@ -228,6 +232,21 @@ Object_sPtr Interpreter::visit_FunctionDefNode(AstNode node, Context& ctx) {
 
 Object_sPtr Interpreter::visit_FunctionCallNode(AstNode node, Context& ctx) {
     std::shared_ptr<FunctionCallNode> funCallNode = std::static_pointer_cast<FunctionCallNode>(node);
+
+    std::shared_ptr<Function> functionObj = std::static_pointer_cast<Function>(visit(funCallNode->nodeToCall, ctx));
+    functionObj->isCallable();
+    functionObj->checkNumArgs(funCallNode->argNodes);
+
+    Context funCtx = ctx.generateNewContext("Function '" + functionObj->name + "'");
+    for (int i = 0; i < (int) functionObj->argNames.size(); i++) {
+
+        Object_sPtr arg_value = visit(funCallNode->argNodes.at(i), ctx);
+        Object_sPtr varWrapper = Object_sPtr(new VariableWrapper(arg_value));
+        funCtx.symbol_table->addLocal(functionObj->argNames.at(i), varWrapper);
+    }
+
+    Object_sPtr res = visit(AstNode(new VectorWrapperNode(functionObj->statements)), funCtx);
+    return res;
 }
 
 

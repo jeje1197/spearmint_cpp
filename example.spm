@@ -5,10 +5,9 @@ if (0) {
     "First case";
 } else if (1) {
     "Spearmint is an awesome language.";
-    var cond = true;
-    #true;
 } else {
     "Else case";
 };
 
-cond;
+# Reassigning constant variables will throw an error
+# filename = "anything else.spm"

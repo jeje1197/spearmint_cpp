@@ -7,3 +7,4 @@ fun newFun(a) {
 newFun;
 
 newFun(5);
+a;

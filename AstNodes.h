@@ -253,8 +253,8 @@ class FunctionCallNode : public AstNodeBase {
         }
 
         std::string toString() {
-            return "(FunctionCallNode NodeToCall:" + nodeToCall->toString() + "Args:(" +
-                astListToString(argNodes) + "))";
+            return "(FunctionCallNode NodeToCall: " + nodeToCall->toString() + ", Args: " +
+                astListToString(argNodes) + ")";
         }
 };
 

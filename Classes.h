@@ -513,7 +513,7 @@ class Function : public Object {
                 throw Exception("Built in method not defined for " + name);
             }
 
-            // Should call function from function pointer (void (*)(void *))
+            // Should call function from function pointer (Object_sPtr (*)(void *))
             return execute(ctx);
         }
 

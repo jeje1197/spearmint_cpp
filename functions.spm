@@ -4,7 +4,6 @@ fun newFun(a) {
     "a is: " + a;
 };
 
-newFun;
-
 newFun(5);
-a;
+
+newFun = 5;

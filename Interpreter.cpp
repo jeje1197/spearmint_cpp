@@ -239,10 +239,14 @@ Object_sPtr Interpreter::visit_FunctionCallNode(AstNode node, Context& ctx) {
 
     Context funCtx = ctx.generateNewContext("Function '" + functionObj->name + "'");
     for (int i = 0; i < (int) functionObj->argNames.size(); i++) {
-
         Object_sPtr arg_value = visit(funCallNode->argNodes.at(i), ctx);
         Object_sPtr varWrapper = Object_sPtr(new VariableWrapper(arg_value));
         funCtx.symbol_table->addLocal(functionObj->argNames.at(i), varWrapper);
+    }
+
+    if (functionObj->isBuiltIn()) {
+        //void* ctxPtr = &ctx;
+        return functionObj->executeWrapper((void*)&ctx);
     }
 
     Object_sPtr res = visit(AstNode(new VectorWrapperNode(functionObj->statements)), funCtx);

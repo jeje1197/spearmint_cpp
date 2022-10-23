@@ -477,11 +477,19 @@ class Function : public Object {
         std::string name;
         std::vector<std::string> argNames;
         std::vector<AstNode> statements;
+        bool builtIn = false;
+        void (*execute)(void*) = nullptr;
 
         Function(std::string name, std::vector<std::string> argNames, std::vector<AstNode> statements) : Object("Function") {
             this->name = name;
             this->argNames = argNames;
             this->statements = statements;
+        }
+
+        Function(std::string name, std::vector<std::string> argNames, void (*execute)(void*)) : Object("Function") {
+            this->name = name;
+            this->argNames = argNames;
+            this->execute = execute;
         }
 
         bool checkNumArgs(std::vector<AstNode>& other) {
@@ -495,9 +503,22 @@ class Function : public Object {
             return true;
         }
 
+        bool isBuiltIn() {
+            return builtIn;
+        }
+
+        Object_sPtr executeWrapper(void* ctx) {
+            if (execute == nullptr) {
+                throw Exception("Built in method not defined for " + name);
+            }
+            execute(ctx);
+        }
+
         std::string toString() {
             return "Function '" + name + "' at address:" + getAddress();
         }
+
+
 
 };
 

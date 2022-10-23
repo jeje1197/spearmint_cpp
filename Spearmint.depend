@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1666496764 source:c:\users\jo\desktop\c++\spearmint\main.cpp
+1666517505 source:c:\users\jo\desktop\c++\spearmint\main.cpp
 	<iostream>
 	<memory>
 	<fstream>
@@ -9,6 +9,7 @@
 	"AstNodes.h"
 	"Interpreter.h"
 	"Classes.h"
+	"BuiltInFunctions.h"
 
 1666272310 c:\users\jo\desktop\c++\spearmint\token.h
 	<string>
@@ -78,7 +79,7 @@
 	<string>
 	<vector>
 
-1666511854 source:c:\users\jo\desktop\c++\spearmint\interpreter.cpp
+1666517345 source:c:\users\jo\desktop\c++\spearmint\interpreter.cpp
 	"Interpreter.h"
 	"Exception.h"
 	"Context.h"
@@ -86,7 +87,7 @@
 	<iostream>
 	<memory>
 
-1666511366 c:\users\jo\desktop\c++\spearmint\classes.h
+1666517980 c:\users\jo\desktop\c++\spearmint\classes.h
 	<iostream>
 	<string>
 	<memory>
@@ -98,4 +99,8 @@
 	"Classes.h"
 	<string>
 	<unordered_map>
+
+1666518069 c:\users\jo\desktop\c++\spearmint\builtinfunctions.h
+	"Classes.h"
+	"Context.h"
 

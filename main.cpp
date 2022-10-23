@@ -8,6 +8,7 @@
 #include "AstNodes.h"
 #include "Interpreter.h"
 #include "Classes.h"
+#include "BuiltInFunctions.h"
 
 
 void run(std::string input);
@@ -113,6 +114,7 @@ void run(std::string input) {
     ctx.symbol_table->addLocal("true", Object_sPtr(new VariableWrapper(truePrimitive, true)));
     ctx.symbol_table->addLocal("false", Object_sPtr(new VariableWrapper(falsePrimitive, true)));
     ctx.symbol_table->addLocal("null", Object_sPtr(new VariableWrapper(nullPrimitive, true)));
+    ctx.symbol_table->addLocal("print", Object_sPtr(new VariableWrapper(printFunction, true)));
     try {
         result = interpreter.visit(programStatements, ctx);
     } catch (Exception& err) {

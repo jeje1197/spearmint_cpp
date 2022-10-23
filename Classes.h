@@ -250,7 +250,7 @@ class String : public Object {
         }
 
         std::string toString() {
-            return "'" + str_value + "'";
+            return str_value;
         }
 
         // Operations
@@ -520,7 +520,6 @@ class Function : public Object {
         std::string toString() {
             return "Function '" + name + "' (" + std::to_string((int) argNames.size()) + ") at address:" + getAddress();
         }
-
 };
 
 #endif // CLASSES_H_INCLUDED

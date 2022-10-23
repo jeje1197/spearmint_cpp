@@ -21,6 +21,7 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="AstNodes.h" />
+		<Unit filename="BuiltInFunctions.h" />
 		<Unit filename="Classes.h" />
 		<Unit filename="Context.h" />
 		<Unit filename="Exception.cpp" />
@@ -31,10 +32,10 @@
 		<Unit filename="Lexer.h" />
 		<Unit filename="Parser.cpp" />
 		<Unit filename="Parser.h" />
-		<Unit filename="SymbolTable.h" />
 		<Unit filename="Token.cpp" />
 		<Unit filename="Token.h" />
 		<Unit filename="example.spm" />
+		<Unit filename="functions.spm" />
 		<Unit filename="loops.spm" />
 		<Unit filename="main.cpp" />
 		<Extensions>

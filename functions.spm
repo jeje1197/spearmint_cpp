@@ -5,5 +5,4 @@ fun newFun(a) {
 };
 
 newFun(5);
-
-newFun = 5;
+print("I love you!!");

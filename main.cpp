@@ -115,6 +115,7 @@ void run(std::string input) {
     ctx.symbol_table->addLocal("false", Object_sPtr(new VariableWrapper(falsePrimitive, true)));
     ctx.symbol_table->addLocal("null", Object_sPtr(new VariableWrapper(nullPrimitive, true)));
     ctx.symbol_table->addLocal("print", Object_sPtr(new VariableWrapper(printFunction, true)));
+
     try {
         result = interpreter.visit(programStatements, ctx);
     } catch (Exception& err) {

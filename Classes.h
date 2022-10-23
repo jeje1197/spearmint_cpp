@@ -478,7 +478,7 @@ class Function : public Object {
         std::vector<std::string> argNames;
         std::vector<AstNode> statements;
         bool builtIn = false;
-        void (*execute)(void*) = nullptr;
+        Object_sPtr (*execute)(void*) = nullptr;
 
         Function(std::string name, std::vector<std::string> argNames, std::vector<AstNode> statements) : Object("Function") {
             this->name = name;
@@ -486,14 +486,15 @@ class Function : public Object {
             this->statements = statements;
         }
 
-        Function(std::string name, std::vector<std::string> argNames, void (*execute)(void*)) : Object("Function") {
+        Function(std::string name, std::vector<std::string> argNames, Object_sPtr (*execute)(void*)) : Object("Function") {
             this->name = name;
             this->argNames = argNames;
             this->execute = execute;
+            this->builtIn = true;
         }
 
-        bool checkNumArgs(std::vector<AstNode>& other) {
-            int numArgs = (int) statements.size();
+        bool checkNumArgs(std::vector<AstNode> other) {
+            int numArgs = (int) argNames.size();
             int numPassedArgs = (int) other.size();
 
             if (numArgs != numPassedArgs) {
@@ -511,14 +512,14 @@ class Function : public Object {
             if (execute == nullptr) {
                 throw Exception("Built in method not defined for " + name);
             }
-            execute(ctx);
+
+            // Should call function from function pointer (void (*)(void *))
+            return execute(ctx);
         }
 
         std::string toString() {
-            return "Function '" + name + "' at address:" + getAddress();
+            return "Function '" + name + "' (" + std::to_string((int) argNames.size()) + ") at address:" + getAddress();
         }
-
-
 
 };
 

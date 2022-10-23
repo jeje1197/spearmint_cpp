@@ -245,8 +245,7 @@ Object_sPtr Interpreter::visit_FunctionCallNode(AstNode node, Context& ctx) {
     }
 
     if (functionObj->isBuiltIn()) {
-        //void* ctxPtr = &ctx;
-        return functionObj->executeWrapper((void*)&ctx);
+        return functionObj->executeWrapper(&funCtx);
     }
 
     Object_sPtr res = visit(AstNode(new VectorWrapperNode(functionObj->statements)), funCtx);

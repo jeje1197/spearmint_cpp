@@ -39,6 +39,14 @@ class SymbolTable {
             symbol_table[key] = value;
         }
 
+        void addGlobal(std::string key, Object_sPtr value) {
+            SymbolTable* cur = this;
+            while (cur->parent != nullptr) {
+                cur = cur->parent;
+            }
+            cur->addLocal(key, value);
+        }
+
         void update(std::string key, Object_sPtr value) {
             SymbolTable* cur = this;
             while (cur != nullptr) {

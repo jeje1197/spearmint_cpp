@@ -16,6 +16,7 @@ Interpreter::Interpreter(std::string fileName) {
 
 Object_sPtr Interpreter::visit(AstNode node, Context& ctx) {
     std::string type = node->type;
+    std::cout << type << std::endl;
 
     if (type == "VectorWrapperNode") {
         return visit_VectorWrapperNode(node, ctx);
@@ -43,6 +44,8 @@ Object_sPtr Interpreter::visit(AstNode node, Context& ctx) {
         return visit_FunctionDefNode(node, ctx);
     } else if (type == "FunctionCallNode") {
         return visit_FunctionCallNode(node, ctx);
+    } else if (type == "ClassDefNode") {
+        return visit_ClassDefNode(node, ctx);
     } else {
         throw Exception("No visit_" + node->type + " method defined.");
     }
@@ -124,7 +127,6 @@ Object_sPtr Interpreter::visit_UnaryOpNode(AstNode node, Context& ctx){
 }
 
 Object_sPtr Interpreter::visit_BinOpNode(AstNode node, Context& ctx){
-    // Cast shared_ptr<AstNode> to shared_ptr<BinOpNode>
     std::shared_ptr<BinOpNode> binOpNode = std::static_pointer_cast<BinOpNode>(node);
 
     // Use shared ptr for virtual calls
@@ -252,5 +254,26 @@ Object_sPtr Interpreter::visit_FunctionCallNode(AstNode node, Context& ctx) {
     return res;
 }
 
+Object_sPtr Interpreter::visit_ClassDefNode(AstNode node, Context& ctx) {
+    std::shared_ptr<ClassDefNode> classDefNode = std::static_pointer_cast<ClassDefNode>(node);
+
+    if (ctx.symbol_table->containsKeyAnywhere(classDefNode->name)) {
+        throw Exception("Class '" + classDefNode->name + "' is already defined.");
+    }
+
+    Object_sPtr newClass = Object_sPtr(new Class(classDefNode->name));
+    for (AstNode a : classDefNode->statements) {
+        if (a->type == "VarDeclarationNode") {
+        } else if (a->type == "FunctionDef"){
+
+        } else {
+            throw Exception(a->type + " cannot be used in a class definition.");
+        }
+    }
+
+    Object_sPtr varWrapper = Object_sPtr(new VariableWrapper(newClass, true));
+    ctx.symbol_table->addGlobal(classDefNode->name, varWrapper);
+    return newClass;
+}
 
 

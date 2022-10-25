@@ -259,14 +259,13 @@ class FunctionCallNode : public AstNodeBase {
 };
 
 
-
 class ClassDefNode : public AstNodeBase {
     public:
         std::string name;
         std::vector<AstNode> statements;
 
         ClassDefNode(Token& classNameTok, std::vector<AstNode>& statements) {
-            this->type = "FunctionCallNode";
+            this->type = "ClassDefNode";
             this->name = classNameTok.value;
             this->statements = statements;
         }
@@ -275,7 +274,10 @@ class ClassDefNode : public AstNodeBase {
             return "(ClassDefNode Name: '" + name + + "' Statements: {" +
                 astListToString(statements) + "})";
         }
+
 };
+
+
 
 
 

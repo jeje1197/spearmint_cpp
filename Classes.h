@@ -6,6 +6,7 @@
 #include <memory>
 #include <sstream>
 #include <cmath>
+#include <unordered_map>
 
 class Object;
 typedef std::shared_ptr<Object> Object_sPtr;
@@ -520,6 +521,41 @@ class Function : public Object {
         std::string toString() {
             return "Function '" + name + "' (" + std::to_string((int) argNames.size()) + ") at address:" + getAddress();
         }
+};
+
+class Class : public Object {
+    public:
+        std::string name;
+        std::unordered_map<std::string, Object_sPtr> fields;
+
+        Class(std::string name) : Object(name) {
+            this->name = name;
+        }
+
+        bool hasField(std::string key) {
+            return fields.find(key) != fields.end();
+        }
+
+        void addField(std::string key, Object_sPtr value) {
+            if (fields.find(key) != fields.end()) {
+                throw Exception("Class '" + name + "' already has a '" + key + "' field.");
+            }
+            fields[key] = value;
+        }
+
+        Object_sPtr getField(std::string key) {
+            if (fields.find(key) == fields.end()) {
+                throw Exception(name + " does not have a '" + key + "' field.");
+            }
+
+            return fields.at(key);
+        }
+
+        std::string toString() {
+            return "Class Definition for " + name;
+        }
+
+
 };
 
 #endif // CLASSES_H_INCLUDED

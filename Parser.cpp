@@ -72,6 +72,9 @@ AstNode Parser::statement() {
     else if (curTok.matches(KEYWORD, "fun")) {
         return functionDef();
     }
+    else if (curTok.matches(KEYWORD, "class")) {
+        return classDef();
+    }
 
     return expr(); // Can return nullptr
 }

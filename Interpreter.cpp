@@ -261,11 +261,15 @@ Object_sPtr Interpreter::visit_ClassDefNode(AstNode node, Context& ctx) {
         throw Exception("Class '" + classDefNode->name + "' is already defined.");
     }
 
-    Object_sPtr newClass = Object_sPtr(new Class(classDefNode->name));
+    std::shared_ptr<Class> newClass = std::shared_ptr<Class>(new Class(classDefNode->name));
     for (AstNode a : classDefNode->statements) {
         if (a->type == "VarDeclarationNode") {
-        } else if (a->type == "FunctionDef"){
-
+            std::shared_ptr<VarDeclarationNode> varNode = std::static_pointer_cast<VarDeclarationNode>(a);
+            newClass->addField(varNode->varName, Object_sPtr(new VariableWrapper(visit(varNode->exprNode, ctx), false)));
+        } else if (a->type == "FunctionDefNode"){
+            std::shared_ptr<FunctionDefNode> funDefNode = std::static_pointer_cast<FunctionDefNode>(a);
+            Object_sPtr newFunction(new Function(funDefNode->name, funDefNode->argNames, funDefNode->statements));
+            newClass->addField(funDefNode->name, Object_sPtr(new VariableWrapper(newFunction, false)));
         } else {
             throw Exception(a->type + " cannot be used in a class definition.");
         }

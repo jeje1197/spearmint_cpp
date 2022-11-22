@@ -57,9 +57,6 @@ AstNode Parser::statement() {
     if (curTok.matches(KEYWORD, "var") || curTok.matches(KEYWORD, "const")) {
         return varDeclaration();
     }
-    else if (curTok.matches(ID) && lookAhead().matches(OP, "=")) {
-        return varAssign();
-    }
     else if (curTok.matches(KEYWORD, "if")) {
         return ifStatement();
     }
@@ -71,6 +68,15 @@ AstNode Parser::statement() {
     }
     else if (curTok.matches(KEYWORD, "fun")) {
         return functionDef();
+    }
+    else if (curTok.matches(KEYWORD, "return")) {
+        return returnStatement();
+    }
+    else if (curTok.matches(KEYWORD, "break")) {
+        return breakStatement();
+    }
+    else if (curTok.matches(KEYWORD, "continue")) {
+        return continueStatement();
     }
     else if (curTok.matches(KEYWORD, "class")) {
         return classDef();
@@ -373,6 +379,34 @@ AstNode Parser::functionDef() {
     return AstNode(new FunctionDefNode(functionNameTok, argNames, statement_list));
 }
 
+AstNode Parser::returnStatement() {
+    if (!curTok.matches(KEYWORD, "return")) {
+        throw Exception("Expected keyword 'return'");
+    }
+    getNext();
+
+    AstNode expr_node = expr();
+    return AstNode(new ReturnNode(expr_node));
+}
+
+AstNode Parser::breakStatement() {
+    if (!curTok.matches(KEYWORD, "break")) {
+        throw Exception("Expected keyword 'break'");
+    }
+    getNext();
+
+    return AstNode(new BreakNode());
+}
+
+AstNode Parser::continueStatement() {
+    if (!curTok.matches(KEYWORD, "continue")) {
+        throw Exception("Expected keyword 'continue'");
+    }
+    getNext();
+
+    return AstNode(new ContinueNode());
+}
+
 
 AstNode Parser::classDef() {
     if (!curTok.matches(KEYWORD, "class")) {
@@ -401,6 +435,7 @@ AstNode Parser::classDef() {
     return AstNode(new ClassDefNode(classNameTok, classStatements));
 }
 
+//AstNode Parser::classAccess
 
 // Expression Parsing
 AstNode Parser::expr() {
@@ -468,7 +503,6 @@ AstNode Parser::call() {
         getNext();
 
         node = AstNode(new FunctionCallNode(node, argNodes));
-        std::cout << node->toString() << std::endl;
     }
 
     return node;
@@ -499,8 +533,13 @@ AstNode Parser::atom() {
         return AstNode(new StringNode(tok));
     }
     else if (tok.matches(ID)) {
+        AstNode node_to_return = AstNode(new VarAccessNode(tok));
         getNext();
-        return AstNode(new VarAccessNode(tok));
+
+        if (curTok.matches(OP, "=")) {
+        return varAssign();
+    }
+        return node_to_return;
     }
     else if (tok.matches(LPAREN)) {
         getNext();

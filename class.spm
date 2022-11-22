@@ -1,0 +1,15 @@
+# This is how classes are written in Spearmint
+
+class Book {
+    # class fields
+    var name = "";
+    var author = "Unknown";
+
+
+
+    # class method
+    fun read() {
+        return "Reading " + hi;
+
+    };
+};

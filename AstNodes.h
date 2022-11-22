@@ -258,6 +258,42 @@ class FunctionCallNode : public AstNodeBase {
         }
 };
 
+class ReturnNode : public AstNodeBase {
+    public:
+        AstNode expr_node;
+
+        ReturnNode(AstNode expr_node) {
+            this->type = "ReturnNode";
+            this->expr_node = expr_node;
+        }
+
+        std::string toString() {
+            return "(ReturnNode: " + expr_node->toString() + ")";
+        }
+};
+
+class BreakNode : public AstNodeBase {
+    public:
+        BreakNode() {
+            this->type = "BreakNode";
+        }
+
+        std::string toString() {
+            return "(BreakNode)";
+        }
+};
+
+class ContinueNode : public AstNodeBase {
+    public:
+        ContinueNode() {
+            this->type = "ContinueNode";
+        }
+
+        std::string toString() {
+            return "(ContinueNode)";
+        }
+};
+
 
 class ClassDefNode : public AstNodeBase {
     public:
@@ -276,10 +312,5 @@ class ClassDefNode : public AstNodeBase {
         }
 
 };
-
-
-
-
-
 
 #endif // ASTNODES_H_INCLUDED

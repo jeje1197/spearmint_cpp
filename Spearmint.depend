@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1666639539 source:c:\users\jo\desktop\c++\spearmint\main.cpp
+1666635939 source:c:\users\jo\desktop\c++\spearmint\main.cpp
 	<iostream>
 	<memory>
 	<fstream>
@@ -11,20 +11,20 @@
 	"Classes.h"
 	"BuiltInFunctions.h"
 
-1666272310 c:\users\jo\desktop\c++\spearmint\token.h
+1666268710 c:\users\jo\desktop\c++\spearmint\token.h
 	<string>
 	<iostream>
 	<set>
 	<sstream>
 
-1666271060 c:\users\jo\desktop\c++\spearmint\lexer.h
+1666267460 c:\users\jo\desktop\c++\spearmint\lexer.h
 	<string>
 	<vector>
 	<set>
 	"Token.h"
 	"Exception.h"
 
-1665994266 c:\users\jo\desktop\c++\spearmint\parser.h
+1669159114 c:\users\jo\desktop\c++\spearmint\parser.h
 	"Token.h"
 	"AstNodes.h"
 	"Exception.h"
@@ -32,7 +32,7 @@
 	<vector>
 	<set>
 
-1666639934 c:\users\jo\desktop\c++\spearmint\astnodes.h
+1669158894 c:\users\jo\desktop\c++\spearmint\astnodes.h
 	<string>
 	<vector>
 	<iostream>
@@ -42,20 +42,20 @@
 1662785747 c:\users\jo\desktop\c++\spearmint\regexfile.h
 	<regex>
 
-1666406252 source:c:\users\jo\desktop\c++\spearmint\lexer.cpp
+1669159288 source:c:\users\jo\desktop\c++\spearmint\lexer.cpp
 	"Lexer.h"
 	<unordered_map>
 
-1666272440 source:c:\users\jo\desktop\c++\spearmint\token.cpp
+1666268840 source:c:\users\jo\desktop\c++\spearmint\token.cpp
 	"Token.h"
 
-1666673211 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
+1669157695 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
 	"Parser.h"
 
-1663114357 source:c:\users\jo\desktop\c++\spearmint\exception.cpp
+1663110757 source:c:\users\jo\desktop\c++\spearmint\exception.cpp
 	"Exception.h"
 
-1666272480 c:\users\jo\desktop\c++\spearmint\exception.h
+1666268880 c:\users\jo\desktop\c++\spearmint\exception.h
 	<string>
 	<iostream>
 
@@ -71,7 +71,7 @@
 
 1663143110 source:c:\users\jo\desktop\c++\spearmint\helper.cpp
 
-1666672578 c:\users\jo\desktop\c++\spearmint\interpreter.h
+1669159061 c:\users\jo\desktop\c++\spearmint\interpreter.h
 	"Exception.h"
 	"AstNodes.h"
 	"Classes.h"
@@ -79,7 +79,7 @@
 	<string>
 	<vector>
 
-1666673376 source:c:\users\jo\desktop\c++\spearmint\interpreter.cpp
+1669157703 source:c:\users\jo\desktop\c++\spearmint\interpreter.cpp
 	"Interpreter.h"
 	"Exception.h"
 	"Context.h"
@@ -87,7 +87,7 @@
 	<iostream>
 	<memory>
 
-1666673012 c:\users\jo\desktop\c++\spearmint\classes.h
+1666669412 c:\users\jo\desktop\c++\spearmint\classes.h
 	<iostream>
 	<string>
 	<memory>
@@ -95,13 +95,13 @@
 	<cmath>
 	<unordered_map>
 
-1666672900 c:\users\jo\desktop\c++\spearmint\context.h
+1666669300 c:\users\jo\desktop\c++\spearmint\context.h
 	"Exception.h"
 	"Classes.h"
 	<string>
 	<unordered_map>
 
-1666523385 c:\users\jo\desktop\c++\spearmint\builtinfunctions.h
+1669155940 c:\users\jo\desktop\c++\spearmint\builtinfunctions.h
 	"Classes.h"
 	"Context.h"
 

@@ -16,7 +16,6 @@ Interpreter::Interpreter(std::string fileName) {
 
 Object_sPtr Interpreter::visit(AstNode node, Context& ctx) {
     std::string type = node->type;
-    std::cout << type << std::endl;
 
     if (type == "VectorWrapperNode") {
         return visit_VectorWrapperNode(node, ctx);
@@ -279,5 +278,8 @@ Object_sPtr Interpreter::visit_ClassDefNode(AstNode node, Context& ctx) {
     ctx.symbol_table->addGlobal(classDefNode->name, varWrapper);
     return newClass;
 }
+
+
+
 
 

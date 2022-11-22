@@ -44,6 +44,10 @@ class Parser {
         AstNode functionDef();
         AstNode call();
 
+        AstNode returnStatement();
+        AstNode breakStatement();
+        AstNode continueStatement();
+
         // Lambda
         //AstNode lambdaDef();
 

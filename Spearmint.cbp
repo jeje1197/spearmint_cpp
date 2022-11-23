@@ -34,8 +34,10 @@
 		<Unit filename="Parser.h" />
 		<Unit filename="Token.cpp" />
 		<Unit filename="Token.h" />
+		<Unit filename="class.spm" />
 		<Unit filename="example.spm" />
 		<Unit filename="functions.spm" />
+		<Unit filename="grammar.spm" />
 		<Unit filename="loops.spm" />
 		<Unit filename="main.cpp" />
 		<Extensions>

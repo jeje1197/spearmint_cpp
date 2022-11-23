@@ -1,0 +1,45 @@
+# Grammar for the spearmint programming language
+
+program: statements
+statements: statement*
+statement: Import
+    | VarDeclaration
+    | IfStatement
+    | ForStatement
+    | WhileStatement
+    | FunctionDef
+    | Return
+    | Break
+    | Continue
+    | ClassDef
+    | ClassAccess
+    | ClassAssign
+    | Import
+    | expr
+
+VarDeclaration: ("const" | "var") ID = expr
+IfStatement: "if" (expr) {statements}
+ForStatement: "for" (statement; expr; statement) {statements}
+WhileStatement: "while" (expr) {statements}
+FunctionDef: "fun" (ID? (, ID)*) {statements}
+Return: "return" expr*;
+Break: "break"
+Continue: "continue"
+ClassDef: "class" ID {statements}
+ClassAccess: expr(.ID | .ID())+
+ClassAssign: expr.ID (.ID() | .ID)* = expr
+Import: "import" STRING (as ID)
+
+expr: !? comp1
+comp1: comp2 ((&& | ||) comp2)*
+comp2: arith_expr ( (< | > | <= | >= | == | !=) arith_expr)*
+arith_expr: term (+|- term)*
+term: power (*|/ power)*
+power: call (^ power)
+call: atom ((expr? (, expr)*))?
+atom: + | -
+    | INT
+    | DOUBLE
+    | STRING
+    | ID | ID = expr
+    | (expr)

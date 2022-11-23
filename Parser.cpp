@@ -534,11 +534,11 @@ AstNode Parser::atom() {
     }
     else if (tok.matches(ID)) {
         AstNode node_to_return = AstNode(new VarAccessNode(tok));
+        if (lookAhead().matches(OP, "=")) {
+            return varAssign();
+        }
         getNext();
 
-        if (curTok.matches(OP, "=")) {
-        return varAssign();
-    }
         return node_to_return;
     }
     else if (tok.matches(LPAREN)) {

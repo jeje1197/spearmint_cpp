@@ -45,6 +45,10 @@ Object_sPtr Interpreter::visit(AstNode node, Context& ctx) {
         return visit_FunctionCallNode(node, ctx);
     } else if (type == "ClassDefNode") {
         return visit_ClassDefNode(node, ctx);
+    } else if (type == "AttributeAccessNode") {
+        return visit_AttributeAccessNode(node, ctx);
+    } else if (type == "AttributeAssignNode") {
+        return visit_AttributeAssignNode(node, ctx);
     } else {
         throw Exception("No visit_" + node->type + " method defined.");
     }
@@ -277,6 +281,18 @@ Object_sPtr Interpreter::visit_ClassDefNode(AstNode node, Context& ctx) {
     Object_sPtr varWrapper = Object_sPtr(new VariableWrapper(newClass, true));
     ctx.symbol_table->addGlobal(classDefNode->name, varWrapper);
     return newClass;
+}
+
+Object_sPtr Interpreter::visit_AttributeAccessNode(AstNode node, Context& ctx){
+    std::shared_ptr<AttributeAccessNode> attrAccessNode = std::static_pointer_cast<AttributeAccessNode>(node);
+    Object_sPtr obj = visit(attrAccessNode->exprNode, ctx);
+
+    Object_sPtr varWrapper = obj->getField(attrAccessNode->name);
+    return varWrapper->getObject();
+}
+
+Object_sPtr Interpreter::visit_AttributeAssignNode(AstNode node, Context& ctx){
+    return Null_sPtr;
 }
 
 

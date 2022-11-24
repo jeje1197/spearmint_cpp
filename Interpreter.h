@@ -33,9 +33,7 @@ class Interpreter {
 		Object_sPtr visit_FunctionDefNode(AstNode node, Context& ctx);
 		Object_sPtr visit_FunctionCallNode(AstNode node, Context& ctx);
 
-
-
 		Object_sPtr visit_ClassDefNode(AstNode node, Context& ctx);
-		//Object_sPtr visit_ClassAccessNode(AstNode node, Context& ctx);
-
+		Object_sPtr visit_AttributeAccessNode(AstNode node, Context& ctx);
+		Object_sPtr visit_AttributeAssignNode(AstNode node, Context& ctx);
 };

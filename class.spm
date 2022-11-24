@@ -2,7 +2,7 @@
 
 class Book {
     # class fields
-    var name = "";
+    var name = "TemplateBookClass";
     var author = "Unknown";
 
 
@@ -13,3 +13,7 @@ class Book {
 
     };
 };
+
+var bookName = Book.name;
+
+print(bookName = "No longer TemplateBookClass");

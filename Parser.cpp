@@ -480,7 +480,7 @@ AstNode Parser::call() {
         node = functionCall(node);
     }
 
-    // Check for attribute access: .ID
+    // Check for attribute access: atom.ID
     while (curTok.matches(DOT) && lookAhead().matches(ID)) {
         getNext();
 
@@ -488,12 +488,12 @@ AstNode Parser::call() {
         node = AstNode(new AttributeAccessNode(attrTok, node));
         getNext();
 
-        // Function Call: atom()
+        // Function Call: atom.ID()
         if (curTok.matches(LPAREN)) {
             node = functionCall(node);
         }
 
-        // Check for assignment: atom = expr
+        // Check for assignment: atom.ID = expr
         if (curTok.matches(OP, "=")) {
             if (node->type != "AttributeAccessNode") {
                 throw Exception("Trying to assign value to non-attribute.");

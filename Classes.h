@@ -93,7 +93,7 @@ class Object {
             if (this->isNull()) {
                 return "null";
             }
-            return type + getAddress();
+            return type + " at " + getAddress();
         }
 
         static Object_sPtr NullType() {
@@ -176,6 +176,19 @@ class Object {
         }
 
         virtual Object_sPtr getInternal(int index) {
+            return illegalOperation();
+        }
+
+        virtual bool hasField(std::string key) {
+            illegalOperation();
+            return false;
+        }
+
+        virtual void addField(std::string key, Object_sPtr value) {
+            illegalOperation();
+        }
+
+        virtual Object_sPtr getField(std::string key) {
             return illegalOperation();
         }
 };

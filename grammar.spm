@@ -26,8 +26,8 @@ Return: "return" expr*;
 Break: "break"
 Continue: "continue"
 ClassDef: "class" ID {statements}
-ClassAccess: expr(.ID | .ID())+
-ClassAssign: expr.ID (.ID() | .ID)* = expr
+ClassAccess: atom(.ID | .ID())+
+ClassAssign: atom.ID (.ID() | .ID)* = expr
 Import: "import" STRING (as ID)
 
 expr: !? comp1
@@ -37,7 +37,7 @@ arith_expr: term (+|- term)*
 term: power (*|/ power)*
 power: call (^ power)
 call: atom ((expr? (, expr)*))?
-atom: + | -
+atom: + | - (atom)
     | INT
     | DOUBLE
     | STRING

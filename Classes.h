@@ -195,7 +195,7 @@ class Object {
 
 class VariableWrapper : public Object {
     private:
-        Object_sPtr obj;
+        Object_sPtr obj = nullptr;
         bool constant_modifier = false; // 0 - none, 1 - const
 
     public:
@@ -567,8 +567,6 @@ class Class : public Object {
         std::string toString() {
             return "Class Definition for " + name;
         }
-
-
 };
 
 #endif // CLASSES_H_INCLUDED

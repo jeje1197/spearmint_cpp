@@ -292,7 +292,16 @@ Object_sPtr Interpreter::visit_AttributeAccessNode(AstNode node, Context& ctx){
 }
 
 Object_sPtr Interpreter::visit_AttributeAssignNode(AstNode node, Context& ctx){
-    return Null_sPtr;
+    std::shared_ptr<AttributeAssignNode> attrAssignNode = std::static_pointer_cast<AttributeAssignNode>(node);
+    std::shared_ptr<AttributeAccessNode> attrAccessNode = std::static_pointer_cast<AttributeAccessNode>(attrAssignNode->attrNode);
+
+    Object_sPtr obj = visit(attrAccessNode->exprNode, ctx);
+
+    Object_sPtr varWrapper = obj->getField(attrAccessNode->name);
+    Object_sPtr value = visit(attrAssignNode->exprNode, ctx);
+    varWrapper->storeObject(value);
+
+    return value;
 }
 
 

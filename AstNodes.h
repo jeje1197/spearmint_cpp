@@ -338,6 +338,7 @@ class AttributeAssignNode : public AstNodeBase {
 
         AttributeAssignNode(AstNode attrNode, AstNode exprNode) {
             this->type = "AttributeAssignNode";
+            this->attrNode = attrNode;
             this->exprNode = exprNode;
         }
 

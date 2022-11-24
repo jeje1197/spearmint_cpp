@@ -5,15 +5,18 @@ class Book {
     var name = "TemplateBookClass";
     var author = "Unknown";
 
-
-
     # class method
     fun read() {
-        return "Reading " + hi;
-
+        return "Reading " + name + ".";
     };
 };
 
-var bookName = Book.name;
+# Creating a book
+# var myFavoriteBook = new Book("TaleOfMemories");
+var myFavoriteBook = Book;
 
-print(bookName = "No longer TemplateBookClass");
+# print(myFavoriteBook.read());
+myFavoriteBook.printName(myFavoriteBook);
+
+Book.name = "Toaru Kagaku no Railgun";
+print(myFavoriteBook.name);

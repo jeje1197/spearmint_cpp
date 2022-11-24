@@ -313,4 +313,40 @@ class ClassDefNode : public AstNodeBase {
 
 };
 
+class AttributeAccessNode : public AstNodeBase {
+    public:
+        AstNode exprNode;
+        std::string name;
+
+        AttributeAccessNode(Token& attributeTok, AstNode exprNode) {
+            this->type = "AttributeAccessNode";
+            this->exprNode = exprNode;
+            this->name = attributeTok.value;
+        }
+
+        std::string toString() {
+            return "(AttributeAccessNode Name: '" + name + + "' Expr: {" +
+                 exprNode->toString() + "})";
+        }
+
+};
+
+class AttributeAssignNode : public AstNodeBase {
+    public:
+        AstNode attrNode;
+        AstNode exprNode;
+
+        AttributeAssignNode(AstNode attrNode, AstNode exprNode) {
+            this->type = "AttributeAssignNode";
+            this->exprNode = exprNode;
+        }
+
+        std::string toString() {
+            return "(AttributeAssignNode Attr: '" + attrNode->toString() + + "' Expr: {" +
+                 exprNode->toString() + "})";
+        }
+
+};
+
+
 #endif // ASTNODES_H_INCLUDED

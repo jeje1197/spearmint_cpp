@@ -44,16 +44,15 @@ class Parser {
         AstNode functionDef();
         AstNode call();
 
+        // Helper for parsing function calls
+        AstNode functionCall(AstNode atomNode);
+
         AstNode returnStatement();
         AstNode breakStatement();
         AstNode continueStatement();
 
-        // Lambda
-        //AstNode lambdaDef();
-
         // Structure Parsing
         AstNode classDef();
-        //AstNode classAccess();
 
         // Expression Parsing
         AstNode expr();

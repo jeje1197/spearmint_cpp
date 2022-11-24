@@ -24,7 +24,7 @@
 	"Token.h"
 	"Exception.h"
 
-1669159114 c:\users\jo\desktop\c++\spearmint\parser.h
+1669272907 c:\users\jo\desktop\c++\spearmint\parser.h
 	"Token.h"
 	"AstNodes.h"
 	"Exception.h"
@@ -32,7 +32,7 @@
 	<vector>
 	<set>
 
-1669158894 c:\users\jo\desktop\c++\spearmint\astnodes.h
+1669271892 c:\users\jo\desktop\c++\spearmint\astnodes.h
 	<string>
 	<vector>
 	<iostream>
@@ -49,7 +49,7 @@
 1666268840 source:c:\users\jo\desktop\c++\spearmint\token.cpp
 	"Token.h"
 
-1669256836 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
+1669272146 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
 	"Parser.h"
 
 1663110757 source:c:\users\jo\desktop\c++\spearmint\exception.cpp

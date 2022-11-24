@@ -475,6 +475,44 @@ AstNode Parser::power() {
 AstNode Parser::call() {
     AstNode node = atom();
 
+    // Function Call: atom()
+    if (curTok.matches(LPAREN)) {
+        node = functionCall(node);
+    }
+
+    // Check for attribute access: .ID
+    while (curTok.matches(DOT) && lookAhead().matches(ID)) {
+        getNext();
+
+        Token attrTok = curTok;
+        node = AstNode(new AttributeAccessNode(attrTok, node));
+        getNext();
+
+        // Function Call: atom()
+        if (curTok.matches(LPAREN)) {
+            node = functionCall(node);
+        }
+
+        // Check for assignment: atom = expr
+        if (curTok.matches(OP, "=")) {
+            if (node->type != "AttributeAccessNode") {
+                throw Exception("Trying to assign value to non-attribute.");
+            }
+            getNext();
+
+            AstNode exprNode = expr();
+            if (exprNode == nullptr) {
+                throw Exception("Expected expression");
+            }
+            node = AstNode(new AttributeAssignNode(node, exprNode));
+        }
+    }
+
+    return node;
+}
+
+// Function Call: atom()
+AstNode Parser::functionCall(AstNode atomNode) {
     while (curTok.matches(LPAREN)) {
         getNext();
         std::vector<AstNode> argNodes;
@@ -500,49 +538,47 @@ AstNode Parser::call() {
         }
         getNext();
 
-        node = AstNode(new FunctionCallNode(node, argNodes));
+        atomNode = AstNode(new FunctionCallNode(atomNode, argNodes));
     }
-
-    return node;
+    return atomNode;
 }
 
 AstNode Parser::atom() {
     Token tok = curTok;
     std::set<std::string> unaryOps = { "+", "-" };
 
-    AstNode nodeToReturn = nullptr;
     if (tok.matches(OP, unaryOps)) {
         getNext();
         auto node = atom();
         if (node == nullptr) {
             throw Exception("Expected atom after unary operator");
         }
-        nodeToReturn = AstNode(new UnaryOpNode(tok, node));
+        return AstNode(new UnaryOpNode(tok, node));
     }
     else if (tok.matches(INT)) {
         getNext();
-        nodeToReturn = AstNode(new NumberNode(tok));
+        return AstNode(new NumberNode(tok));
     }
     else if (tok.matches(DOUBLE)) {
         getNext();
-        nodeToReturn = AstNode(new NumberNode(tok));
+        return AstNode(new NumberNode(tok));
     }
     else if (tok.matches(STRING)) {
         getNext();
-        nodeToReturn = AstNode(new StringNode(tok));
+        return AstNode(new StringNode(tok));
     }
     else if (tok.matches(ID)) {
         if (lookAhead().matches(OP, "=")) {
-            nodeToReturn = varAssign();
+            return varAssign();
         } else {
-            nodeToReturn = AstNode(new VarAccessNode(tok));
             getNext();
+            return AstNode(new VarAccessNode(tok));
         }
     }
     else if (tok.matches(LPAREN)) {
         getNext();
-        nodeToReturn = expr();
-        if (nodeToReturn == nullptr) {
+        AstNode exprNode = expr();
+        if (exprNode == nullptr) {
             throw Exception("Expected expr after parenthesis");
         }
 
@@ -550,9 +586,10 @@ AstNode Parser::atom() {
             throw Exception("Expected ')'");
         }
         getNext();
+        return exprNode;
     }
 
-    return nodeToReturn;
+    return nullptr;
 }
 
 AstNode Parser::binOp(ParserFunction func1, std::set<std::string> ops, ParserFunction func2) {

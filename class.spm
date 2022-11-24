@@ -1,22 +1,20 @@
 # This is how classes are written in Spearmint
 
 class Book {
-    # class fields
+    # fields
     var name = "TemplateBookClass";
     var author = "Unknown";
 
-    # class method
+    # methods
     fun read() {
         return "Reading " + name + ".";
     };
 };
 
 # Creating a book
-# var myFavoriteBook = new Book("TaleOfMemories");
-var myFavoriteBook = Book;
+var myFavoriteBook = new Book("TaleOfMemories");
 
-# print(myFavoriteBook.read());
-myFavoriteBook.printName(myFavoriteBook);
+print(myFavoriteBook.read());
 
 Book.name = "Toaru Kagaku no Railgun";
 print(myFavoriteBook.name);

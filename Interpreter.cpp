@@ -43,6 +43,12 @@ Object_sPtr Interpreter::visit(AstNode node, Context& ctx) {
         return visit_FunctionDefNode(node, ctx);
     } else if (type == "FunctionCallNode") {
         return visit_FunctionCallNode(node, ctx);
+    } else if (type == "ReturnNode") {
+        return visit_ReturnNode(node, ctx);
+    } else if (type == "BreakNode") {
+        return visit_BreakNode(node, ctx);
+    } else if (type == "ContinueNode") {
+        return visit_ContinueNode(node, ctx);
     } else if (type == "ClassDefNode") {
         return visit_ClassDefNode(node, ctx);
     } else if (type == "AttributeAccessNode") {
@@ -61,6 +67,11 @@ Object_sPtr Interpreter::visit_VectorWrapperNode(AstNode node, Context& ctx){
     Object_sPtr retList = Object_sPtr(new List());
     for (AstNode a: v) {
         retList->add(visit(a, ctx));
+        if (this->should_return) {
+            return this->return_value;
+        } else if (this->should_break || this->should_continue) {
+            return Null_sPtr;
+        }
     }
 
     if (retList->getSizeInternal() == 1) {
@@ -198,6 +209,12 @@ Object_sPtr Interpreter::visit_ForNode(AstNode node, Context& ctx) {
     while (visit(forNode->condNode, initCtx)->is_true()) {
         Context iterCtx = initCtx.generateNewContext("For loop iteration");
         retList->add(visit(AstNode(new VectorWrapperNode(forNode->statements)), iterCtx));
+        if (this->should_break) {
+            this->should_break = false;
+            break;
+        } else if (this->should_continue) {
+            this->should_continue = false;
+        }
         visit(forNode->updateStatement, iterCtx);
     }
 
@@ -214,6 +231,12 @@ Object_sPtr Interpreter::visit_WhileNode(AstNode node, Context& ctx) {
     while (visit(whileNode->condNode, ctx)->is_true()) {
         Context iterCtx = ctx.generateNewContext("While loop iteration");
         retList->add(visit(AstNode(new VectorWrapperNode(whileNode->statements)), iterCtx));
+        if (this->should_break) {
+            this->should_break = false;
+            break;
+        } else if (this->should_continue) {
+            this->should_continue = false;
+        }
     }
 
     if (retList->getSizeInternal() == 1) {
@@ -254,7 +277,29 @@ Object_sPtr Interpreter::visit_FunctionCallNode(AstNode node, Context& ctx) {
     }
 
     Object_sPtr res = visit(AstNode(new VectorWrapperNode(functionObj->statements)), funCtx);
+
+    // Clear return flag & value
+    this->should_return = false;
+    this->return_value = Null_sPtr;
+
     return res;
+}
+
+Object_sPtr Interpreter::visit_ReturnNode(AstNode node, Context& ctx){
+    std::shared_ptr<ReturnNode> returnNode = std::static_pointer_cast<ReturnNode>(node);
+    this->return_value = visit(returnNode->exprNode, ctx);
+    this->should_return = true;
+    return Null_sPtr;
+}
+
+Object_sPtr Interpreter::visit_BreakNode(AstNode node, Context& ctx){
+    this->should_break = true;
+    return Null_sPtr;
+}
+
+Object_sPtr Interpreter::visit_ContinueNode(AstNode node, Context& ctx){
+    this->should_continue = true;
+    return Null_sPtr;
 }
 
 Object_sPtr Interpreter::visit_ClassDefNode(AstNode node, Context& ctx) {
@@ -281,6 +326,15 @@ Object_sPtr Interpreter::visit_ClassDefNode(AstNode node, Context& ctx) {
     Object_sPtr varWrapper = Object_sPtr(new VariableWrapper(newClass, true));
     ctx.symbol_table->addGlobal(classDefNode->name, varWrapper);
     return newClass;
+}
+
+Object_sPtr Interpreter::visit_ConstructorCallNode(AstNode node, Context& ctx){
+    std::shared_ptr<ConstructorCallNode> constructorCallNode = std::static_pointer_cast<ConstructorCallNode>(node);
+    std::shared_ptr<FunctionCallNode> funCallNode = std::static_pointer_cast<FunctionCallNode>(node);
+    //Object_sPtr obj = visit(attrAccessNode->exprNode, ctx);
+
+    //Object_sPtr varWrapper = obj->getField(attrAccessNode->name);
+    return Null_sPtr;
 }
 
 Object_sPtr Interpreter::visit_AttributeAccessNode(AstNode node, Context& ctx){

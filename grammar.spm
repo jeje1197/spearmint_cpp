@@ -35,7 +35,8 @@ comp1: comp2 ((&& | ||) comp2)*
 comp2: arith_expr ( (< | > | <= | >= | == | !=) arith_expr)*
 arith_expr: term (+|- term)*
 term: power (*|/ power)*
-power: call (^ power)
+power: constructorCall (^ power)
+constructorCall: "new" call
 call: atom ((expr? (, expr)*))?
 atom: + | - (atom)
     | INT

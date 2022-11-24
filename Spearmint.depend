@@ -24,7 +24,7 @@
 	"Token.h"
 	"Exception.h"
 
-1669272907 c:\users\jo\desktop\c++\spearmint\parser.h
+1669329635 c:\users\jo\desktop\c++\spearmint\parser.h
 	"Token.h"
 	"AstNodes.h"
 	"Exception.h"
@@ -32,7 +32,7 @@
 	<vector>
 	<set>
 
-1669276492 c:\users\jo\desktop\c++\spearmint\astnodes.h
+1669332122 c:\users\jo\desktop\c++\spearmint\astnodes.h
 	<string>
 	<vector>
 	<iostream>
@@ -42,14 +42,14 @@
 1662785747 c:\users\jo\desktop\c++\spearmint\regexfile.h
 	<regex>
 
-1669159288 source:c:\users\jo\desktop\c++\spearmint\lexer.cpp
+1669330165 source:c:\users\jo\desktop\c++\spearmint\lexer.cpp
 	"Lexer.h"
 	<unordered_map>
 
 1666268840 source:c:\users\jo\desktop\c++\spearmint\token.cpp
 	"Token.h"
 
-1669273290 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
+1669330545 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
 	"Parser.h"
 
 1663110757 source:c:\users\jo\desktop\c++\spearmint\exception.cpp
@@ -71,7 +71,7 @@
 
 1663143110 source:c:\users\jo\desktop\c++\spearmint\helper.cpp
 
-1669273375 c:\users\jo\desktop\c++\spearmint\interpreter.h
+1669332555 c:\users\jo\desktop\c++\spearmint\interpreter.h
 	"Exception.h"
 	"AstNodes.h"
 	"Classes.h"

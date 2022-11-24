@@ -10,6 +10,7 @@ class Interpreter {
 	public:
 		std::string fileName;
 
+		Object_sPtr return_value = nullptr;
 		bool should_return = false;
 		bool should_break = false;
 		bool should_continue = false;
@@ -33,7 +34,12 @@ class Interpreter {
 		Object_sPtr visit_FunctionDefNode(AstNode node, Context& ctx);
 		Object_sPtr visit_FunctionCallNode(AstNode node, Context& ctx);
 
+		Object_sPtr visit_ReturnNode(AstNode node, Context& ctx);
+		Object_sPtr visit_BreakNode(AstNode node, Context& ctx);
+		Object_sPtr visit_ContinueNode(AstNode node, Context& ctx);
+
 		Object_sPtr visit_ClassDefNode(AstNode node, Context& ctx);
+		Object_sPtr visit_ConstructorCallNode(AstNode node, Context& ctx);
 		Object_sPtr visit_AttributeAccessNode(AstNode node, Context& ctx);
 		Object_sPtr visit_AttributeAssignNode(AstNode node, Context& ctx);
 };

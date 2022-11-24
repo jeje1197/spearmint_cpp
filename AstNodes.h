@@ -260,15 +260,15 @@ class FunctionCallNode : public AstNodeBase {
 
 class ReturnNode : public AstNodeBase {
     public:
-        AstNode expr_node;
+        AstNode exprNode;
 
-        ReturnNode(AstNode expr_node) {
+        ReturnNode(AstNode exprNode) {
             this->type = "ReturnNode";
-            this->expr_node = expr_node;
+            this->exprNode = exprNode;
         }
 
         std::string toString() {
-            return "(ReturnNode: " + expr_node->toString() + ")";
+            return "(ReturnNode: " + exprNode->toString() + ")";
         }
 };
 
@@ -313,6 +313,20 @@ class ClassDefNode : public AstNodeBase {
 
 };
 
+class ConstructorCallNode : public AstNodeBase {
+    public:
+        AstNode funCallNode;
+
+        ConstructorCallNode(AstNode funCallNode) {
+            this->type = "ConstructorCallNode";
+            this->funCallNode = funCallNode;
+        }
+
+        std::string toString() {
+            return "(ConstructorCallNode: " + funCallNode->toString() + "})";
+        }
+};
+
 class AttributeAccessNode : public AstNodeBase {
     public:
         AstNode exprNode;
@@ -346,7 +360,6 @@ class AttributeAssignNode : public AstNodeBase {
             return "(AttributeAssignNode Attr: '" + attrNode->toString() + + "' Expr: {" +
                  exprNode->toString() + "})";
         }
-
 };
 
 

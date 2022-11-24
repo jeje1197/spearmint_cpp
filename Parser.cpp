@@ -469,7 +469,7 @@ AstNode Parser::term() {
 }
 
 AstNode Parser::power() {
-    return binOp(&Parser::call, { "^" }, &Parser::power);
+    return binOp(&Parser::constructorStatement, { "^" }, &Parser::power);
 }
 
 AstNode Parser::call() {
@@ -541,6 +541,23 @@ AstNode Parser::functionCall(AstNode atomNode) {
         atomNode = AstNode(new FunctionCallNode(atomNode, argNodes));
     }
     return atomNode;
+}
+
+AstNode Parser::constructorStatement() {
+    if (curTok.matches(KEYWORD, "new")) {
+        getNext();
+
+        AstNode funCallNode = call();
+        if (funCallNode == nullptr) {
+            throw Exception("Expected constructor function after 'new' keyword");
+        } else if (funCallNode->type != "FunctionCallNode") {
+            throw Exception("Expected constructor function after 'new' keyword");
+        }
+
+        return AstNode(new ConstructorCallNode(funCallNode));
+    }
+
+    return call();
 }
 
 AstNode Parser::atom() {

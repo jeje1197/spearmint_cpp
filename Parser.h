@@ -42,6 +42,7 @@ class Parser {
 
         // Function Parsing (PassableFunctions?)
         AstNode functionDef();
+        AstNode constructorStatement();
         AstNode call();
 
         // Helper for parsing function calls

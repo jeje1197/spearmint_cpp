@@ -19,8 +19,12 @@ class Book {
 var book1 = new Book("Toaru Kagaku no Railgun");
 var book2 = new Book("Toaru Majutsu no Index");
 
+print("Instantiation Complete!");
 print(book1 == book2);
+book1.name = "Book 1";
+book2.name = "Book 2";
 
-Book.name = "If this is the same value, then the pointers are the same.";
+book1 = null;
+print("Book class name attr: " + Book.name);
 print(book1.name);
 print(book2.name);

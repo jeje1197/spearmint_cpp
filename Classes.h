@@ -7,6 +7,7 @@
 #include <sstream>
 #include <cmath>
 #include <unordered_map>
+#include <iterator>
 
 class Object;
 typedef std::shared_ptr<Object> Object_sPtr;
@@ -15,10 +16,9 @@ class Object {
     // Base Object in Spearmint
     public:
         std::string type = "BaseObject"; // This is for type management
-        std::string str_value = "Base Object String"; // This is for strings
-        //std::string name = "BaseObject"; // This is for functions
-        float float_value; // This is for numbers
-        bool boolean_value = false; // This is for booleans
+        std::string str_value = "Base Object String";
+        float float_value;
+        bool boolean_value = false;
 
         Object() {}
 
@@ -195,6 +195,12 @@ class Object {
         virtual Object_sPtr createInstance() {
             return illegalOperation();
         }
+
+        virtual Object_sPtr copy() {
+            Object_sPtr o = (Object_sPtr)this;
+
+            return o;
+        }
 };
 
 class VariableWrapper : public Object {
@@ -217,11 +223,25 @@ class VariableWrapper : public Object {
         }
 
         Object_sPtr getObject() {
+            if (obj == nullptr) {
+                throw Exception("Nullptr in VariableWrapper");
+            }
             return obj;
         }
 
         bool isConstant() {
             return constant_modifier;
+        }
+
+        std::string toString() {
+            if (obj == nullptr) {
+                return "Null VariableWrapper";
+            }
+            return obj->toString();
+        }
+
+        Object_sPtr copy() {
+            return illegalOperation();
         }
 };
 
@@ -257,6 +277,10 @@ class Boolean : public Object {
 
         Object_sPtr notted() {
             return Object_sPtr(new Boolean(!is_true()));
+        }
+
+        Object_sPtr copy() {
+            return Object_sPtr(new Boolean(this->boolean_value));
         }
 
 };
@@ -327,6 +351,10 @@ class String : public Object {
 
         bool is_true() {
             return this->getStrValue().compare("") != 0;
+        }
+
+        Object_sPtr copy() {
+            return Object_sPtr(new String(this->str_value));
         }
 };
 
@@ -432,6 +460,10 @@ class Number : public Object {
 
         bool is_true() {
             return this->getFloatValue() != 0;
+        }
+
+        Object_sPtr copy() {
+            return Object_sPtr(new Number(this->float_value));
         }
 
 };
@@ -587,6 +619,10 @@ class ObjectInstance : public Object {
             return "<" + name + " object>";
         }
 
+        Object_sPtr copy() {
+            return (Object_sPtr) this;
+        }
+
 };
 
 class Class : public Object {
@@ -622,8 +658,18 @@ class Class : public Object {
         }
 
         Object_sPtr createInstance() {
-            Object_sPtr newInstance = Object_sPtr(new ObjectInstance(name, fields));
-            return newInstance;
+            std::unordered_map<std::string, Object_sPtr> newFields;
+            for(std::unordered_map<std::string, Object_sPtr>::iterator iter = fields.begin(); iter != fields.end(); iter++){
+                std::string key = iter->first; // A string (attribute name)
+                Object_sPtr value = iter->second; // A VariableWrapper containing the Object_sPtr
+
+                Object_sPtr newVW = Object_sPtr(new VariableWrapper(value->getObject()));
+                std::cout << "Original Object: " << value->getObject()->getAddress() << " New Object: " <<
+                    newVW->getObject()->getAddress() << std::endl;
+                newFields[key] = newVW;
+            }
+
+            return Object_sPtr(new ObjectInstance(name, newFields));
         }
 };
 

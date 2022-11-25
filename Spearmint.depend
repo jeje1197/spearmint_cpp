@@ -32,7 +32,7 @@
 	<vector>
 	<set>
 
-1669332122 c:\users\jo\desktop\c++\spearmint\astnodes.h
+1669342082 c:\users\jo\desktop\c++\spearmint\astnodes.h
 	<string>
 	<vector>
 	<iostream>
@@ -49,7 +49,7 @@
 1666268840 source:c:\users\jo\desktop\c++\spearmint\token.cpp
 	"Token.h"
 
-1669330545 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
+1669340350 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
 	"Parser.h"
 
 1663110757 source:c:\users\jo\desktop\c++\spearmint\exception.cpp
@@ -87,7 +87,7 @@
 	<iostream>
 	<memory>
 
-1669276379 c:\users\jo\desktop\c++\spearmint\classes.h
+1669342172 c:\users\jo\desktop\c++\spearmint\classes.h
 	<iostream>
 	<string>
 	<memory>
@@ -101,7 +101,7 @@
 	<string>
 	<unordered_map>
 
-1669155940 c:\users\jo\desktop\c++\spearmint\builtinfunctions.h
+1669341153 c:\users\jo\desktop\c++\spearmint\builtinfunctions.h
 	"Classes.h"
 	"Context.h"
 

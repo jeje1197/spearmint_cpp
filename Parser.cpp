@@ -550,8 +550,6 @@ AstNode Parser::constructorStatement() {
         AstNode funCallNode = call();
         if (funCallNode == nullptr) {
             throw Exception("Expected constructor function after 'new' keyword");
-        } else if (funCallNode->type != "FunctionCallNode") {
-            throw Exception("Expected constructor function after 'new' keyword");
         }
 
         return AstNode(new ConstructorCallNode(funCallNode));

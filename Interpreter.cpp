@@ -51,6 +51,8 @@ Object_sPtr Interpreter::visit(AstNode node, Context& ctx) {
         return visit_ContinueNode(node, ctx);
     } else if (type == "ClassDefNode") {
         return visit_ClassDefNode(node, ctx);
+    } else if (type == "ConstructorCallNode") {
+        return visit_ConstructorCallNode(node, ctx);
     } else if (type == "AttributeAccessNode") {
         return visit_AttributeAccessNode(node, ctx);
     } else if (type == "AttributeAssignNode") {
@@ -330,11 +332,28 @@ Object_sPtr Interpreter::visit_ClassDefNode(AstNode node, Context& ctx) {
 
 Object_sPtr Interpreter::visit_ConstructorCallNode(AstNode node, Context& ctx){
     std::shared_ptr<ConstructorCallNode> constructorCallNode = std::static_pointer_cast<ConstructorCallNode>(node);
-    std::shared_ptr<FunctionCallNode> funCallNode = std::static_pointer_cast<FunctionCallNode>(node);
-    //Object_sPtr obj = visit(attrAccessNode->exprNode, ctx);
+    std::shared_ptr<FunctionCallNode> funCallNode = std::static_pointer_cast<FunctionCallNode>(constructorCallNode->funCallNode);
 
-    //Object_sPtr varWrapper = obj->getField(attrAccessNode->name);
-    return Null_sPtr;
+    Object_sPtr classDefinition = visit(funCallNode->nodeToCall, ctx);
+    Object_sPtr newInstance = classDefinition->createInstance();
+
+    Object_sPtr varWrapper = newInstance->getField("constructor");
+    std::shared_ptr<Function> constructorObj = std::static_pointer_cast<Function>(varWrapper->getObject());
+
+    constructorObj->isCallable();
+    constructorObj->checkNumArgs(funCallNode->argNodes);
+
+    Context funCtx = ctx.generateNewContext("Function "+ classDefinition->type +"'.constructor'");
+    for (int i = 0; i < (int) constructorObj->argNames.size(); i++) {
+        Object_sPtr arg_value = visit(funCallNode->argNodes.at(i), ctx);
+        Object_sPtr varWrapper = Object_sPtr(new VariableWrapper(arg_value));
+        funCtx.symbol_table->addLocal(constructorObj->argNames.at(i), varWrapper);
+    }
+
+    visit(AstNode(new VectorWrapperNode(constructorObj->statements)), funCtx);
+    this->should_return = false;
+
+    return newInstance;
 }
 
 Object_sPtr Interpreter::visit_AttributeAccessNode(AstNode node, Context& ctx){

@@ -191,6 +191,10 @@ class Object {
         virtual Object_sPtr getField(std::string key) {
             return illegalOperation();
         }
+
+        virtual Object_sPtr createInstance() {
+            return illegalOperation();
+        }
 };
 
 class VariableWrapper : public Object {
@@ -536,6 +540,40 @@ class Function : public Object {
         }
 };
 
+class ObjectInstance : public Object {
+    public:
+        std::string name;
+        std::unordered_map<std::string, Object_sPtr> fields;
+
+        ObjectInstance(std::string name, std::unordered_map<std::string, Object_sPtr> fields) : Object(name) {
+            this->name = name;
+        }
+
+        bool hasField(std::string key) {
+            return fields.find(key) != fields.end();
+        }
+
+        void addField(std::string key, Object_sPtr value) {
+            if (fields.find(key) != fields.end()) {
+                throw Exception("Class '" + name + "' already has a '" + key + "' field.");
+            }
+            fields[key] = value;
+        }
+
+        Object_sPtr getField(std::string key) {
+            if (fields.find(key) == fields.end()) {
+                throw Exception(name + " does not have a '" + key + "' field.");
+            }
+
+            return fields.at(key);
+        }
+
+        std::string toString() {
+            return "<" + name + " object>";
+        }
+
+};
+
 class Class : public Object {
     public:
         std::string name;
@@ -566,6 +604,10 @@ class Class : public Object {
 
         std::string toString() {
             return "Class Definition for " + name;
+        }
+
+        Object_sPtr createInstance() {
+            Object_sPtr newInstance = Object_sPtr(new ObjectInstance(name, fields));
         }
 };
 

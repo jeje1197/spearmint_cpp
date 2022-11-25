@@ -23,7 +23,6 @@ Object_sPtr closeProgram(Context* ctx) {
 }
 Function_sPtr exitFunction(new Function("exit", {}, (Object_sPtr (*)(void *))&closeProgram));
 
-
 // Function to add all built-in functions to SymbolTable
 std::vector<Function_sPtr> BUILTINFUNCTIONS = {printFunction, exitFunction};
 void addBuiltInFunctions(SymbolTable_sPtr symbol_table) {

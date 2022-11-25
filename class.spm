@@ -5,6 +5,10 @@ class Book {
     var name = "TemplateBookClass";
     var author = "Unknown";
 
+    fun constructor(name) {
+        print("Creating book: '" + name + "'");
+    };
+
     # methods
     fun read() {
         return "Reading " + name + ".";
@@ -12,9 +16,11 @@ class Book {
 };
 
 # Creating a book
-var myFavoriteBook = new Book("TaleOfMemories");
+var book1 = new Book("Toaru Kagaku no Railgun");
+var book2 = new Book("Toaru Majutsu no Index");
 
-print(myFavoriteBook.read());
+print(book1 == book2);
 
-Book.name = "Toaru Kagaku no Railgun";
-print(myFavoriteBook.name);
+Book.name = "If this is the same value, then the pointers are the same.";
+print(book1.name);
+print(book2.name);

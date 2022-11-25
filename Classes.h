@@ -547,6 +547,7 @@ class ObjectInstance : public Object {
 
         ObjectInstance(std::string name, std::unordered_map<std::string, Object_sPtr> fields) : Object(name) {
             this->name = name;
+            this->fields = fields;
         }
 
         bool hasField(std::string key) {
@@ -566,6 +567,20 @@ class ObjectInstance : public Object {
             }
 
             return fields.at(key);
+        }
+
+        Object_sPtr compare_ee(Object_sPtr other) {
+            if (isInstance(other, type))  {
+                return Object_sPtr(new Boolean(this->getAddress() == other->getAddress()));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_ne(Object_sPtr other) {
+            if (isInstance(other, type))  {
+                return Object_sPtr(new Boolean(this->getAddress() != other->getAddress()));
+            }
+            return illegalOperation();
         }
 
         std::string toString() {
@@ -608,6 +623,7 @@ class Class : public Object {
 
         Object_sPtr createInstance() {
             Object_sPtr newInstance = Object_sPtr(new ObjectInstance(name, fields));
+            return newInstance;
         }
 };
 

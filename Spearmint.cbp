@@ -35,6 +35,7 @@
 		<Unit filename="Token.cpp" />
 		<Unit filename="Token.h" />
 		<Unit filename="class.spm" />
+		<Unit filename="class2.spm" />
 		<Unit filename="example.spm" />
 		<Unit filename="functions.spm" />
 		<Unit filename="grammar.spm" />

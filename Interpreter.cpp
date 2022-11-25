@@ -339,7 +339,7 @@ Object_sPtr Interpreter::visit_ConstructorCallNode(AstNode node, Context& ctx){
     Object_sPtr newInstance = classDefinition->createInstance();
 
     Object_sPtr varWrapper = newInstance->getField("constructor");
-    //varWrapper->constant_modifier = true;
+    // varWrapper->constant_modifier = true;
     std::shared_ptr<Function> constructorObj = std::static_pointer_cast<Function>(varWrapper->getObject());
 
     constructorObj->isCallable();

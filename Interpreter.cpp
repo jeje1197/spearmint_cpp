@@ -312,6 +312,9 @@ Object_sPtr Interpreter::visit_ClassDefNode(AstNode node, Context& ctx) {
     }
 
     std::shared_ptr<Class> newClass = std::shared_ptr<Class>(new Class(classDefNode->name));
+    Object_sPtr varWrapper = Object_sPtr(new VariableWrapper(newClass, true));
+    ctx.symbol_table->addLocal(classDefNode->name, varWrapper);
+
     for (AstNode a : classDefNode->statements) {
         if (a->type == "VarDeclarationNode") {
             std::shared_ptr<VarDeclarationNode> varNode = std::static_pointer_cast<VarDeclarationNode>(a);
@@ -325,8 +328,6 @@ Object_sPtr Interpreter::visit_ClassDefNode(AstNode node, Context& ctx) {
         }
     }
 
-    Object_sPtr varWrapper = Object_sPtr(new VariableWrapper(newClass, true));
-    ctx.symbol_table->addGlobal(classDefNode->name, varWrapper);
     return newClass;
 }
 
@@ -338,6 +339,7 @@ Object_sPtr Interpreter::visit_ConstructorCallNode(AstNode node, Context& ctx){
     Object_sPtr newInstance = classDefinition->createInstance();
 
     Object_sPtr varWrapper = newInstance->getField("constructor");
+    //varWrapper->constant_modifier = true;
     std::shared_ptr<Function> constructorObj = std::static_pointer_cast<Function>(varWrapper->getObject());
 
     constructorObj->isCallable();

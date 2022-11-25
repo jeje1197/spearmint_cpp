@@ -8,6 +8,7 @@ class Book {
     fun constructor(name) {
         print("Creating book: '" + name + "'");
     };
+    var reference = new Book("Reference");
 
     # methods
     fun read() {
@@ -19,12 +20,11 @@ class Book {
 var book1 = new Book("Toaru Kagaku no Railgun");
 var book2 = new Book("Toaru Majutsu no Index");
 
-print("Instantiation Complete!");
-print(book1 == book2);
-book1.name = "Book 1";
-book2.name = "Book 2";
+book1.reference = book2;
 
-book1 = null;
+print(book1 == book2);
+print(book2 == book1.reference);
+
 print("Book class name attr: " + Book.name);
 print(book1.name);
 print(book2.name);

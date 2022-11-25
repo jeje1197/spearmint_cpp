@@ -663,9 +663,7 @@ class Class : public Object {
                 std::string key = iter->first; // A string (attribute name)
                 Object_sPtr value = iter->second; // A VariableWrapper containing the Object_sPtr
 
-                Object_sPtr newVW = Object_sPtr(new VariableWrapper(value->getObject()));
-                std::cout << "Original Object: " << value->getObject()->getAddress() << " New Object: " <<
-                    newVW->getObject()->getAddress() << std::endl;
+                Object_sPtr newVW = Object_sPtr(new VariableWrapper(value->getObject(), value->isConstant()));
                 newFields[key] = newVW;
             }
 

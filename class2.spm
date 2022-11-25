@@ -1,0 +1,16 @@
+# example class in Spearmint
+
+# Constructors should always go first so that they are in scope
+# if you try to create a class within a class
+
+class Vector3 {
+    fun constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    };
+
+    const x = 0;
+    const y = 5;
+};
+
+const myVec = new Vector3(20, 5);

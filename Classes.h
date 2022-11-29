@@ -49,6 +49,11 @@ class Object {
             return (int) float_value;
         }
 
+        virtual int getLength() {
+            illegalOperation();
+            return 0;
+        }
+
         virtual bool isConstant() {
             illegalOperation();
             return false;
@@ -293,6 +298,10 @@ class String : public Object {
 
         std::string toString() {
             return str_value;
+        }
+
+        virtual int getLength() {
+            return str_value.length();
         }
 
         // Operations

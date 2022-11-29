@@ -12,6 +12,7 @@ class Vector3 {
 
     const x = 0;
     const y = 5;
+    const vec2 = new Vector3(0, 0);
 
     fun toString() {
         return "x: " + this.x + " y: " + this.y;

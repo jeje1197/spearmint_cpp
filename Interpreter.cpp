@@ -278,20 +278,21 @@ Object_sPtr Interpreter::visit_FunctionCallNode(AstNode node, Context& ctx) {
     if (functionObj->boundObject != nullptr) {
         Object_sPtr varWrapper = Object_sPtr(new VariableWrapper(functionObj->boundObject));
         funCtx.symbol_table->addLocal("this", varWrapper);
-        std::cout << "Binding objects" << std::endl;
+        functionObj->boundObject = nullptr;
     }
 
     if (functionObj->isBuiltIn()) {
         return functionObj->executeWrapper(&funCtx);
     }
 
-    Object_sPtr res = visit(AstNode(new VectorWrapperNode(functionObj->statements)), funCtx);
+    visit(AstNode(new VectorWrapperNode(functionObj->statements)), funCtx);
 
-    // Clear return flag & value
-    this->should_return = false;
-    this->return_value = Null_sPtr;
+    if (this->should_return) {
+        this->should_return = false;
+        return this->return_value;
+    }
 
-    return res;
+    return Null_sPtr;
 }
 
 Object_sPtr Interpreter::visit_ReturnNode(AstNode node, Context& ctx){
@@ -378,7 +379,6 @@ Object_sPtr Interpreter::visit_AttributeAccessNode(AstNode node, Context& ctx){
         std::shared_ptr<Function> fun = std::static_pointer_cast<Function>(obj);
         fun->bindToObject = true;
         fun->boundObject = classObj;
-        std::cout << "Method accessed"<< std::endl;
     }
     return varWrapper->getObject();
 }

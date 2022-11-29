@@ -57,6 +57,8 @@ Object_sPtr Interpreter::visit(AstNode node, Context& ctx) {
         return visit_AttributeAccessNode(node, ctx);
     } else if (type == "AttributeAssignNode") {
         return visit_AttributeAssignNode(node, ctx);
+    } else if (type == "ListNode") {
+        return visit_ListNode(node, ctx);
     } else {
         throw Exception("No visit_" + node->type + " method defined.");
     }
@@ -394,4 +396,15 @@ Object_sPtr Interpreter::visit_AttributeAssignNode(AstNode node, Context& ctx){
     varWrapper->storeObject(value);
 
     return value;
+}
+
+Object_sPtr Interpreter::visit_ListNode(AstNode node, Context& ctx){
+    std::shared_ptr<ListNode> listNode = std::static_pointer_cast<ListNode>(node);
+    Object_sPtr listObj = Object_sPtr(new List());
+
+    for (AstNode n: listNode->listValueNodes) {
+        listObj->add(visit(n, ctx));
+    }
+
+    return listObj;
 }

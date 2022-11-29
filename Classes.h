@@ -488,6 +488,10 @@ class List : public Object {
             return (int) this->myList.size();
         }
 
+        int getLength() {
+            return (int) this->myList.size();
+        }
+
         Object_sPtr getInternal(int index) {
             return this->myList.at(index);
         }
@@ -495,6 +499,10 @@ class List : public Object {
         Object_sPtr add(Object_sPtr newObj) {
             this->myList.push_back(newObj);
             return Object::NullType();
+        }
+
+        Object_sPtr pow(Object_sPtr newObj) {
+            return this->get(newObj);
         }
 
         Object_sPtr get(Object_sPtr numObj) {
@@ -505,8 +513,7 @@ class List : public Object {
             if ((index < 0) || (index >= (int) myList.size())) {
                 throw Exception("Index " + std::to_string(index) + " is out of list bounds.");
             }
-            this->myList.at(index);
-            return Object::NullType();
+            return this->myList.at(index);;
         }
 
         Object_sPtr getSize() {

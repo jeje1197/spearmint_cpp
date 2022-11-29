@@ -362,5 +362,19 @@ class AttributeAssignNode : public AstNodeBase {
         }
 };
 
+class ListNode : public AstNodeBase {
+    public:
+        std::vector<AstNode> listValueNodes;
+
+        ListNode(std::vector<AstNode> listValueNodes) {
+            this->type = "ListNode";
+            this->listValueNodes = listValueNodes;
+        }
+
+        std::string toString() {
+            return "(ListNode: size: " + std::to_string((int) listValueNodes.size()) + ")";
+        }
+};
+
 
 #endif // ASTNODES_H_INCLUDED

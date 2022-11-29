@@ -1,0 +1,17 @@
+# Creating a list in Spearmint
+var myList = [4];
+
+#  Appending to a list
+myList + 5;
+myList + 6;
+
+# Accessing elements from a list
+myList^2;
+
+myList = [];
+for (var i = 0; i < 100; i = i + 1) {
+    myList + i;
+};
+
+print(myList);
+

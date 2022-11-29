@@ -26,6 +26,7 @@
 		<Unit filename="Context.h" />
 		<Unit filename="Exception.cpp" />
 		<Unit filename="Exception.h" />
+		<Unit filename="FirstGame.spm" />
 		<Unit filename="Interpreter.cpp" />
 		<Unit filename="Interpreter.h" />
 		<Unit filename="Lexer.cpp" />
@@ -39,9 +40,11 @@
 		<Unit filename="example.spm" />
 		<Unit filename="functions.spm" />
 		<Unit filename="grammar.spm" />
+		<Unit filename="list.spm" />
 		<Unit filename="loops.spm" />
 		<Unit filename="main.cpp" />
 		<Unit filename="spm_architecture.txt" />
+		<Unit filename="testf" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

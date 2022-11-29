@@ -590,6 +590,32 @@ AstNode Parser::atom() {
             return AstNode(new VarAccessNode(tok));
         }
     }
+    else if (tok.matches(LBRACKET)) {
+        getNext();
+        std::vector<AstNode> listValueNodes;
+
+        AstNode expr_node = expr();
+        if (expr_node != nullptr) {
+            listValueNodes.push_back(expr_node);
+        }
+
+        while (curTok.matches(COMMA)) {
+            getNext();
+
+            expr_node = expr();
+            if (expr_node == nullptr) {
+                throw Exception("Expected expression after ','");
+            }
+
+            listValueNodes.push_back(expr_node);
+        }
+
+        if (!curTok.matches(RBRACKET)) {
+            throw Exception("Expected ')'");
+        }
+        getNext();
+        return AstNode(new ListNode(listValueNodes));
+    }
     else if (tok.matches(LPAREN)) {
         getNext();
         AstNode exprNode = expr();

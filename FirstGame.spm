@@ -1,0 +1,28 @@
+# This is the first game developed in the Spearmint Language
+
+class Game {
+    fun constructor() {};
+
+    var choices = ["Tomoyo", "Kuroko", "Sakura"];
+
+    fun start() {
+        print("Starting game!");
+
+        var answer = this.choices ^ 1;
+        var turns = 0;
+        while (true) {
+            turns = turns + 1;
+            print("Which girl do I love: " + this.choices);
+
+            var guess = input();
+            if (guess == answer) {
+                print("Correct! I love " + answer + " <3");
+                break;
+            } else {
+                answer = this.choices ^ (turns % len(this.choices));
+            };
+        };
+    };
+};
+
+Game.start();

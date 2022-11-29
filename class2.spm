@@ -7,10 +7,16 @@ class Vector3 {
     fun constructor(x, y) {
         this.x = x;
         this.y = y;
+        return x;
     };
 
     const x = 0;
     const y = 5;
+
+    fun toString() {
+        return "x: " + this.x + " y: " + this.y;
+    };
 };
 
 const myVec = new Vector3(20, 5);
+myVec.toString();

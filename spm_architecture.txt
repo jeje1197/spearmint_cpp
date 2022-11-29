@@ -1,0 +1,32 @@
+--- Spearmint Programming Language ---
+
+Interpreted programming language
+
+--- Data Types ---
+
+Every datatype in Spearmint is implemented using a C++ object of which a reference are stored
+in a shared_ptr<Object>, also typedef as Object_sPtr.
+
+--- Variables and Scope ---
+
+Scope is managed using a Context object containing a symbol table (unordered_map)
+mapping keys to values for variable storage.
+
+Classes have their own symbol tables for fields. When a Spearmint object is instantiated,
+its defined fields are copied (objects by reference, including functions).
+
+To bind the correct instance to the 'this' keyword to a class method, the function context symbol table
+is injected with a reference to the object of which it's called from. That way 'this' is defined inside of
+the function call.
+
+--- Imports ---
+
+Import statements are an interesting case to implement. You have to inject the imported code into the
+current file's global scope to provide access to its members. There are two rules that ensure import statements
+are consistent:
+    1. Imported code is always executed before the current file's code
+    2. Imported code is saved into namespaces. (This makes it easy to export for use in other files)
+
+For this reason, the parser does multiple passes before executing an code. It first scans the file for imports.
+If there are any imports, the parser adds all the statements to its own list to execute and save into a namespace.
+Then it re-parses through the current file and creates a list of code to execute.

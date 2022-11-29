@@ -530,6 +530,9 @@ class Function : public Object {
         bool builtIn = false;
         Object_sPtr (*execute)(void*) = nullptr;
 
+        bool bindToObject = false;
+        Object_sPtr boundObject = nullptr;
+
         Function(std::string name, std::vector<std::string> argNames, std::vector<AstNode> statements) : Object("Function") {
             this->name = name;
             this->argNames = argNames;

@@ -274,6 +274,13 @@ Object_sPtr Interpreter::visit_FunctionCallNode(AstNode node, Context& ctx) {
         funCtx.symbol_table->addLocal(functionObj->argNames.at(i), varWrapper);
     }
 
+    // Bind this to object it's called from
+    if (functionObj->boundObject != nullptr) {
+        Object_sPtr varWrapper = Object_sPtr(new VariableWrapper(functionObj->boundObject));
+        funCtx.symbol_table->addLocal("this", varWrapper);
+        std::cout << "Binding objects" << std::endl;
+    }
+
     if (functionObj->isBuiltIn()) {
         return functionObj->executeWrapper(&funCtx);
     }
@@ -339,7 +346,6 @@ Object_sPtr Interpreter::visit_ConstructorCallNode(AstNode node, Context& ctx){
     Object_sPtr newInstance = classDefinition->createInstance();
 
     Object_sPtr varWrapper = newInstance->getField("constructor");
-    // varWrapper->constant_modifier = true;
     std::shared_ptr<Function> constructorObj = std::static_pointer_cast<Function>(varWrapper->getObject());
 
     constructorObj->isCallable();
@@ -352,6 +358,10 @@ Object_sPtr Interpreter::visit_ConstructorCallNode(AstNode node, Context& ctx){
         funCtx.symbol_table->addLocal(constructorObj->argNames.at(i), varWrapper);
     }
 
+    // Bind this to object it's called from
+    Object_sPtr thisVarWrapper = Object_sPtr(new VariableWrapper(newInstance));
+    funCtx.symbol_table->addLocal("this", thisVarWrapper);
+
     visit(AstNode(new VectorWrapperNode(constructorObj->statements)), funCtx);
     this->should_return = false;
 
@@ -360,9 +370,16 @@ Object_sPtr Interpreter::visit_ConstructorCallNode(AstNode node, Context& ctx){
 
 Object_sPtr Interpreter::visit_AttributeAccessNode(AstNode node, Context& ctx){
     std::shared_ptr<AttributeAccessNode> attrAccessNode = std::static_pointer_cast<AttributeAccessNode>(node);
-    Object_sPtr obj = visit(attrAccessNode->exprNode, ctx);
+    Object_sPtr classObj = visit(attrAccessNode->exprNode, ctx);
 
-    Object_sPtr varWrapper = obj->getField(attrAccessNode->name);
+    Object_sPtr varWrapper = classObj->getField(attrAccessNode->name);
+    Object_sPtr obj = varWrapper->getObject();
+    if (obj->type == "Function") {
+        std::shared_ptr<Function> fun = std::static_pointer_cast<Function>(obj);
+        fun->bindToObject = true;
+        fun->boundObject = classObj;
+        std::cout << "Method accessed"<< std::endl;
+    }
     return varWrapper->getObject();
 }
 
@@ -378,8 +395,3 @@ Object_sPtr Interpreter::visit_AttributeAssignNode(AstNode node, Context& ctx){
 
     return value;
 }
-
-
-
-
-

@@ -41,6 +41,7 @@
 		<Unit filename="grammar.spm" />
 		<Unit filename="loops.spm" />
 		<Unit filename="main.cpp" />
+		<Unit filename="spm_architecture.txt" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

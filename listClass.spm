@@ -1,3 +1,5 @@
+print("Before");
+
 class List {
     fun constructor() {
         this.list = [];
@@ -54,22 +56,10 @@ class List {
     };
 };
 
-# Test list initialization
-const list = new List();
-
-# Test add method
-for (var i = 1; i < 100; i = i + i) {
+var list = new List();
+for (var i = 0; i < 1000000; i = i + 1) {
     list.add(i);
 };
+print("After");
 
-# Test size method
-print("This is my list: " + list.toString());
-print("It has " + list.size() + " elements.");
 
-# Test insert method
-list.insert(2, "I inserted this element");
-print("List after insert: " + list.toString());
-
-# Test remove method
-list.remove(3);
-print("List after removal: " + list.toString());

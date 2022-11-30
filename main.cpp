@@ -125,7 +125,7 @@ void run(std::string input) {
     }
 
     // Print out results
-    std::cout << result->toString() << std::endl;
+    //std::cout << result->toString() << std::endl;
 }
 
 std::string getFileText(std::string fileName) {

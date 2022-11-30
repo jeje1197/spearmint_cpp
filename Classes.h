@@ -501,6 +501,11 @@ class List : public Object {
             return Object::NullType();
         }
 
+        Object_sPtr sub(Object_sPtr other) {
+            this->myList.erase(this->myList.begin()+other->getIntValue());
+            return Object::NullType();
+        }
+
         Object_sPtr pow(Object_sPtr newObj) {
             return this->get(newObj);
         }

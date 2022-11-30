@@ -49,7 +49,7 @@
 1666268840 source:c:\users\jo\desktop\c++\spearmint\token.cpp
 	"Token.h"
 
-1669706976 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
+1669789957 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
 	"Parser.h"
 
 1663110757 source:c:\users\jo\desktop\c++\spearmint\exception.cpp
@@ -87,7 +87,7 @@
 	<iostream>
 	<memory>
 
-1669709291 c:\users\jo\desktop\c++\spearmint\classes.h
+1669792253 c:\users\jo\desktop\c++\spearmint\classes.h
 	<iostream>
 	<string>
 	<memory>
@@ -102,7 +102,7 @@
 	<string>
 	<unordered_map>
 
-1669705397 c:\users\jo\desktop\c++\spearmint\builtinfunctions.h
+1669791525 c:\users\jo\desktop\c++\spearmint\builtinfunctions.h
 	"Classes.h"
 	"Context.h"
 

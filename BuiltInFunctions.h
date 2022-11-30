@@ -26,6 +26,15 @@ Object_sPtr type(Context* ctx) {
 Function_sPtr typeFunction(new Function("type", {"object"}, (Object_sPtr (*)(void *))&type));
 
 // Get type
+Object_sPtr isNull(Context* ctx) {
+    Object_sPtr varWrapper = ctx->symbol_table->get("object");
+    Object_sPtr obj = varWrapper->getObject();
+
+    return Object_sPtr(new Boolean(varWrapper->getObject()->getType() == "Null"));
+}
+Function_sPtr isNullFunction(new Function("isNull", {"object"}, (Object_sPtr (*)(void *))&isNull));
+
+// Get type
 Object_sPtr len(Context* ctx) {
     Object_sPtr varWrapper = ctx->symbol_table->get("object");
     Object_sPtr obj = varWrapper->getObject();
@@ -50,7 +59,7 @@ Object_sPtr closeProgram(Context* ctx) {
 Function_sPtr exitFunction(new Function("exit", {}, (Object_sPtr (*)(void *))&closeProgram));
 
 // Function to add all built-in functions to SymbolTable
-std::vector<Function_sPtr> BUILTINFUNCTIONS = {printFunction, typeFunction, lenFunction, inputFunction,
+std::vector<Function_sPtr> BUILTINFUNCTIONS = {printFunction, typeFunction, isNullFunction, lenFunction, inputFunction,
     exitFunction};
 
 void addBuiltInFunctions(SymbolTable_sPtr symbol_table) {

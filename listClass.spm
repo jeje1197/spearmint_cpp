@@ -1,0 +1,75 @@
+class List {
+    fun constructor() {
+        this.list = [];
+    };
+
+    var list = null;
+
+    fun size() {
+        if (isNull(this.list)) {
+            return null;
+        };
+        return len(this.list);
+    };
+
+    fun add(element) {
+        this.list + element;
+    };
+
+    fun get(index) {
+        return this.list ^ index;
+    };
+
+    fun insert(index, element) {
+        const newList = [];
+
+        # Copy elements before
+        for (var i = 0; i < index; i = i + 1) {
+            newList + (this.list ^ i);
+        };
+
+        # Place current element
+        newList + element;
+
+        # Copy elements after
+        for (var i = index + 1; i < len(this.list); i = i + 1) {
+            newList + (this.list ^ i);
+        };
+
+        this.list = newList;
+    };
+
+    fun remove(index) {
+        this.list - index;
+    };
+
+    fun toString() {
+        var str = "[";
+        for (var i = 0; i < len(this.list); i = i + 1) {
+            str = str + (this.list ^ i) + ", ";
+
+        };
+        str = str + "]";
+        return str;
+    };
+};
+
+# Test list initialization
+const list = new List();
+
+# Test add method
+for (var i = 1; i < 100; i = i + i) {
+    list.add(i);
+};
+
+# Test size method
+print("This is my list: " + list.toString());
+print("It has " + list.size() + " elements.");
+
+# Test insert method
+list.insert(2, "I inserted this element");
+print("List after insert: " + list.toString());
+
+# Test remove method
+list.remove(3);
+print("List after removal: " + list.toString());

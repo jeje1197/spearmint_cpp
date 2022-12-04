@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1669350774 source:c:\users\jo\desktop\c++\spearmint\main.cpp
+1670135546 source:c:\users\jo\desktop\c++\spearmint\main.cpp
 	<iostream>
 	<memory>
 	<fstream>
@@ -24,7 +24,7 @@
 	"Token.h"
 	"Exception.h"
 
-1669329635 c:\users\jo\desktop\c++\spearmint\parser.h
+1670129290 c:\users\jo\desktop\c++\spearmint\parser.h
 	"Token.h"
 	"AstNodes.h"
 	"Exception.h"
@@ -32,7 +32,7 @@
 	<vector>
 	<set>
 
-1669706904 c:\users\jo\desktop\c++\spearmint\astnodes.h
+1670130944 c:\users\jo\desktop\c++\spearmint\astnodes.h
 	<string>
 	<vector>
 	<iostream>
@@ -42,14 +42,16 @@
 1662785747 c:\users\jo\desktop\c++\spearmint\regexfile.h
 	<regex>
 
-1669330165 source:c:\users\jo\desktop\c++\spearmint\lexer.cpp
+1670140893 source:c:\users\jo\desktop\c++\spearmint\lexer.cpp
 	"Lexer.h"
+	<ctype.h>
+	<unordered_set>
 	<unordered_map>
 
-1666268840 source:c:\users\jo\desktop\c++\spearmint\token.cpp
+1670131612 source:c:\users\jo\desktop\c++\spearmint\token.cpp
 	"Token.h"
 
-1669789957 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
+1670131442 source:c:\users\jo\desktop\c++\spearmint\parser.cpp
 	"Parser.h"
 
 1663110757 source:c:\users\jo\desktop\c++\spearmint\exception.cpp
@@ -79,7 +81,7 @@
 	<string>
 	<vector>
 
-1669707278 source:c:\users\jo\desktop\c++\spearmint\interpreter.cpp
+1669792821 source:c:\users\jo\desktop\c++\spearmint\interpreter.cpp
 	"Interpreter.h"
 	"Exception.h"
 	"Context.h"

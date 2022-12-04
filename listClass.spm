@@ -57,9 +57,13 @@ class List {
 };
 
 var list = new List();
-for (var i = 0; i < 1000000; i = i + 1) {
+for (var i = 0; i < 100; i = i + 1) {
     list.add(i);
 };
+
+for (var i = 0; i < list.size(); i++) {
+    print(list.get(i));
+}
 print("After");
 
 

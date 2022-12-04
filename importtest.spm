@@ -1,0 +1,9 @@
+import "stdlib.spm"
+
+
+print(Math.add(20, 5));
+print(Math.sub(15, 5));
+print(Math.mul(15, 10));
+print(Math.div(10, 2));
+
+

@@ -29,6 +29,9 @@ class Parser {
         std::vector<AstNode> statements(int ENDTYPE);
         AstNode statement();
 
+        // Import Statement Parsing
+        AstNode importStatement();
+
         // Variable Action Parsing
         AstNode varDeclaration();
         AstNode varAssign();

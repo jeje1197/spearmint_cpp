@@ -1,4 +1,6 @@
 #include "Lexer.h"
+#include <ctype.h>
+#include <unordered_set>
 #include <unordered_map>
 
 Lexer::Lexer(std::string fileName, std::string text) {
@@ -35,7 +37,7 @@ char Lexer::lookAhead(int steps) {
 std::vector<Token> Lexer::getTokens() {
     std::vector<Token> tokens;
     std::string operators = "+-*/^%=<>!";
-    std::set<std::string> keywords = {"const", "var", "if", "else", "for", "while", "fun",
+    std::unordered_set<std::string> keywords = {"import", "as", "const", "var", "if", "else", "for", "while", "fun",
         "return", "break", "continue", "class", "new"};
 
     while (curChar != '\0') {
@@ -52,14 +54,16 @@ std::vector<Token> Lexer::getTokens() {
             std::string str(1, curChar);
             getNext();
 
-            while (hasNext() && (isalnum(curChar) || curChar == '_')) {
+            while (isalpha(curChar) || isdigit(curChar) || curChar == '_') {
                 str += curChar;
                 getNext();
             }
 
             if (keywords.find(str)!= keywords.end()) {
+                std::cout << "Found keyword: " << str << std::endl;
                 tokens.push_back(Token(KEYWORD, str, startPos));
             } else {
+                std::cout << "Found id: " << str << std::endl;
                 tokens.push_back(Token(ID, str, startPos));
             }
             continue;
@@ -70,14 +74,13 @@ std::vector<Token> Lexer::getTokens() {
 
             int decimal_count = 0;
             while (curChar != '\0' && (isdigit(curChar) || curChar == '.')) {
-                number += curChar;
                 if (curChar == '.') {
                     if (decimal_count == 1) break;
                     decimal_count++;
                 }
+                number += curChar;
                 getNext();
             }
-
 
             if (decimal_count == 0) {
                 tokens.push_back(Token(INT, number));

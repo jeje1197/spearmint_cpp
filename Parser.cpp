@@ -54,10 +54,10 @@ std::vector<AstNode> Parser::statements(int ENDTYPE) {
 
 AstNode Parser::statement() {
 
-    //if (curTok.matches(KEYWORD, "import")) {
-    //    return importStatement();
-    //}
-    if (curTok.matches(KEYWORD, "var") || curTok.matches(KEYWORD, "const")) {
+    if (curTok.matches(KEYWORD, "import")) {
+        return importStatement();
+    }
+    else if (curTok.matches(KEYWORD, "var") || curTok.matches(KEYWORD, "const")) {
         return varDeclaration();
     }
     else if (curTok.matches(KEYWORD, "if")) {
@@ -86,6 +86,32 @@ AstNode Parser::statement() {
     }
 
     return expr(); // Can return nullptr
+}
+
+AstNode Parser::importStatement() {
+    std::cout << "In import statement" << std::endl;
+    if (!curTok.matches(KEYWORD, "import")) {
+        throw Exception("Expected keyword 'import'.");
+    }
+    getNext();
+
+    if (!curTok.matches(STRING)) {
+        throw Exception("Expected module name.");
+    }
+    Token fileNameTok = curTok;
+    getNext();
+
+    Token varNameTok;
+    if (curTok.matches(KEYWORD, "as")) {
+        getNext();
+
+        if (!curTok.matches(ID)) {
+            throw Exception("Expected identifier.");
+        }
+        varNameTok = curTok;
+        getNext();
+    }
+    return AstNode(new ImportNode(fileNameTok, varNameTok));
 }
 
 AstNode Parser::varDeclaration() {

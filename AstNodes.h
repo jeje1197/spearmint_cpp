@@ -119,6 +119,22 @@ class BinOpNode : public AstNodeBase {
         }
 };
 
+class ImportNode : public AstNodeBase {
+    public:
+        std::string fileToImport;
+        std::string varName;
+
+        ImportNode(Token& fileNameTok, Token& varNameTok) {
+            this->type = "ImportNode";
+            this->fileToImport = fileNameTok.value;
+            this->varName = varNameTok.value;
+        }
+
+        std::string toString() {
+            return "(ImportNode: '" + fileToImport + "' as " + varName +")";
+        }
+};
+
 class VarDeclarationNode : public AstNodeBase {
     public:
         std::string varName;

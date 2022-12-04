@@ -63,7 +63,7 @@ bool Token::matches(int type) {
 }
 
 bool Token::matches(int type, std::string value) {
-    return this->type == type && this->value == value;
+    return this->type == type && (this->value == value);
 }
 
 bool Token::matches(int type, std::set<std::string>& valueSet) {

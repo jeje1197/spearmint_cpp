@@ -21,6 +21,7 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="AstNodes.h" />
+		<Unit filename="BuiltInClasses.h" />
 		<Unit filename="BuiltInFunctions.h" />
 		<Unit filename="Classes.h" />
 		<Unit filename="Context.h" />
@@ -41,6 +42,7 @@
 		<Unit filename="functions.spm" />
 		<Unit filename="grammar.spm" />
 		<Unit filename="list.spm" />
+		<Unit filename="listClass.spm" />
 		<Unit filename="loops.spm" />
 		<Unit filename="main.cpp" />
 		<Unit filename="spm_architecture.txt" />

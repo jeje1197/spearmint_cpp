@@ -20,7 +20,7 @@ class Parser {
         Parser(std::vector<Token>& tokens);
 
         bool hasNext(int steps);
-        void getNext();
+        Token getNext();
         Token lookAhead(int steps);
         void skipSemis();
 

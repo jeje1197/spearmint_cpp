@@ -594,6 +594,27 @@ class Function : public Object {
         std::string toString() {
             return "Function '" + name + "' (" + std::to_string((int) argNames.size()) + ") at address:" + getAddress();
         }
+
+                Object_sPtr add(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new String(this->toString() + other->getStrValue()));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_ee(Object_sPtr other) {
+            if (isInstance(other, type))  {
+                return Object_sPtr(new Boolean(this->getAddress() == other->getAddress()));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_ne(Object_sPtr other) {
+            if (isInstance(other, type))  {
+                return Object_sPtr(new Boolean(this->getAddress() != other->getAddress()));
+            }
+            return illegalOperation();
+        }
 };
 
 class ObjectInstance : public Object {
@@ -623,6 +644,13 @@ class ObjectInstance : public Object {
             }
 
             return fields.at(key);
+        }
+
+        Object_sPtr add(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new String(this->toString() + other->getStrValue()));
+            }
+            return illegalOperation();
         }
 
         Object_sPtr compare_ee(Object_sPtr other) {
@@ -692,6 +720,27 @@ class Class : public Object {
             }
 
             return Object_sPtr(new ObjectInstance(name, newFields));
+        }
+
+        Object_sPtr add(Object_sPtr other) {
+            if (isInstance(other, "String"))  {
+                return Object_sPtr(new String(this->toString() + other->getStrValue()));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_ee(Object_sPtr other) {
+            if (isInstance(other, type))  {
+                return Object_sPtr(new Boolean(this->getAddress() == other->getAddress()));
+            }
+            return illegalOperation();
+        }
+
+        Object_sPtr compare_ne(Object_sPtr other) {
+            if (isInstance(other, type))  {
+                return Object_sPtr(new Boolean(this->getAddress() != other->getAddress()));
+            }
+            return illegalOperation();
         }
 };
 

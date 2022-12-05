@@ -6,9 +6,9 @@
 Lexer::Lexer(std::string fileName, std::string text) {
     this->fileName = fileName;
     this->text = text;
-    this->index = 0;
-    this->curChar = text.at(0);
+    this->index = -1;
     this->curPos = Position(fileName);
+    this->curChar = getNext();
 }
 
 bool Lexer::hasNext() {

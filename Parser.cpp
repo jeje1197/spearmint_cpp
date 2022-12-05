@@ -2,15 +2,15 @@
 
 Parser::Parser(std::vector<Token>& tokens) {
     this->tokens = &tokens;
-    this->index = 0;
-    this->curTok = tokens.at(0);
+    this->index = -1;
+    this->curTok = getNext();
 }
 
 bool Parser::hasNext(int steps = 1) {
     return (index + steps) < (int)tokens->size();
 }
 
-void Parser::getNext() {
+Token Parser::getNext() {
     if (hasNext()) {
         index++;
         curTok = tokens->at(index);
@@ -18,6 +18,7 @@ void Parser::getNext() {
     else {
         curTok = Token::getNullToken();
     }
+    return curTok;
 }
 
 Token Parser::lookAhead(int steps = 1) {

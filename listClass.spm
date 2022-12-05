@@ -1,4 +1,4 @@
-print("Before");
+# Internal List
 
 class List {
     fun constructor() {
@@ -55,15 +55,3 @@ class List {
         return str;
     };
 };
-
-var list = new List();
-for (var i = 0; i < 100; i = i + 1) {
-    list.add(i);
-};
-
-for (var i = 0; i < list.size(); i++) {
-    print(list.get(i));
-}
-print("After");
-
-

@@ -54,10 +54,11 @@ std::vector<AstNode> Parser::statements(int ENDTYPE) {
 
 AstNode Parser::statement() {
 
-    if (curTok.matches(KEYWORD, "import")) {
-        return importStatement();
+    while (curTok.matches(KEYWORD, "import")) {
+        importStatement();
     }
-    else if (curTok.matches(KEYWORD, "var") || curTok.matches(KEYWORD, "const")) {
+
+    if (curTok.matches(KEYWORD, "var") || curTok.matches(KEYWORD, "const")) {
         return varDeclaration();
     }
     else if (curTok.matches(KEYWORD, "if")) {
@@ -88,8 +89,7 @@ AstNode Parser::statement() {
     return expr(); // Can return nullptr
 }
 
-AstNode Parser::importStatement() {
-    std::cout << "In import statement" << std::endl;
+void Parser::importStatement() {
     if (!curTok.matches(KEYWORD, "import")) {
         throw Exception("Expected keyword 'import'.");
     }
@@ -111,7 +111,13 @@ AstNode Parser::importStatement() {
         varNameTok = curTok;
         getNext();
     }
-    return AstNode(new ImportNode(fileNameTok, varNameTok));
+
+    if (!curTok.matches(SEMICOLON)) {
+            throw Exception("Expected semicolon after statement.");
+    }
+    getNext();
+
+    this->importStatements.push_back(AstNode(new ImportNode(fileNameTok, varNameTok)));
 }
 
 AstNode Parser::varDeclaration() {

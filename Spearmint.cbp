@@ -41,11 +41,13 @@
 		<Unit filename="example.spm" />
 		<Unit filename="functions.spm" />
 		<Unit filename="grammar.spm" />
+		<Unit filename="importtest.spm" />
 		<Unit filename="list.spm" />
 		<Unit filename="listClass.spm" />
 		<Unit filename="loops.spm" />
 		<Unit filename="main.cpp" />
 		<Unit filename="spm_architecture.txt" />
+		<Unit filename="stdlib.spm" />
 		<Unit filename="testf" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

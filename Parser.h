@@ -15,6 +15,8 @@ class Parser {
         int index;
         Token curTok;
 
+        std::vector<AstNode> importStatements;
+
         Parser(std::vector<Token>& tokens);
 
         bool hasNext(int steps);
@@ -30,7 +32,7 @@ class Parser {
         AstNode statement();
 
         // Import Statement Parsing
-        AstNode importStatement();
+        void importStatement();
 
         // Variable Action Parsing
         AstNode varDeclaration();

@@ -60,10 +60,8 @@ std::vector<Token> Lexer::getTokens() {
             }
 
             if (keywords.find(str)!= keywords.end()) {
-                std::cout << "Found keyword: " << str << std::endl;
                 tokens.push_back(Token(KEYWORD, str, startPos));
             } else {
-                std::cout << "Found id: " << str << std::endl;
                 tokens.push_back(Token(ID, str, startPos));
             }
             continue;

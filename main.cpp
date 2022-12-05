@@ -58,9 +58,9 @@ void showWelcomeMessage() {
     std::cout << "Type '-e' or '-exit' to close the shell.\nType -help to see a list of available commands.\n" << std::endl;
 }
 
-void run(std::string input) {
-    // Lexer
-    // std::cout << "Starting lexing." << std::endl;
+std::vector<AstNode> getAstFromText(std::string input) {
+    std::vector<AstNode> ast;
+
     Lexer lexer = Lexer("Console", input);
     std::vector<Token> tokens;
 
@@ -68,32 +68,41 @@ void run(std::string input) {
         tokens = lexer.getTokens();
     } catch (Exception& err) {
         err.show();
-        return;
+        return ast;
     }
 
-    if ((int) tokens.size() <= 1) return;
-
-    //std::cout << "Lexing complete." << std::endl;
-    for (Token t: tokens) {
-        std::cout << t << std::endl;
-    }
-    std::cout << "\n----------\n"<< std::endl;
+    if ((int) tokens.size() <= 1) return ast;
 
     // Parser
-    //std::cout << "Starting parsing." << std::endl;
-    std::vector<AstNode> ast;
+    std::vector<AstNode> imports;
     try {
         Parser parser(tokens);
         ast = parser.parse();
+        imports = parser.importStatements;
     } catch (Exception& err) {
         err.show();
-        return;
     }
 
-    // Clean up tokens
-    tokens.clear();
+    // Add imported code to current file's ast
+    for (int i = (int) imports.size() - 1; i >= 0; i--) {
+        std::shared_ptr<ImportNode> importNode = std::static_pointer_cast<ImportNode>(imports.at(i));
+        std::string fileText = "";
 
-    //std::cout << "Parsing complete." << std::endl;
+        try {
+            fileText = getFileText(importNode->fileToImport);
+        } catch (...) {
+            std::cout << "File: '" << input << "' not found.";
+        }
+
+        std::vector<AstNode> importedAst = getAstFromText(fileText);
+        ast.insert(ast.begin(), importedAst.begin(), importedAst.end());
+    }
+
+    return ast;
+}
+
+void run(std::string input) {
+    std::vector<AstNode> ast = getAstFromText(input);
     if (ast.empty()) return;
 
     //std::cout << "Printing statements" << std::endl;
@@ -135,5 +144,9 @@ std::string getFileText(std::string fileName) {
     while (getline(MyReadFile, text)) {
         fileText += text + "\n";
     }
-    return fileText.erase(fileText.length()-1, 1);
+
+    if (fileText.size() > 0) {
+        return fileText.erase(fileText.length()-1, 1);
+    }
+    return "";
 }

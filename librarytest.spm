@@ -1,12 +1,24 @@
 import "stdlib.spm";
 
+# Test List
+print("testing list");
+var list = new List();
+for (var i = 1; i <= 5; i = i + 1) {
+    list.add(i);
+};
+
+print(list.toString());
+list.remove(list.size() - 1);
+print(list.toString());
+
 # Test Stack
+print("testing stack");
 var stack = new Stack();
 for (var i = 1; i <= 5; i = i + 1) {
     stack.push(i);
 };
 
-#print(stack.toString());
+print(stack.toString());
 stack.pop();
 print(stack.pop());
 print(stack.peek());

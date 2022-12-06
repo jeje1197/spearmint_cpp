@@ -5,6 +5,7 @@ class QueueNode {
     };
 
     var data = null;
+    var prev = null;
     var next = null;
 };
 
@@ -20,12 +21,15 @@ class Queue {
     };
 
     fun peek() {
-        return this.front;
+        if (isNull(this.front)) {
+            return null;
+        };
+        return this.front.data;
     };
 
     fun enqueue(element) {
         var newNode = new QueueNode(element);
-        if (!this.front) {
+        if (isNull(this.front)) {
             this.front = newNode;
             this.end = newNode;
         } else {
@@ -42,7 +46,7 @@ class Queue {
             return null;
         };
 
-        var dequeuedElement = this.front;
+        var dequeuedNode = this.front;
         this.front = this.front.next;
 
         if (this.queueSize == 1) {
@@ -50,14 +54,14 @@ class Queue {
         };
 
         this.queueSize = this.queueSize - 1;
-        return dequeuedElement;
+        return dequeuedNode.data;
     };
 
     fun toString() {
         var str = "[";
         var cur = this.front;
         while (cur) {
-            str = str + cur + ", ";
+            str = str + cur.data + ", ";
             cur = cur.next;
         };
         str = str + "]";

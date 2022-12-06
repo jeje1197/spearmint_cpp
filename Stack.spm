@@ -1,0 +1,45 @@
+# Stack Class
+
+class Stack {
+    fun constructor() {
+        this.list = [];
+    };
+
+    var list = null;
+
+    fun size() {
+        if (isNull(this.list)) {
+            return null;
+        };
+        return len(this.list);
+    };
+
+    fun peek() {
+        if (!this.list) {
+            return null;
+        };
+        return this.list ^ (len(this.list) - 1);
+    };
+
+    fun push(element) {
+        this.list + element;
+    };
+
+    fun pop() {
+        if (!this.list) {
+            return null;
+        };
+        var poppedElement = this.list ^ (len(this.list) - 1);
+        this.list - (len(this.list) - 1);
+        return poppedElement;
+    };
+
+    fun toString() {
+        var str = "[";
+        for (var i = 0; i < len(this.list); i = i + 1) {
+            str = str + (this.list ^ i) + ", ";
+        };
+        str = str + "]";
+        return str;
+    };
+};

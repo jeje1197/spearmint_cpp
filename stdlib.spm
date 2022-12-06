@@ -1,107 +1,11 @@
-# List Class
+# This is the standard library for the Spearmint Programming Language
 
-class List {
-    fun constructor() {
-        this.list = [];
-    };
+# --- Data Structures ---
+import "List.spm";
+import "Stack.spm";
+import "Queue.spm";
 
-    var list = null;
-
-    fun size() {
-        if (isNull(this.list)) {
-            return null;
-        };
-        return len(this.list);
-    };
-
-    fun add(element) {
-        this.list + element;
-    };
-
-    fun get(index) {
-        return this.list ^ index;
-    };
-
-    fun insert(index, element) {
-        const newList = [];
-
-        # Copy elements before
-        for (var i = 0; i < index; i = i + 1) {
-            newList + (this.list ^ i);
-        };
-
-        # Place current element
-        newList + element;
-
-        # Copy elements after
-        for (var i = index + 1; i < len(this.list); i = i + 1) {
-            newList + (this.list ^ i);
-        };
-
-        this.list = newList;
-    };
-
-    fun remove(index) {
-        this.list - index;
-    };
-
-    fun toString() {
-        var str = "[";
-        for (var i = 0; i < len(this.list); i = i + 1) {
-            str = str + (this.list ^ i) + ", ";
-
-        };
-        str = str + "]";
-        return str;
-    };
-};
-
-# Stack Class
-
-class Stack {
-    fun constructor() {
-        this.list = [];
-    };
-
-    var list = null;
-
-    fun size() {
-        if (!this.list) {
-            return null;
-        };
-        return len(this.list);
-    };
-
-    fun peek() {
-        if (!this.list) {
-            return null;
-        };
-        return this.list ^ (len(this.list) - 1);
-    };
-
-    fun push(element) {
-        this.list + element;
-    };
-
-    fun pop() {
-        if (!this.list) {
-            return null;
-        };
-        var poppedElement = this.list ^ (len(this.list) - 1);
-        this.list - (len(this.list) - 1);
-        return poppedElement;
-    };
-
-    fun toString() {
-        var str = "[";
-        for (var i = 0; i < len(this.list); i = i + 1) {
-            str = str + (this.list ^ i) + ", ";
-        };
-        str = str + "]";
-        return str;
-    };
-};
-
+# Map
 class Map {
     fun constructor() {
 

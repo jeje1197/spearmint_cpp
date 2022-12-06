@@ -22,3 +22,15 @@ print(stack.toString());
 stack.pop();
 print(stack.pop());
 print(stack.peek());
+
+# Test Queue
+print("testing queue");
+var queue = new Queue();
+for (var i = 1; i <= 5; i = i + 1) {
+    queue.enqueue(i);
+};
+
+print(queue.toString());
+queue.dequeue();
+print(queue.deque());
+print(queue.peek());

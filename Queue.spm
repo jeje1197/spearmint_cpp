@@ -1,0 +1,66 @@
+# Queue Class
+class QueueNode {
+    fun constructor(data) {
+        this.data = data;
+    };
+
+    var data = null;
+    var next = null;
+};
+
+class Queue {
+    fun constructor() {};
+
+    var front = null;
+    var end = null;
+    var queueSize = 0;
+
+    fun size() {
+        return this.queueSize;
+    };
+
+    fun peek() {
+        return this.front;
+    };
+
+    fun enqueue(element) {
+        var newNode = new QueueNode(element);
+        if (!this.front) {
+            this.front = newNode;
+            this.end = newNode;
+        } else {
+            this.end.next = newNode;
+            newNode.prev = this.end;
+            this.end = newNode;
+        };
+
+        this.queueSize = this.queueSize + 1;
+    };
+
+    fun dequeue() {
+        if (this.queueSize == 0) {
+            return null;
+        };
+
+        var dequeuedElement = this.front;
+        this.front = this.front.next;
+
+        if (this.queueSize == 1) {
+            this.end = null;
+        };
+
+        this.queueSize = this.queueSize - 1;
+        return dequeuedElement;
+    };
+
+    fun toString() {
+        var str = "[";
+        var cur = this.front;
+        while (cur) {
+            str = str + cur + ", ";
+            cur = cur.next;
+        };
+        str = str + "]";
+        return str;
+    };
+};

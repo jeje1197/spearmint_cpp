@@ -541,6 +541,10 @@ class List : public Object {
             return !myList.empty();
         }
 
+        Object_sPtr notted() {
+            return Object_sPtr(new Boolean(!is_true()));
+        }
+
 };
 
 class Function : public Object {
@@ -675,6 +679,10 @@ class ObjectInstance : public Object {
             return (Object_sPtr) this;
         }
 
+        Object_sPtr notted() {
+            return Object_sPtr(new Boolean(false));
+        }
+
 };
 
 class Class : public Object {
@@ -741,6 +749,10 @@ class Class : public Object {
                 return Object_sPtr(new Boolean(this->getAddress() != other->getAddress()));
             }
             return illegalOperation();
+        }
+
+        Object_sPtr notted() {
+            return Object_sPtr(new Boolean(false));
         }
 };
 

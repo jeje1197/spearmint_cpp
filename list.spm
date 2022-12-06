@@ -1,17 +1,57 @@
-# Creating a list in Spearmint
-var myList = [4];
+# List Class
 
-#  Appending to a list
-myList + 5;
-myList + 6;
+class List {
+    fun constructor() {
+        this.list = [];
+    };
 
-# Accessing elements from a list
-myList^2;
+    var list = null;
 
-myList = [];
-for (var i = 0; i < 100; i = i + 1) {
-    myList + i;
+    fun size() {
+        if (isNull(this.list)) {
+            return null;
+        };
+        return len(this.list);
+    };
+
+    fun add(element) {
+        this.list + element;
+    };
+
+    fun get(index) {
+        return this.list ^ index;
+    };
+
+    fun insert(index, element) {
+        const newList = [];
+
+        # Copy elements before
+        for (var i = 0; i < index; i = i + 1) {
+            newList + (this.list ^ i);
+        };
+
+        # Place current element
+        newList + element;
+
+        # Copy elements after
+        for (var i = index + 1; i < len(this.list); i = i + 1) {
+            newList + (this.list ^ i);
+        };
+
+        this.list = newList;
+    };
+
+    fun remove(index) {
+        this.list - index;
+    };
+
+    fun toString() {
+        var str = "[";
+        for (var i = 0; i < len(this.list); i = i + 1) {
+            str = str + (this.list ^ i) + ", ";
+
+        };
+        str = str + "]";
+        return str;
+    };
 };
-
-print(myList);
-

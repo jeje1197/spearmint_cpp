@@ -1,0 +1,12 @@
+import "stdlib.spm";
+
+# Test Stack
+var stack = new Stack();
+for (var i = 1; i <= 5; i = i + 1) {
+    stack.push(i);
+};
+
+#print(stack.toString());
+stack.pop();
+print(stack.pop());
+print(stack.peek());

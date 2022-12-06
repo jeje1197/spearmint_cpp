@@ -1,17 +1,121 @@
-class Math {
-    fun add(a, b) {
-        return a + b;
+# List Class
+
+class List {
+    fun constructor() {
+        this.list = [];
     };
 
-    fun sub(a, b) {
-        return a - b;
+    var list = null;
+
+    fun size() {
+        if (isNull(this.list)) {
+            return null;
+        };
+        return len(this.list);
     };
 
-    fun mul(a, b) {
-        return a * b;
+    fun add(element) {
+        this.list + element;
     };
 
-    fun div(a, b) {
-        return a / b;
+    fun get(index) {
+        return this.list ^ index;
+    };
+
+    fun insert(index, element) {
+        const newList = [];
+
+        # Copy elements before
+        for (var i = 0; i < index; i = i + 1) {
+            newList + (this.list ^ i);
+        };
+
+        # Place current element
+        newList + element;
+
+        # Copy elements after
+        for (var i = index + 1; i < len(this.list); i = i + 1) {
+            newList + (this.list ^ i);
+        };
+
+        this.list = newList;
+    };
+
+    fun remove(index) {
+        this.list - index;
+    };
+
+    fun toString() {
+        var str = "[";
+        for (var i = 0; i < len(this.list); i = i + 1) {
+            str = str + (this.list ^ i) + ", ";
+
+        };
+        str = str + "]";
+        return str;
+    };
+};
+
+# Stack Class
+
+class Stack {
+    fun constructor() {
+        this.list = [];
+    };
+
+    var list = null;
+
+    fun size() {
+        if (!this.list) {
+            return null;
+        };
+        return len(this.list);
+    };
+
+    fun peek() {
+        if (!this.list) {
+            return null;
+        };
+        return this.list ^ (len(this.list) - 1);
+    };
+
+    fun push(element) {
+        this.list + element;
+    };
+
+    fun pop() {
+        if (!this.list) {
+            return null;
+        };
+        var poppedElement = this.list ^ (len(this.list) - 1);
+        this.list - (len(this.list) - 1);
+        return poppedElement;
+    };
+
+    fun toString() {
+        var str = "[";
+        for (var i = 0; i < len(this.list); i = i + 1) {
+            str = str + (this.list ^ i) + ", ";
+        };
+        str = str + "]";
+        return str;
+    };
+};
+
+class Map {
+    fun constructor() {
+
+    };
+
+    fun add() {
+
+    };
+
+    fun hashCode() {
+
+    };
+
+    fun toString() {
+
     };
 };
